@@ -2,6 +2,10 @@ import { Configuration, App } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
+import * as redis from '@midwayjs/redis';
+import * as jwt from '@midwayjs/jwt';
+import * as upload from '@midwayjs/upload';
+import * as i18n from '@midwayjs/i18n';
 import { join } from 'path';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
@@ -10,7 +14,11 @@ import { ReportMiddleware } from './middleware/report.middleware';
 @Configuration({
   imports: [
     koa,
+    redis,
     validate,
+    jwt,
+    upload,
+    i18n,
     {
       component: info,
       enabledEnvironment: ['local'],

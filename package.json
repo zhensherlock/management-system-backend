@@ -1,28 +1,35 @@
 {
-  "name": "my-midway-project",
+  "name": "management-system-backend",
   "version": "1.0.0",
   "description": "",
   "private": true,
   "dependencies": {
-    "@midwayjs/bootstrap": "^3.0.0",
-    "@midwayjs/core": "^3.0.0",
-    "@midwayjs/decorator": "^3.0.0",
-    "@midwayjs/info": "^3.0.0",
-    "@midwayjs/koa": "^3.0.0",
-    "@midwayjs/logger": "^2.14.0",
-    "@midwayjs/validate": "^3.0.0"
+    "@midwayjs/bootstrap": "^3.11.6",
+    "@midwayjs/captcha": "^3.11.6",
+    "@midwayjs/core": "^3.11.6",
+    "@midwayjs/decorator": "^3.11.6",
+    "@midwayjs/i18n": "^3.11.6",
+    "@midwayjs/info": "^3.11.6",
+    "@midwayjs/jwt": "^3.11.6",
+    "@midwayjs/koa": "^3.11.6",
+    "@midwayjs/logger": "^2.17.0",
+    "@midwayjs/redis": "^3.11.6",
+    "@midwayjs/upload": "^3.11.6",
+    "@midwayjs/validate": "^3.11.6",
+    "crypto-js": "^4.1.1",
+    "ms": "^2.1.3"
   },
   "devDependencies": {
-    "@midwayjs/cli": "^2.0.0",
-    "@midwayjs/mock": "^3.0.0",
-    "@types/jest": "^29.2.0",
-    "@types/koa": "^2.13.4",
-    "@types/node": "14",
-    "cross-env": "^6.0.0",
-    "jest": "^29.2.2",
-    "mwts": "^1.0.5",
-    "ts-jest": "^29.0.3",
-    "typescript": "~4.8.0"
+    "@midwayjs/cli": "^2.0.15",
+    "@midwayjs/mock": "^3.11.6",
+    "@types/jest": "^29.5.1",
+    "@types/koa": "^2.13.6",
+    "@types/node": "^18.16.10",
+    "cross-env": "^7.0.3",
+    "jest": "^29.5.0",
+    "mwts": "^1.3.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "~5.0.4"
   },
   "engines": {
     "node": ">=12.0.0"
