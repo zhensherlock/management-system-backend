@@ -19,6 +19,7 @@
     "@midwayjs/validate": "^3.11.6",
     "crypto-js": "^4.1.1",
     "ms": "^2.1.3",
+    "mysql2": "^3.3.2",
     "typeorm": "^0.3.16"
   },
   "devDependencies": {

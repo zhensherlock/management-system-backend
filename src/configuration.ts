@@ -6,6 +6,7 @@ import * as redis from '@midwayjs/redis';
 import * as jwt from '@midwayjs/jwt';
 import * as upload from '@midwayjs/upload';
 import * as i18n from '@midwayjs/i18n';
+import * as orm from '@midwayjs/typeorm';
 import { join } from 'path';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
@@ -19,6 +20,7 @@ import { ReportMiddleware } from './middleware/report.middleware';
     jwt,
     upload,
     i18n,
+    orm,
     {
       component: info,
       enabledEnvironment: ['local'],
