@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { DeleteResult, UpdateResult, Repository } from 'typeorm';
 import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 
 export class BaseService<T> {
@@ -35,15 +35,16 @@ export class BaseService<T> {
   }
 
   async updateObject(id: string, entity: T): Promise<T> {
-    await this.entityModel.update(id, entity);
-    return this.getObjectById(id);
+    const mdl = await this.getObjectById(id);
+    Object.assign(mdl, entity);
+    return await this.entityModel.save(mdl);
   }
 
-  async deleteObject(id: string): Promise<void> {
-    await this.entityModel.delete(id);
+  async deleteObject(id: string): Promise<DeleteResult> {
+    return await this.entityModel.delete(id);
   }
 
-  async softDeleteObject(id: string): Promise<void> {
-    await this.entityModel.softDelete(id);
+  async softDeleteObject(id: string): Promise<UpdateResult> {
+    return await this.entityModel.softDelete(id);
   }
 }
