@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 
 export class BaseService<T> {
   entityModel: Repository<T | any>;
@@ -11,8 +12,8 @@ export class BaseService<T> {
     });
   }
 
-  async getObjectList(): Promise<T[]> {
-    return this.entityModel.find();
+  async getCount(options?: FindManyOptions<T>): Promise<number> {
+    return await this.entityModel.count(options);
   }
 
   async findAll(): Promise<T[]> {
@@ -20,15 +21,17 @@ export class BaseService<T> {
   }
 
   async saveObject(entity: T): Promise<T> {
-    if (Object.prototype.hasOwnProperty.bind(entity, 'id')) {
-      return await this.updateObject(entity['id'] as string, entity);
+    if (this.entityModel.hasId(entity)) {
+      return await this.updateObject(this.entityModel.getId(entity), entity);
     } else {
       return await this.createObject(entity);
     }
   }
 
   async createObject(entity: T): Promise<T> {
-    return this.entityModel.create(entity);
+    const mdl = this.entityModel.create();
+    Object.assign(mdl, entity);
+    return this.entityModel.save(mdl);
   }
 
   async updateObject(id: string, entity: T): Promise<T> {
@@ -38,5 +41,9 @@ export class BaseService<T> {
 
   async deleteObject(id: string): Promise<void> {
     await this.entityModel.delete(id);
+  }
+
+  async softDeleteObject(id: string): Promise<void> {
+    await this.entityModel.softDelete(id);
   }
 }

@@ -8,9 +8,10 @@ import * as upload from '@midwayjs/upload';
 import * as i18n from '@midwayjs/i18n';
 import * as orm from '@midwayjs/typeorm';
 import { join } from 'path';
-// import { DefaultErrorFilter } from './filter/default.filter';
-// import { NotFoundFilter } from './filter/notfound.filter';
+import { DefaultErrorFilter } from './filter/default.filter';
+import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
+import { ValidateErrorFilter } from './filter/validate.filter';
 
 @Configuration({
   imports: [
@@ -36,6 +37,10 @@ export class ContainerLifeCycle {
     // add middleware
     this.app.useMiddleware([ReportMiddleware]);
     // add filter
-    // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
+    this.app.useFilter([
+      NotFoundFilter,
+      DefaultErrorFilter,
+      ValidateErrorFilter,
+    ]);
   }
 }
