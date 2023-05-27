@@ -5,5 +5,68 @@ export default {
   keys: '1684229751344_9182',
   koa: {
     port: 7001,
+    globalPrefix: '/v1',
   },
+  typeorm: {
+    dataSource: {
+      default: {
+        type: 'mysql',
+        timezone: '+08:00',
+        database: 'smart_security',
+        charset: 'utf8mb4',
+        synchronize: true, // 如果第一次使用，不存在表，有同步的需求可以写 true，注意会丢数据
+        logging: false,
+        entities: ['**/entity/*.entity{.ts,.js}'],
+      },
+    },
+    defaultDataSourceName: 'default',
+  },
+  redis: {
+    client: {
+      db: 0,
+    },
+  },
+  jwt: {
+    secret: '123456789', // fs.readFileSync('xxxxx.key')
+    refreshToken: {
+      secret: '987654321',
+      expiresIn: '5d',
+    },
+    expiresIn: '1m', // https://github.com/vercel/ms
+  },
+  midwayLogger: {
+    default: {
+      maxSize: '200m',
+      maxFiles: '31d',
+      dir: './logs/',
+    },
+    clients: {
+      coreLogger: {
+        level: 'warn',
+        consoleLevel: 'warn',
+      },
+      appLogger: {
+        level: 'info',
+        consoleLevel: 'info',
+      },
+    },
+  },
+  // i18n: {
+  //   writeCookie: true,
+  //   defaultLocale: 'zh_CN',
+  //   localeTable: {
+  //     en_US: {
+  //       default: require('../../locales/en_US'),
+  //       module: require('../../locales/en-US/module'),
+  //       user: require('../../locales/en-US/user'),
+  //       employee: require('../../locales/en-US/employee'),
+  //     },
+  //     zh_CN: {
+  //       default: require('../../locales/zh_CN'),
+  //       module: require('../../locales/zh-CN/module'),
+  //       user: require('../../locales/zh-CN/user'),
+  //       employee: require('../../locales/zh-CN/employee'),
+  //     },
+  //   },
+  // },
 } as MidwayConfig;
