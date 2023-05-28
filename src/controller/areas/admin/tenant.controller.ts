@@ -7,15 +7,22 @@ import {
   Del,
   Param,
   Body,
+  Query,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { TenantService } from '../../../service/tenant.service';
-import { ajaxErrorResult, ajaxSuccessResult } from '../../../util';
+import {
+  ajaxErrorResult,
+  ajaxListResult,
+  ajaxSuccessResult,
+} from '../../../util';
 import {
   CreateTenantDTO,
   UpdateTenantDTO,
 } from '../../../dto/areas/admin/tenant.dto';
 import { Tenant } from '../../../entity/tenant.entity';
+import { IGetTenantListOptions } from '../../../interface';
+import { Like } from 'typeorm';
 // import { Validate } from '@midwayjs/validate';
 
 @Controller('/api/admin/tenant')
@@ -30,6 +37,20 @@ export class TenantController {
   async getTenant(@Param('id') id: string) {
     const tenant = await this.tenantService.getObjectById(id);
     return ajaxSuccessResult(tenant);
+  }
+
+  @Get('/list')
+  async getTenantList(@Query() query: IGetTenantListOptions) {
+    const result = await this.tenantService.getPaginatedList(
+      query.currentPage,
+      query.pageSize,
+      {
+        where: {
+          name: Like(`%${query.keyword}%`),
+        },
+      }
+    );
+    return ajaxListResult({ result });
   }
 
   @Post('/create')

@@ -1,6 +1,5 @@
-/**
- * @description Base-Service parameters
- */
-export interface IBaseFindOneByIdOptions {
-  id: string;
+export interface IBaseGetListOptions {
+  keyword?: string;
+  currentPage?: number;
+  pageSize?: number;
 }
