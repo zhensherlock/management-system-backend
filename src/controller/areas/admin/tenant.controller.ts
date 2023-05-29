@@ -35,8 +35,8 @@ export class TenantController {
 
   @Get('/:id')
   async getTenant(@Param('id') id: string) {
-    const tenant = await this.tenantService.getObjectById(id);
-    return ajaxSuccessResult(tenant);
+    const mdl = await this.tenantService.getObjectById(id);
+    return ajaxSuccessResult(mdl);
   }
 
   @Get('/list')
@@ -58,14 +58,14 @@ export class TenantController {
   //   errorStatus: 422,
   // })
   async createTenant(@Body() dto: CreateTenantDTO) {
-    const tenant = await this.tenantService.createObject(<Tenant>dto);
-    return ajaxSuccessResult(tenant);
+    const mdl = await this.tenantService.createObject(<Tenant>dto);
+    return ajaxSuccessResult(mdl);
   }
 
   @Put('/:id')
   async updateTenant(@Param('id') id: string, @Body() dto: UpdateTenantDTO) {
-    const tenant = await this.tenantService.updateObject(id, <Tenant>dto);
-    return ajaxSuccessResult(tenant);
+    const mdl = await this.tenantService.updateObject(id, <Tenant>dto);
+    return ajaxSuccessResult(mdl);
   }
 
   @Del('/:id')

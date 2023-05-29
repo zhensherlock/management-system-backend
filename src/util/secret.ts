@@ -1,7 +1,14 @@
-import hmacMD5 from 'crypto-js/hmac-md5';
+import { createHash } from 'crypto';
+import { nanoid } from 'nanoid';
 
-const secretKey = '6(DF1H*D&F3&72@!I#Jl';
-
-export const encrypt = message => {
-  return hmacMD5(message, secretKey).toString();
+export const encrypt = password => {
+  // const salt = randomBytes(8).toString('hex');
+  const salt = nanoid(16);
+  const hash = createHash('sha256')
+    .update(password + salt)
+    .digest('hex');
+  return {
+    salt,
+    hash,
+  };
 };

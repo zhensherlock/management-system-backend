@@ -35,7 +35,7 @@ export class User {
     name: 'real_name',
     length: 191,
     nullable: true,
-    comment: '用户简介',
+    comment: '用户真实姓名',
   })
   realName: string;
 
