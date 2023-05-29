@@ -6,6 +6,12 @@ import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 export class BaseService<T> {
   entityModel: Repository<T | any>;
 
+  async getOneObject(): Promise<T> {
+    return await this.entityModel.findOne({
+      where: {},
+    });
+  }
+
   async getObjectById(id: string): Promise<T> {
     return await this.entityModel.findOne({
       where: {

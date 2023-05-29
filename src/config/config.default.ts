@@ -25,6 +25,7 @@ export default {
     client: {
       db: 0,
     },
+    globalPrefix: 'ss:',
   },
   jwt: {
     secret: '123456789', // fs.readFileSync('xxxxx.key')

@@ -1,4 +1,4 @@
-import { AjaxResultListInterface } from '../interface';
+import { AjaxResultListOptions } from '../interface';
 
 export const ajaxResult = (result, status = 200, message = null) => {
   return {
@@ -33,7 +33,7 @@ export const ajaxResultList = (
   return ajaxResult({ list, count }, status, message);
 };
 
-export const ajaxListResult = (params: AjaxResultListInterface) => {
+export const ajaxListResult = (params: AjaxResultListOptions) => {
   const {
     result: [list, count],
     extra = null,

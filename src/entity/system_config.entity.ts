@@ -7,7 +7,7 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { generateUUID } from '../util';
+import { generateUUID, updatedDateTransformer } from '../util';
 
 @Entity({
   name: 'system_config',
@@ -29,6 +29,7 @@ export class SystemConfig {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: updatedDateTransformer,
   })
   createdDate: Date;
 
@@ -37,6 +38,7 @@ export class SystemConfig {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
