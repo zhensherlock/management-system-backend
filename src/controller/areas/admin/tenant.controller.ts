@@ -12,7 +12,7 @@ import {
 import { Context } from '@midwayjs/koa';
 import { TenantService } from '../../../service/tenant.service';
 import {
-  ajaxErrorResult,
+  ajaxErrorMessage,
   ajaxListResult,
   ajaxSuccessResult,
 } from '../../../util';
@@ -75,11 +75,15 @@ export class TenantController {
   @Del('/:id')
   async deleteTenant(@Param('id') id: string) {
     if (!(await this.tenantService.existObjectById(id))) {
-      return ajaxErrorResult(this.i18nService.translate('not.exist'));
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
     }
     const result = await this.tenantService.deleteObject(id);
     if (!result.affected) {
-      return ajaxErrorResult(this.i18nService.translate('delete.failure'));
+      return ajaxErrorMessage(
+        this.i18nService.translate('delete.failure', { group: 'global' })
+      );
     }
     return ajaxSuccessResult();
   }
@@ -87,11 +91,15 @@ export class TenantController {
   @Del('/soft/:id')
   async softDeleteTenant(@Param('id') id: string) {
     if (!(await this.tenantService.existObjectById(id))) {
-      return ajaxErrorResult(this.i18nService.translate('not.exist'));
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
     }
     const result = await this.tenantService.softDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorResult(this.i18nService.translate('delete.failure'));
+      return ajaxErrorMessage(
+        this.i18nService.translate('delete.failure', { group: 'global' })
+      );
     }
     return ajaxSuccessResult();
   }
