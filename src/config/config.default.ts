@@ -54,22 +54,24 @@ export default {
       },
     },
   },
-  // i18n: {
-  //   writeCookie: true,
-  //   defaultLocale: 'zh_CN',
-  //   localeTable: {
-  //     en_US: {
-  //       default: require('../../locales/en_US'),
-  //       module: require('../../locales/en-US/module'),
-  //       user: require('../../locales/en-US/user'),
-  //       employee: require('../../locales/en-US/employee'),
-  //     },
-  //     zh_CN: {
-  //       default: require('../../locales/zh_CN'),
-  //       module: require('../../locales/zh-CN/module'),
-  //       user: require('../../locales/zh-CN/user'),
-  //       employee: require('../../locales/zh-CN/employee'),
-  //     },
-  //   },
-  // },
+  i18n: {
+    writeCookie: true,
+    defaultLocale: 'zh_CN',
+    localeTable: {
+      en_US: {
+        // default: require('../../locales/en_US'),
+        // module: require('../../locales/en-US/module'),
+        // user: require('../../locales/en-US/user'),
+        // employee: require('../../locales/en-US/employee'),
+        tenant: require('../locales/en-US/tenant'),
+      },
+      zh_CN: {
+        // default: require('../../locales/zh_CN'),
+        // module: require('../../locales/zh-CN/module'),
+        // user: require('../../locales/zh-CN/user'),
+        // employee: require('../../locales/zh-CN/employee'),
+        tenant: require('../locales/zh-CN/tenant'),
+      },
+    },
+  },
 } as MidwayConfig;

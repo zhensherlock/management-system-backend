@@ -1,0 +1,13 @@
+{
+  "tenant": "Tenant",
+  "tenant.list": "Tenant List",
+  "tenant.name": "Tenant Name",
+  "tenant.name.placeholder": "Please input tenant name",
+  "tenant.name.search.placeholder": "Please input filter keywords",
+  "tenant.name.required.message": "Please input tenant name!",
+  "tenant.operation.list": "Button List",
+  "tenant.create": "Create Tenant",
+  "tenant.update": "Update Tenant",
+  "tenant.delete.confirm.content": "Are you sure you want to delete {name} tenant?",
+  "tenant.delete.success": "Delete tenant success!"
+}
