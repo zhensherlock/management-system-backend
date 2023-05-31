@@ -16,6 +16,13 @@ export const ajaxErrorResult = (
   return ajaxResult(result, status, message);
 };
 
+export const ajaxErrorMessage = (
+  message = '系统错误，请联系管理员',
+  status = 500
+) => {
+  return ajaxResult(undefined, status, message);
+};
+
 export const ajaxSuccessResult = (
   result = undefined,
   message = '操作成功',
