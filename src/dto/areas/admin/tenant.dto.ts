@@ -1,5 +1,6 @@
 import { Rule, RuleType, OmitDto } from '@midwayjs/validate';
 import { handleError, handleErrors } from '../../../error';
+import { GetListBaseDTO } from '../../base.dto';
 
 export class TenantDTO {
   @Rule(RuleType.string().max(36).required())
@@ -172,3 +173,5 @@ export class TenantDTO {
 export class CreateTenantDTO extends OmitDto(TenantDTO, ['id']) {}
 
 export class UpdateTenantDTO extends TenantDTO {}
+
+export class GetTenantListDTO extends GetListBaseDTO {}

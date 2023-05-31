@@ -18,11 +18,12 @@ import {
 } from '../../../util';
 import {
   CreateTenantDTO,
+  GetTenantListDTO,
   UpdateTenantDTO,
 } from '../../../dto/areas/admin/tenant.dto';
 import { Tenant } from '../../../entity/tenant.entity';
-import { IGetTenantListOptions } from '../../../interface';
 import { Like } from 'typeorm';
+import { MidwayI18nService } from '@midwayjs/i18n';
 // import { Validate } from '@midwayjs/validate';
 
 @Controller('/api/admin/tenant')
@@ -33,6 +34,9 @@ export class TenantController {
   @Inject()
   tenantService: TenantService;
 
+  @Inject()
+  i18nService: MidwayI18nService;
+
   @Get('/:id')
   async getTenant(@Param('id') id: string) {
     const mdl = await this.tenantService.getObjectById(id);
@@ -40,7 +44,7 @@ export class TenantController {
   }
 
   @Get('/list')
-  async getTenantList(@Query() query: IGetTenantListOptions) {
+  async getTenantList(@Query() query: GetTenantListDTO) {
     const result = await this.tenantService.getPaginatedList(
       query.currentPage,
       query.pageSize,
@@ -70,18 +74,24 @@ export class TenantController {
 
   @Del('/:id')
   async deleteTenant(@Param('id') id: string) {
+    if (!(await this.tenantService.existObjectById(id))) {
+      return ajaxErrorResult(this.i18nService.translate('not.exist'));
+    }
     const result = await this.tenantService.deleteObject(id);
     if (!result.affected) {
-      return ajaxErrorResult('id不正确');
+      return ajaxErrorResult(this.i18nService.translate('delete.failure'));
     }
     return ajaxSuccessResult();
   }
 
   @Del('/soft/:id')
   async softDeleteTenant(@Param('id') id: string) {
+    if (!(await this.tenantService.existObjectById(id))) {
+      return ajaxErrorResult(this.i18nService.translate('not.exist'));
+    }
     const result = await this.tenantService.softDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorResult('id不正确');
+      return ajaxErrorResult(this.i18nService.translate('delete.failure'));
     }
     return ajaxSuccessResult();
   }

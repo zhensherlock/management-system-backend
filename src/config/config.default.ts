@@ -71,6 +71,8 @@ export default {
         // user: require('../../locales/zh-CN/user'),
         // employee: require('../../locales/zh-CN/employee'),
         tenant: require('../locales/zh-CN/tenant'),
+        system: require('../locales/zh-CN/system'),
+        validation: require('../locales/zh-CN/validation.json'),
       },
     },
   },
