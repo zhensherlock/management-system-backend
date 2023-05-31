@@ -9,7 +9,7 @@ export const ajaxResult = (result, status = 200, message = null) => {
 };
 
 export const ajaxErrorResult = (
-  result = null,
+  result = undefined,
   message = '系统错误，请联系管理员',
   status = 500
 ) => {
@@ -17,7 +17,7 @@ export const ajaxErrorResult = (
 };
 
 export const ajaxSuccessResult = (
-  result = null,
+  result = undefined,
   message = '操作成功',
   status = 200
 ) => {
@@ -25,7 +25,7 @@ export const ajaxSuccessResult = (
 };
 
 export const ajaxResultList = (
-  result = null,
+  result = undefined,
   message = '操作成功',
   status = 200
 ) => {

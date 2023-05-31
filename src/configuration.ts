@@ -39,8 +39,8 @@ export class ContainerLifeCycle {
     // add filter
     this.app.useFilter([
       NotFoundFilter,
-      DefaultErrorFilter,
       ValidateErrorFilter,
+      DefaultErrorFilter,
     ]);
   }
 }
