@@ -24,8 +24,11 @@ import {
 import { Tenant } from '../../../entity/tenant.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
+import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
+import { isEmpty } from 'lodash';
 // import { Validate } from '@midwayjs/validate';
 
+@ApiTags(['tenant'])
 @Controller('/api/admin/tenant')
 export class TenantController {
   @Inject()
@@ -37,42 +40,52 @@ export class TenantController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Get('/:id')
+  @Get('/:id', { summary: '查询单个租户' })
+  @ApiParam({ name: 'id', description: '编号' })
   async getTenant(@Param('id') id: string) {
     const mdl = await this.tenantService.getObjectById(id);
     return ajaxSuccessResult(mdl);
   }
 
-  @Get('/list')
+  @Get('/list', { summary: '查询租户列表' })
+  @ApiQuery({})
   async getTenantList(@Query() query: GetTenantListDTO) {
     const result = await this.tenantService.getPaginatedList(
       query.currentPage,
       query.pageSize,
       {
         where: {
-          name: Like(`%${query.keyword}%`),
+          ...(isEmpty(query.keyword)
+            ? {}
+            : {
+                name: Like(`%${query.keyword}%`),
+              }),
         },
       }
     );
     return ajaxListResult({ result });
   }
 
-  @Post('/create')
   // @Validate({
   //   errorStatus: 422,
   // })
+  @Post('/create', { summary: '新建租户' })
+  @ApiBody({ description: '租户信息' })
   async createTenant(@Body() dto: CreateTenantDTO) {
     const mdl = await this.tenantService.createObject(<Tenant>dto);
     return ajaxSuccessResult(mdl);
   }
 
-  @Put('/:id')
+  @Put('/:id', { summary: '修改租户' })
+  @ApiParam({ name: 'id', description: '编号' })
+  @ApiBody({ description: '租户信息' })
   async updateTenant(@Param('id') id: string, @Body() dto: UpdateTenantDTO) {
     const mdl = await this.tenantService.updateObject(id, <Tenant>dto);
     return ajaxSuccessResult(mdl);
   }
 
-  @Del('/:id')
+  @Del('/:id', { summary: '删除租户' })
+  @ApiParam({ name: 'id', description: '编号' })
   async deleteTenant(@Param('id') id: string) {
     if (!(await this.tenantService.existObjectById(id))) {
       return ajaxErrorMessage(
@@ -88,7 +101,8 @@ export class TenantController {
     return ajaxSuccessResult();
   }
 
-  @Del('/soft/:id')
+  @Del('/soft/:id', { summary: '软删除租户' })
+  @ApiParam({ name: 'id', description: '编号' })
   async softDeleteTenant(@Param('id') id: string) {
     if (!(await this.tenantService.existObjectById(id))) {
       return ajaxErrorMessage(

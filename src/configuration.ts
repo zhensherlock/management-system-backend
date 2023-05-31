@@ -7,6 +7,7 @@ import * as jwt from '@midwayjs/jwt';
 import * as upload from '@midwayjs/upload';
 import * as i18n from '@midwayjs/i18n';
 import * as orm from '@midwayjs/typeorm';
+import * as swagger from '@midwayjs/swagger';
 import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
@@ -22,6 +23,7 @@ import { ValidateErrorFilter } from './filter/validate.filter';
     upload,
     i18n,
     orm,
+    swagger,
     {
       component: info,
       enabledEnvironment: ['local'],

@@ -54,6 +54,14 @@ export default {
       },
     },
   },
+  swagger: {
+    tags: [
+      {
+        name: 'tenant',
+        description: 'Tenant API Document',
+      },
+    ],
+  },
   i18n: {
     writeCookie: true,
     defaultLocale: 'zh_CN',
