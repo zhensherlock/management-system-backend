@@ -71,6 +71,14 @@ export class BaseService<T> {
     return await this.entityModel.save(mdl);
   }
 
+  async existObjectById(id: string): Promise<boolean> {
+    return await this.entityModel.exist({
+      where: {
+        id,
+      },
+    });
+  }
+
   async deleteObject(id: string): Promise<DeleteResult> {
     return await this.entityModel.delete(id);
   }

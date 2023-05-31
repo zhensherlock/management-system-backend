@@ -19,6 +19,7 @@ import {
 import {
   CreateAdminDTO,
   UpdateAdminDTO,
+  UpdateAdminPasswordDTO,
 } from '../../../dto/areas/admin/admin.dto';
 import { Admin } from '../../../entity/admin.entity';
 import { IGetAdminListOptions } from '../../../interface';
@@ -60,10 +61,18 @@ export class AdminController {
 
   @Put('/:id')
   async updateAdmin(@Param('id') id: string, @Body() dto: UpdateAdminDTO) {
-    const mdl = await this.adminService.updateObject(id, <any>dto);
+    const mdl = await this.adminService.updateAdmin(id, <any>dto);
     return ajaxSuccessResult(mdl);
   }
 
+  @Put('/password/:id')
+  async updateAdminPassword(
+    @Param('id') id: string,
+    @Body() dto: UpdateAdminPasswordDTO
+  ) {
+    await this.adminService.updateAdminPassword(id, <any>dto);
+    return ajaxSuccessResult();
+  }
   @Del('/:id')
   async deleteAdmin(@Param('id') id: string) {
     const result = await this.adminService.deleteObject(id);

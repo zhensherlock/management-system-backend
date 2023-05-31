@@ -21,10 +21,17 @@ export class AdminService extends BaseService<Admin> {
     return await this.createObject(admin);
   }
 
-  generatePassword(password) {
-    encrypt(password);
+  async updateAdmin(id: string, admin: Admin) {
+    const secret = encrypt(admin.password);
+    admin.password = secret.hash;
+    admin.salt = secret.salt;
+    return await this.updateObject(id, admin);
   }
 
-  checkPassword() {
+  async updateAdminPassword(id: string, admin: Admin) {
+    const secret = encrypt(admin.password);
+    admin.password = secret.hash;
+    admin.salt = secret.salt;
+    return await this.updateObject(id, admin);
   }
 }

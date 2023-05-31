@@ -19,6 +19,9 @@ export class Admin {
   @Column({ length: 191, comment: '用户名' })
   name: string;
 
+  @Column({ length: 191, comment: '管理员邮箱' })
+  email: string;
+
   @Column({ length: 191, nullable: true, comment: '管理员密码' })
   password: string;
 
