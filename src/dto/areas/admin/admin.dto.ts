@@ -1,29 +1,124 @@
-import { Rule, RuleType, OmitDto, PickDto } from '@midwayjs/validate';
+import { Rule, RuleType } from '@midwayjs/validate';
+import { ApiProperty } from '@midwayjs/swagger';
+import { GetListBaseDTO } from '../../base.dto';
+import { handleError, handleErrors } from '../../../error';
 
 export class AdminDTO {
-  @Rule(RuleType.string().max(36).required())
-  id: string;
-
-  @Rule(RuleType.string().max(100).required())
+  @ApiProperty({ example: 'admin1', description: '管理员登录名' })
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .required()
+      .error(
+        handleErrors({
+          'string.empty': {
+            message: 'i18n:name.required.message',
+            options: { group: 'admin' },
+          },
+          'any.required': {
+            message: 'i18n:name.required.message',
+            options: { group: 'admin' },
+          },
+          'string.max': {
+            message: 'i18n:name.length.message',
+            options: { group: 'admin' },
+          },
+          'string.base': {
+            message: 'i18n:name.base.message',
+            options: { group: 'admin' },
+          },
+        })
+      )
+  )
   name: string;
 
-  @Rule(RuleType.string().email().max(100))
+  @ApiProperty({ example: 'admin1@hy.com', description: '管理员邮箱' })
+  @Rule(
+    RuleType.string()
+      .email()
+      .max(100)
+      .error(
+        handleErrors({
+          'string.max': {
+            message: 'i18n:email.length.message',
+            options: { group: 'admin' },
+          },
+          'string.email': {
+            message: 'i18n:email.base.message',
+            options: { group: 'admin' },
+          },
+          'string.base': {
+            message: 'i18n:email.base.message',
+            options: { group: 'admin' },
+          },
+        })
+      )
+  )
   email: string;
 
-  @Rule(RuleType.string().max(100))
+  @ApiProperty({ example: 'Michael', description: '管理员真实姓名' })
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .error(
+        handleErrors({
+          'string.max': {
+            message: 'i18n:real_name.length.message',
+            options: { group: 'tenant' },
+          },
+          'string.base': {
+            message: 'i18n:real_name.base.message',
+            options: { group: 'tenant' },
+          },
+        })
+      )
+  )
   realName: string;
 
-  @Rule(RuleType.string().max(150))
+  @ApiProperty({ example: '新的管理员', description: '管理员介绍' })
+  @Rule(
+    RuleType.string()
+      .max(150)
+      .error(
+        handleErrors({
+          'string.max': {
+            message: 'i18n:description.length.message',
+            options: { group: 'tenant' },
+          },
+          'string.base': {
+            message: 'i18n:description.base.message',
+            options: { group: 'tenant' },
+          },
+        })
+      )
+  )
   description: string;
 
-  @Rule(RuleType.boolean())
+  @ApiProperty({ example: true, description: '管理员是否可用' })
+  @Rule(
+    RuleType.boolean().error(
+      handleError({
+        message: 'i18n:enabled.base.message',
+        options: { group: 'tenant' },
+      })
+    )
+  )
   enabled: boolean;
 
-  @Rule(RuleType.object())
+  @ApiProperty({ example: {}, description: '管理员扩展配置信息' })
+  @Rule(
+    RuleType.object().error(
+      handleError({
+        message: 'i18n:options.base.message',
+        options: { group: 'tenant' },
+      })
+    )
+  )
   options: object;
 }
 
-export class CreateAdminDTO extends OmitDto(AdminDTO, ['id']) {
+export class CreateAdminDTO extends AdminDTO {
+  @ApiProperty({ example: {}, description: '管理员密码' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -34,20 +129,39 @@ export class CreateAdminDTO extends OmitDto(AdminDTO, ['id']) {
 }
 
 export class UpdateAdminDTO extends AdminDTO {
+  @ApiProperty({
+    example: '50e743d998244f81a46db4acc6aa2d8d',
+    description: '管理员编号',
+  })
+  @Rule(RuleType.string().max(36).required())
+  id: string;
+
+  @ApiProperty({ example: {}, description: '管理员旧密码' })
   @Rule(RuleType.string().max(100))
   old_password: string;
 
+  @ApiProperty({ example: {}, description: '管理员新密码' })
   @Rule(RuleType.string().max(100).not(RuleType.ref('old_password')))
   new_password: string;
 
+  @ApiProperty({ example: {}, description: '管理员确认新密码' })
   @Rule(RuleType.string().max(100).valid(RuleType.ref('new_password')))
   repeat_new_password: string;
 }
 
-export class UpdateAdminPasswordDTO extends PickDto(AdminDTO, ['id']) {
+export class UpdateAdminPasswordDTO {
+  @ApiProperty({
+    example: '50e743d998244f81a46db4acc6aa2d8d',
+    description: '管理员编号',
+  })
+  @Rule(RuleType.string().max(36).required())
+  id: string;
+
+  @ApiProperty({ example: {}, description: '管理员旧密码' })
   @Rule(RuleType.string().max(100).required())
   old_password: string;
 
+  @ApiProperty({ example: {}, description: '管理员新密码' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -57,8 +171,11 @@ export class UpdateAdminPasswordDTO extends PickDto(AdminDTO, ['id']) {
   )
   new_password: string;
 
+  @ApiProperty({ example: {}, description: '管理员确认新密码' })
   @Rule(
     RuleType.string().max(100).required().valid(RuleType.ref('new_password'))
   )
   repeat_new_password: string;
 }
+
+export class GetAdminListDTO extends GetListBaseDTO {}

@@ -18,13 +18,15 @@ import {
 } from '../../../util';
 import {
   CreateAdminDTO,
+  GetAdminListDTO,
   UpdateAdminDTO,
   UpdateAdminPasswordDTO,
 } from '../../../dto/areas/admin/admin.dto';
 import { Admin } from '../../../entity/admin.entity';
-import { IGetAdminListOptions } from '../../../interface';
 import { Like } from 'typeorm';
+import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 
+@ApiTags(['admin'])
 @Controller('/api/admin/admin')
 export class AdminController {
   @Inject()
@@ -33,14 +35,16 @@ export class AdminController {
   @Inject()
   adminService: AdminService;
 
-  @Get('/:id')
+  @Get('/:id', { summary: '查询单个管理员' })
+  @ApiParam({ name: 'id', description: '编号' })
   async getAdmin(@Param('id') id: string) {
     const mdl = await this.adminService.getObjectById(id);
     return ajaxSuccessResult(mdl);
   }
 
-  @Get('/list')
-  async getAdminList(@Query() query: IGetAdminListOptions) {
+  @Get('/list', { summary: '查询管理员列表' })
+  @ApiQuery({})
+  async getAdminList(@Query() query: GetAdminListDTO) {
     const result = await this.adminService.getPaginatedList(
       query.currentPage,
       query.pageSize,
@@ -53,19 +57,24 @@ export class AdminController {
     return ajaxListResult({ result });
   }
 
-  @Post('/create')
+  @Post('/create', { summary: '新建管理员' })
+  @ApiBody({ description: '管理员信息' })
   async createAdmin(@Body() dto: CreateAdminDTO) {
     const mdl = await this.adminService.createAdmin(<Admin>dto);
     return ajaxSuccessResult(mdl);
   }
 
-  @Put('/:id')
+  @Put('/:id', { summary: '修改管理员' })
+  @ApiParam({ name: 'id', description: '编号' })
+  @ApiBody({ description: '管理员信息' })
   async updateAdmin(@Param('id') id: string, @Body() dto: UpdateAdminDTO) {
     const mdl = await this.adminService.updateAdmin(id, <any>dto);
     return ajaxSuccessResult(mdl);
   }
 
-  @Put('/password/:id')
+  @Put('/password/:id', { summary: '修改管理员密码' })
+  @ApiParam({ name: 'id', description: '编号' })
+  @ApiBody({ description: '管理员信息' })
   async updateAdminPassword(
     @Param('id') id: string,
     @Body() dto: UpdateAdminPasswordDTO
@@ -73,7 +82,9 @@ export class AdminController {
     await this.adminService.updateAdminPassword(id, <any>dto);
     return ajaxSuccessResult();
   }
-  @Del('/:id')
+
+  @Del('/:id', { summary: '删除管理员' })
+  @ApiParam({ name: 'id', description: '编号' })
   async deleteAdmin(@Param('id') id: string) {
     const result = await this.adminService.deleteObject(id);
     if (!result.affected) {
@@ -82,7 +93,8 @@ export class AdminController {
     return ajaxSuccessResult();
   }
 
-  @Del('/soft/:id')
+  @Del('/soft/:id', { summary: '软删除管理员' })
+  @ApiParam({ name: 'id', description: '编号' })
   async softDeleteAdmin(@Param('id') id: string) {
     const result = await this.adminService.softDeleteObject(id);
     if (!result.affected) {
