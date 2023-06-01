@@ -11,10 +11,7 @@ export class TenantDTO {
   @Rule(RuleType.string().max(36).required())
   id: string;
 
-  @ApiProperty({
-    example: '测试租户1',
-    description: '租户名称',
-  })
+  @ApiProperty({ example: '测试租户1', description: '租户名称' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -42,10 +39,7 @@ export class TenantDTO {
   )
   name: string;
 
-  @ApiProperty({
-    example: '测试租户介绍',
-    description: '租户介绍',
-  })
+  @ApiProperty({ example: '测试租户介绍', description: '租户介绍' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -64,10 +58,7 @@ export class TenantDTO {
   )
   description: string;
 
-  @ApiProperty({
-    example: '测试租户地址',
-    description: '租户地址',
-  })
+  @ApiProperty({ example: '测试租户地址', description: '租户地址' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -86,10 +77,7 @@ export class TenantDTO {
   )
   address: string;
 
-  @ApiProperty({
-    example: '中国',
-    description: '租户所在国家',
-  })
+  @ApiProperty({ example: '中国', description: '租户所在国家' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -108,10 +96,7 @@ export class TenantDTO {
   )
   country: string;
 
-  @ApiProperty({
-    example: '江苏省',
-    description: '租户所在省份',
-  })
+  @ApiProperty({ example: '江苏省', description: '租户所在省份' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -130,10 +115,7 @@ export class TenantDTO {
   )
   province: string;
 
-  @ApiProperty({
-    example: '苏州市',
-    description: '租户所在城市',
-  })
+  @ApiProperty({ example: '苏州市', description: '租户所在城市' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -152,10 +134,7 @@ export class TenantDTO {
   )
   city: string;
 
-  @ApiProperty({
-    example: 90,
-    description: '租户纬度',
-  })
+  @ApiProperty({ example: 90, description: '租户纬度' })
   @Rule(
     RuleType.number()
       .min(-90)
@@ -169,10 +148,7 @@ export class TenantDTO {
   )
   latitude: number;
 
-  @ApiProperty({
-    example: 180,
-    description: '租户经度',
-  })
+  @ApiProperty({ example: 180, description: '租户经度' })
   @Rule(
     RuleType.number()
       .min(-180)
@@ -186,10 +162,7 @@ export class TenantDTO {
   )
   longitude: number;
 
-  @ApiProperty({
-    example: true,
-    description: '租户是否可用',
-  })
+  @ApiProperty({ example: true, description: '租户是否可用' })
   @Rule(
     RuleType.boolean().error(
       handleError({
@@ -200,10 +173,7 @@ export class TenantDTO {
   )
   enabled: boolean;
 
-  @ApiProperty({
-    example: {},
-    description: '租户扩展配置信息',
-  })
+  @ApiProperty({ example: {}, description: '租户扩展配置信息' })
   @Rule(
     RuleType.object().error(
       handleError({

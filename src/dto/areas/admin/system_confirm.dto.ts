@@ -10,10 +10,7 @@ export class SystemConfigDTO {
   @Rule(RuleType.string().max(36).required())
   id: string;
 
-  @ApiProperty({
-    example: '智能安防系统',
-    description: '系统名称',
-  })
+  @ApiProperty({ example: '智能安防系统', description: '系统名称' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -41,10 +38,7 @@ export class SystemConfigDTO {
   )
   name: string;
 
-  @ApiProperty({
-    example: '智能安防系统介绍',
-    description: '系统介绍',
-  })
+  @ApiProperty({ example: '智能安防系统介绍', description: '系统介绍' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -63,10 +57,7 @@ export class SystemConfigDTO {
   )
   description: string;
 
-  @ApiProperty({
-    example: {},
-    description: '系统扩展配置信息',
-  })
+  @ApiProperty({ example: {}, description: '系统扩展配置信息' })
   @Rule(
     RuleType.object().error(
       handleError({
