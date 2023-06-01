@@ -60,6 +60,10 @@ export default {
         name: 'tenant',
         description: 'Tenant API Document',
       },
+      {
+        name: 'system_config',
+        description: 'System Config API Document',
+      },
     ],
   },
   i18n: {
@@ -80,7 +84,8 @@ export default {
         // employee: require('../../locales/zh-CN/employee'),
         tenant: require('../locales/zh-CN/tenant'),
         system: require('../locales/zh-CN/system'),
-        validation: require('../locales/zh-CN/validation.json'),
+        global: require('../locales/zh-CN/global'),
+        validation: require('../locales/zh-CN/validation'),
       },
     },
   },
