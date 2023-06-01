@@ -7,7 +7,11 @@ import {
   PrimaryColumn,
   BeforeInsert,
 } from 'typeorm';
-import { generateUUID, updatedDateTransformer } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 
 @Entity({
   name: 'admin',
@@ -19,7 +23,7 @@ export class Admin {
   @Column({ length: 191, comment: '用户名' })
   name: string;
 
-  @Column({ length: 191, comment: '管理员邮箱' })
+  @Column({ length: 191, nullable: true, comment: '管理员邮箱' })
   email: string;
 
   @Column({ length: 191, nullable: true, comment: '管理员密码' })
@@ -49,7 +53,7 @@ export class Admin {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
-    transformer: updatedDateTransformer,
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 

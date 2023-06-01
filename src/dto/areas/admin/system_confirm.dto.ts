@@ -29,7 +29,7 @@ export class SystemConfigDTO {
             message: 'i18n:name.length.message',
             options: { group: 'system' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:name.base.message',
             options: { group: 'system' },
           },
@@ -48,7 +48,7 @@ export class SystemConfigDTO {
             message: 'i18n:description.length.message',
             options: { group: 'system' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:description.base.message',
             options: { group: 'system' },
           },

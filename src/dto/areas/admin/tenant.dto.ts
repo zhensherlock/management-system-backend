@@ -30,7 +30,7 @@ export class TenantDTO {
             message: 'i18n:name.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:name.base.message',
             options: { group: 'tenant' },
           },
@@ -43,13 +43,14 @@ export class TenantDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:description.base.message',
             options: { group: 'tenant' },
           },
@@ -62,13 +63,14 @@ export class TenantDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:address.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:address.base.message',
             options: { group: 'tenant' },
           },
@@ -81,13 +83,14 @@ export class TenantDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:country.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:country.base.message',
             options: { group: 'tenant' },
           },
@@ -100,13 +103,14 @@ export class TenantDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:province.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:province.base.message',
             options: { group: 'tenant' },
           },
@@ -119,13 +123,14 @@ export class TenantDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:city.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:city.base.message',
             options: { group: 'tenant' },
           },

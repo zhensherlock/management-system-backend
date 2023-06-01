@@ -7,6 +7,8 @@
   "name.required.message": "请输入管理员登录名",
   "name.length.message": "管理员登录名请控制在100字符以内！",
   "name.base.message": "请输入正确的管理员登录名",
+  "password.required.message": "请输入管理员登录密码",
+  "password.base.message": "请输入有效的管理员登录密码（必须包含大小写字母和数字的组合，支持特殊字符，长度在8-10之间）",
   "email.length.message": "管理员邮箱长度在100个字符以内",
   "email.base.message": "请输入正确的管理员邮箱",
   "real_name.length.message": "管理员真实姓名长度在100个字符以内",

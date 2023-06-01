@@ -23,7 +23,7 @@ export class AdminDTO {
             message: 'i18n:name.length.message',
             options: { group: 'admin' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:name.base.message',
             options: { group: 'admin' },
           },
@@ -37,6 +37,7 @@ export class AdminDTO {
     RuleType.string()
       .email()
       .max(100)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
@@ -47,7 +48,7 @@ export class AdminDTO {
             message: 'i18n:email.base.message',
             options: { group: 'admin' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:email.base.message',
             options: { group: 'admin' },
           },
@@ -60,13 +61,14 @@ export class AdminDTO {
   @Rule(
     RuleType.string()
       .max(100)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:real_name.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:real_name.base.message',
             options: { group: 'tenant' },
           },
@@ -79,13 +81,14 @@ export class AdminDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .empty('')
       .error(
         handleErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'tenant' },
           },
-          'string.base': {
+          '*': {
             message: 'i18n:description.base.message',
             options: { group: 'tenant' },
           },
@@ -121,9 +124,24 @@ export class CreateAdminDTO extends AdminDTO {
   @ApiProperty({ example: {}, description: '管理员密码' })
   @Rule(
     RuleType.string()
-      .max(100)
       .required()
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
+      .error(
+        handleErrors({
+          'string.empty': {
+            message: 'i18n:password.required.message',
+            options: { group: 'admin' },
+          },
+          'any.required': {
+            message: 'i18n:password.required.message',
+            options: { group: 'admin' },
+          },
+          '*': {
+            message: 'i18n:password.base.message',
+            options: { group: 'admin' },
+          },
+        })
+      )
   )
   password: string;
 }

@@ -1,5 +1,5 @@
 import { TranslateOptions } from '@midwayjs/i18n';
-import { RuleType } from '@midwayjs/validate';
+import { MidwayValidationError, RuleType } from '@midwayjs/validate';
 import { TranslateValidateError } from './validate.error';
 
 interface ErrorMessages {
@@ -19,7 +19,17 @@ export const handleErrors = (messages: { [key: string]: ErrorMessages }) => {
       return;
     }
     const error = errors[0];
-    const obj = messages[error.code];
-    return new TranslateValidateError(obj.message, obj.options);
+    const obj = messages[error.code] || messages['*'];
+    if (obj) {
+      return new TranslateValidateError(obj.message, obj.options);
+    } else {
+      return new MidwayValidationError(
+        error.prefs.messages[error.prefs.errors.language][
+          error.code
+        ].toString(),
+        422,
+        null
+      );
+    }
   };
 };

@@ -28,8 +28,9 @@ export class AdminService extends BaseService<Admin> {
     return await this.updateObject(id, admin);
   }
 
-  async updateAdminPassword(id: string, admin: Admin) {
-    const secret = encrypt(admin.password);
+  async updateAdminPassword(id: string, dto: Admin) {
+    const secret = encrypt(dto.password);
+    const admin = await this.getObjectById(id);
     admin.password = secret.hash;
     admin.salt = secret.salt;
     return await this.updateObject(id, admin);

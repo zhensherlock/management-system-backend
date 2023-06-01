@@ -12,7 +12,7 @@ import {
 import { Context } from '@midwayjs/koa';
 import { AdminService } from '../../../service/admin.service';
 import {
-  ajaxErrorResult,
+  ajaxErrorMessage,
   ajaxListResult,
   ajaxSuccessResult,
 } from '../../../util';
@@ -25,6 +25,8 @@ import {
 import { Admin } from '../../../entity/admin.entity';
 import { Like } from 'typeorm';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
+import { isEmpty } from 'lodash';
+import { MidwayI18nService } from '@midwayjs/i18n';
 
 @ApiTags(['admin'])
 @Controller('/api/admin/admin')
@@ -34,6 +36,9 @@ export class AdminController {
 
   @Inject()
   adminService: AdminService;
+
+  @Inject()
+  i18nService: MidwayI18nService;
 
   @Get('/:id', { summary: '查询单个管理员' })
   @ApiParam({ name: 'id', description: '编号' })
@@ -50,7 +55,11 @@ export class AdminController {
       query.pageSize,
       {
         where: {
-          name: Like(`%${query.keyword}%`),
+          ...(isEmpty(query.keyword)
+            ? {}
+            : {
+                name: Like(`%${query.keyword}%`),
+              }),
         },
       }
     );
@@ -86,9 +95,16 @@ export class AdminController {
   @Del('/:id', { summary: '删除管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteAdmin(@Param('id') id: string) {
+    if (!(await this.adminService.existObjectById(id))) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
+    }
     const result = await this.adminService.deleteObject(id);
     if (!result.affected) {
-      return ajaxErrorResult('id不正确');
+      return ajaxErrorMessage(
+        this.i18nService.translate('delete.failure', { group: 'global' })
+      );
     }
     return ajaxSuccessResult();
   }
@@ -96,9 +112,16 @@ export class AdminController {
   @Del('/soft/:id', { summary: '软删除管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteAdmin(@Param('id') id: string) {
+    if (!(await this.adminService.existObjectById(id))) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
+    }
     const result = await this.adminService.softDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorResult('id不正确');
+      return ajaxErrorMessage(
+        this.i18nService.translate('delete.failure', { group: 'global' })
+      );
     }
     return ajaxSuccessResult();
   }
