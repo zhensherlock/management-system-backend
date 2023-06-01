@@ -7,7 +7,7 @@ export class SystemConfigDTO {
     example: '50e743d998244f81a46db4acc6aa2d8d',
     description: '系统编号',
   })
-  @Rule(RuleType.string().max(36).required())
+  @Rule(RuleType.string().max(36).required().trim(true))
   id: string;
 
   @ApiProperty({ example: '智能安防系统', description: '系统名称' })
@@ -15,6 +15,7 @@ export class SystemConfigDTO {
     RuleType.string()
       .max(100)
       .required()
+      .trim(true)
       .error(
         handleErrors({
           'string.empty': {
@@ -42,6 +43,7 @@ export class SystemConfigDTO {
   @Rule(
     RuleType.string()
       .max(150)
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {

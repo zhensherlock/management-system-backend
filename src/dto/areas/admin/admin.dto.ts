@@ -9,6 +9,7 @@ export class AdminDTO {
     RuleType.string()
       .max(100)
       .required()
+      .trim(true)
       .error(
         handleErrors({
           'string.empty': {
@@ -29,6 +30,7 @@ export class AdminDTO {
           },
         })
       )
+    // .external(isExistSameName, '校验用户名是否重复')
   )
   name: string;
 
@@ -38,6 +40,7 @@ export class AdminDTO {
       .email()
       .max(100)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -62,6 +65,7 @@ export class AdminDTO {
     RuleType.string()
       .max(100)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -82,6 +86,7 @@ export class AdminDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -125,6 +130,7 @@ export class CreateAdminDTO extends AdminDTO {
   @Rule(
     RuleType.string()
       .required()
+      .trim(true)
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
       .error(
         handleErrors({
@@ -151,19 +157,41 @@ export class UpdateAdminDTO extends AdminDTO {
     example: '50e743d998244f81a46db4acc6aa2d8d',
     description: '管理员编号',
   })
-  @Rule(RuleType.string().max(36).required())
+  @Rule(RuleType.string().max(36).required().trim(true))
   id: string;
 
   @ApiProperty({ example: {}, description: '管理员旧密码' })
-  @Rule(RuleType.string().max(100))
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .trim(true)
+      .error(
+        handleErrors({
+          'string.empty': {
+            message: 'i18n:old_password.required.message',
+            options: { group: 'admin' },
+          },
+          'any.required': {
+            message: 'i18n:old_password.required.message',
+            options: { group: 'admin' },
+          },
+          '*': {
+            message: 'i18n:old_password.base.message',
+            options: { group: 'admin' },
+          },
+        })
+      )
+  )
   old_password: string;
 
   @ApiProperty({ example: {}, description: '管理员新密码' })
-  @Rule(RuleType.string().max(100).not(RuleType.ref('old_password')))
+  @Rule(RuleType.string().max(100).trim(true).not(RuleType.ref('old_password')))
   new_password: string;
 
   @ApiProperty({ example: {}, description: '管理员确认新密码' })
-  @Rule(RuleType.string().max(100).valid(RuleType.ref('new_password')))
+  @Rule(
+    RuleType.string().max(100).trim(true).valid(RuleType.ref('new_password'))
+  )
   repeat_new_password: string;
 }
 
@@ -172,11 +200,32 @@ export class UpdateAdminPasswordDTO {
     example: '50e743d998244f81a46db4acc6aa2d8d',
     description: '管理员编号',
   })
-  @Rule(RuleType.string().max(36).required())
+  @Rule(RuleType.string().max(36).required().trim(true))
   id: string;
 
   @ApiProperty({ example: {}, description: '管理员旧密码' })
-  @Rule(RuleType.string().max(100).required())
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .required()
+      .trim(true)
+      .error(
+        handleErrors({
+          'string.empty': {
+            message: 'i18n:old_password.required.message',
+            options: { group: 'admin' },
+          },
+          'any.required': {
+            message: 'i18n:old_password.required.message',
+            options: { group: 'admin' },
+          },
+          '*': {
+            message: 'i18n:old_password.base.message',
+            options: { group: 'admin' },
+          },
+        })
+      )
+  )
   old_password: string;
 
   @ApiProperty({ example: {}, description: '管理员新密码' })
@@ -184,6 +233,7 @@ export class UpdateAdminPasswordDTO {
     RuleType.string()
       .max(100)
       .required()
+      .trim(true)
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
       .not(RuleType.ref('old_password'))
   )
@@ -191,7 +241,11 @@ export class UpdateAdminPasswordDTO {
 
   @ApiProperty({ example: {}, description: '管理员确认新密码' })
   @Rule(
-    RuleType.string().max(100).required().valid(RuleType.ref('new_password'))
+    RuleType.string()
+      .max(100)
+      .required()
+      .trim(true)
+      .valid(RuleType.ref('new_password'))
   )
   repeat_new_password: string;
 }

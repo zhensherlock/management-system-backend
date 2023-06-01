@@ -69,6 +69,11 @@ export class AdminController {
   @Post('/create', { summary: '新建管理员' })
   @ApiBody({ description: '管理员信息' })
   async createAdmin(@Body() dto: CreateAdminDTO) {
+    if (await this.adminService.checkNameExisted(dto.name)) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('name.exist.message', { group: 'admin' })
+      );
+    }
     const mdl = await this.adminService.createAdmin(<Admin>dto);
     return ajaxSuccessResult(mdl);
   }

@@ -4,7 +4,7 @@ import { ApiProperty } from '@midwayjs/swagger';
 
 export class GetListBaseDTO {
   @ApiProperty({ description: '关键字' })
-  @Rule(RuleType.string().empty(''))
+  @Rule(RuleType.string().empty('').trim(true))
   keyword: string;
 
   @ApiProperty({ description: '当前页数', example: 1 })

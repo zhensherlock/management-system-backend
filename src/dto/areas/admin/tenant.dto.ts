@@ -8,7 +8,7 @@ export class TenantDTO {
     example: '50e743d998244f81a46db4acc6aa2d8d',
     description: '租户编号',
   })
-  @Rule(RuleType.string().max(36).required())
+  @Rule(RuleType.string().max(36).required().trim(true))
   id: string;
 
   @ApiProperty({ example: '测试租户1', description: '租户名称' })
@@ -16,6 +16,7 @@ export class TenantDTO {
     RuleType.string()
       .max(100)
       .required()
+      .trim(true)
       .error(
         handleErrors({
           'string.empty': {
@@ -44,6 +45,7 @@ export class TenantDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -64,6 +66,7 @@ export class TenantDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -84,6 +87,7 @@ export class TenantDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -104,6 +108,7 @@ export class TenantDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
@@ -124,6 +129,7 @@ export class TenantDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .trim(true)
       .error(
         handleErrors({
           'string.max': {
