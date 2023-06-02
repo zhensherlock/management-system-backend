@@ -10,7 +10,11 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 import { Operation } from './operation.entity';
 import { ModuleRoleMapping } from './module_role_mapping.entity';
 
@@ -21,7 +25,7 @@ export class Module {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '模块编号' })
   id: string;
 
-  @Column({ length: 191, comment: '模块名字' })
+  @Column({ length: 191, comment: '模块名称' })
   name: string;
 
   @Column({ length: 191, nullable: true, comment: '模块简介' })
@@ -73,6 +77,7 @@ export class Module {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -81,6 +86,7 @@ export class Module {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
@@ -89,6 +95,7 @@ export class Module {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 
