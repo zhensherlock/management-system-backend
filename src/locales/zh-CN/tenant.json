@@ -1,7 +1,5 @@
 {
   "tenant": "租户",
-  "list": "租户列表",
-  "name": "租户名称",
   "name.placeholder": "请输入租户名称",
   "name.search.placeholder": "请输入租户名称",
   "name.required.message": "请输入租户名称",
@@ -23,9 +21,6 @@
   "enabled.base.message": "请输入正确的租户状态",
   "options.base.message": "请输入正确的租户扩展配置信息",
   "sequence.base.message": "请输入正确的租户顺序",
-  "operation.list": "按钮列表",
-  "create": "新增租户",
-  "update": "修改租户",
-  "delete.confirm.content": "确定要删除 {name} 租户？",
-  "delete.success": "租户删除成功！"
+  "delete.success": "租户删除成功！",
+  "restore.success": "租户恢复成功！"
 }

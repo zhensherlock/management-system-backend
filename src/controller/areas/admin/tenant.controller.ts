@@ -14,6 +14,7 @@ import { TenantService } from '../../../service/tenant.service';
 import {
   ajaxErrorMessage,
   ajaxListResult,
+  ajaxSuccessMessage,
   ajaxSuccessResult,
 } from '../../../util';
 import {
@@ -115,7 +116,9 @@ export class TenantController {
         this.i18nService.translate('delete.failure', { group: 'global' })
       );
     }
-    return ajaxSuccessResult();
+    return ajaxSuccessMessage(
+      this.i18nService.translate('delete.success', { group: 'global' })
+    );
   }
 
   @Del('/soft/:id', { summary: '软删除租户' })
@@ -132,7 +135,9 @@ export class TenantController {
         this.i18nService.translate('delete.failure', { group: 'global' })
       );
     }
-    return ajaxSuccessResult();
+    return ajaxSuccessMessage(
+      this.i18nService.translate('delete.success', { group: 'global' })
+    );
   }
 
   @Post('/restore/:id', { summary: '恢复软删除租户' })
@@ -144,6 +149,8 @@ export class TenantController {
         this.i18nService.translate('restore.failure', { group: 'global' })
       );
     }
-    return ajaxSuccessResult();
+    return ajaxSuccessMessage(
+      this.i18nService.translate('restore.success', { group: 'global' })
+    );
   }
 }

@@ -1,10 +1,9 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Admin } from '../entity/admin.entity';
-import { Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { encrypt } from '../util';
-import { isEmpty } from 'lodash';
 
 @Provide()
 export class AdminService extends BaseService<Admin> {
@@ -35,14 +34,5 @@ export class AdminService extends BaseService<Admin> {
     admin.password = secret.hash;
     admin.salt = secret.salt;
     return await this.updateObject(id, admin);
-  }
-
-  async checkNameExisted(name: string, id?: string) {
-    return await this.entityModel.exist({
-      where: {
-        name,
-        ...(isEmpty(id) ? {} : { id: Not(id) }),
-      },
-    });
   }
 }

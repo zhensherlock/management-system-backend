@@ -23,6 +23,10 @@ export const ajaxErrorMessage = (
   return ajaxResult(undefined, status, message);
 };
 
+export const ajaxSuccessMessage = (message = '操作成功', status = 200) => {
+  return ajaxResult(undefined, status, message);
+};
+
 export const ajaxSuccessResult = (
   result = undefined,
   message = '操作成功',
