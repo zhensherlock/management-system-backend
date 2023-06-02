@@ -48,6 +48,7 @@
   "update.success": "修改成功",
   "delete.success": "删除成功",
   "delete.failure": "删除失败",
+  "restore.failure": "恢复失败",
   "not.exist": "数据不存在",
   "dialog.title": "系统提示",
   "confirm.title": "警告提示",

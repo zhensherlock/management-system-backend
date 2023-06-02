@@ -86,4 +86,8 @@ export class BaseService<T> {
   async softDeleteObject(id: string): Promise<UpdateResult> {
     return await this.entityModel.softDelete(id);
   }
+
+  async restoreDeleteObject(id: string): Promise<UpdateResult> {
+    return await this.entityModel.restore(id);
+  }
 }

@@ -15,12 +15,13 @@ import {
   ajaxErrorMessage,
   ajaxListResult,
   ajaxSuccessResult,
+  encrypt,
+  generatePassword,
 } from '../../../util';
 import {
   CreateAdminDTO,
   GetAdminListDTO,
   UpdateAdminDTO,
-  UpdateAdminPasswordDTO,
 } from '../../../dto/areas/admin/admin.dto';
 import { Admin } from '../../../entity/admin.entity';
 import { Like } from 'typeorm';
@@ -82,18 +83,35 @@ export class AdminController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '管理员信息' })
   async updateAdmin(@Param('id') id: string, @Body() dto: UpdateAdminDTO) {
-    const mdl = await this.adminService.updateAdmin(id, <any>dto);
+    const admin = await this.adminService.getObjectById(id);
+    if (!admin) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
+    }
+    Object.assign(admin, dto);
+    if (!isEmpty(dto.new_password)) {
+      const { hash, salt } = encrypt(dto.new_password);
+      admin.password = hash;
+      admin.salt = salt;
+    }
+    const mdl = await this.adminService.updateObject(id, admin);
     return ajaxSuccessResult(mdl);
   }
 
-  @Put('/password/:id', { summary: '修改管理员密码' })
+  @Put('/password/:id', { summary: '重置管理员密码' })
   @ApiParam({ name: 'id', description: '编号' })
-  @ApiBody({ description: '管理员信息' })
-  async updateAdminPassword(
-    @Param('id') id: string,
-    @Body() dto: UpdateAdminPasswordDTO
-  ) {
-    await this.adminService.updateAdminPassword(id, <any>dto);
+  async resetAdminPassword(@Param('id') id: string) {
+    const admin = await this.adminService.getObjectById(id);
+    if (!admin) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
+    }
+    const { hash, salt } = encrypt(generatePassword());
+    admin.password = hash;
+    admin.salt = salt;
+    await this.adminService.updateObject(id, admin);
     return ajaxSuccessResult();
   }
 
@@ -126,6 +144,18 @@ export class AdminController {
     if (!result.affected) {
       return ajaxErrorMessage(
         this.i18nService.translate('delete.failure', { group: 'global' })
+      );
+    }
+    return ajaxSuccessResult();
+  }
+
+  @Post('/restore/:id', { summary: '恢复软删除管理员' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async restoreDeleteAdmin(@Param('id') id: string) {
+    const result = await this.adminService.restoreDeleteObject(id);
+    if (!result.affected) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('restore.failure', { group: 'global' })
       );
     }
     return ajaxSuccessResult();

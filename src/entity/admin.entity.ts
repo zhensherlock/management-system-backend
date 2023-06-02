@@ -26,10 +26,15 @@ export class Admin {
   @Column({ length: 191, nullable: true, comment: '管理员邮箱' })
   email: string;
 
-  @Column({ length: 191, nullable: true, comment: '管理员密码' })
+  @Column({ length: 191, nullable: true, comment: '管理员密码', select: false })
   password: string;
 
-  @Column({ length: 191, nullable: true, comment: '管理员密码盐' })
+  @Column({
+    length: 191,
+    nullable: true,
+    comment: '管理员密码盐',
+    select: false,
+  })
   salt: string;
 
   @Column({
@@ -71,6 +76,7 @@ export class Admin {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 

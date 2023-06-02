@@ -12,3 +12,7 @@ export const encrypt = password => {
     hash,
   };
 };
+
+export const generatePassword = () => {
+  return nanoid(10);
+};
