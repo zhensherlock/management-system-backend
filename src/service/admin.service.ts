@@ -41,11 +41,7 @@ export class AdminService extends BaseService<Admin> {
     return await this.entityModel.exist({
       where: {
         name,
-        ...(isEmpty(id)
-          ? {}
-          : {
-              id: Not(id),
-            }),
+        ...(isEmpty(id) ? {} : { id: Not(id) }),
       },
     });
   }

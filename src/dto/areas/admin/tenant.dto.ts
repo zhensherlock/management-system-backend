@@ -1,16 +1,9 @@
-import { Rule, RuleType, OmitDto } from '@midwayjs/validate';
+import { Rule, RuleType } from '@midwayjs/validate';
 import { handleError, handleErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
 export class TenantDTO {
-  @ApiProperty({
-    example: '50e743d998244f81a46db4acc6aa2d8d',
-    description: '租户编号',
-  })
-  @Rule(RuleType.string().max(36).required().trim(true))
-  id: string;
-
   @ApiProperty({ example: '测试租户1', description: '租户名称' })
   @Rule(
     RuleType.string()
@@ -196,7 +189,7 @@ export class TenantDTO {
   options: object;
 }
 
-export class CreateTenantDTO extends OmitDto(TenantDTO, ['id']) {}
+export class CreateTenantDTO extends TenantDTO {}
 
 export class UpdateTenantDTO extends TenantDTO {}
 

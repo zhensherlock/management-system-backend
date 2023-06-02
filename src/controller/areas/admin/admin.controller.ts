@@ -89,6 +89,11 @@ export class AdminController {
         this.i18nService.translate('not.exist', { group: 'global' })
       );
     }
+    if (await this.adminService.checkNameExisted(dto.name, id)) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('name.exist.message', { group: 'admin' })
+      );
+    }
     Object.assign(admin, dto);
     if (!isEmpty(dto.new_password)) {
       const { hash, salt } = encrypt(dto.new_password);

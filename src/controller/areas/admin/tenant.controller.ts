@@ -72,6 +72,11 @@ export class TenantController {
   @Post('/create', { summary: '新建租户' })
   @ApiBody({ description: '租户信息' })
   async createTenant(@Body() dto: CreateTenantDTO) {
+    if (await this.tenantService.checkNameExisted(dto.name)) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('name.exist.message', { group: 'tenant' })
+      );
+    }
     const mdl = await this.tenantService.createObject(<Tenant>dto);
     return ajaxSuccessResult(mdl);
   }
@@ -80,7 +85,19 @@ export class TenantController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '租户信息' })
   async updateTenant(@Param('id') id: string, @Body() dto: UpdateTenantDTO) {
-    const mdl = await this.tenantService.updateObject(id, <Tenant>dto);
+    const tenant = await this.tenantService.getObjectById(id);
+    if (!tenant) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('not.exist', { group: 'global' })
+      );
+    }
+    if (await this.tenantService.checkNameExisted(dto.name, id)) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('name.exist.message', { group: 'tenant' })
+      );
+    }
+    Object.assign(tenant, dto);
+    const mdl = await this.tenantService.updateObject(id, tenant);
     return ajaxSuccessResult(mdl);
   }
 
@@ -113,6 +130,18 @@ export class TenantController {
     if (!result.affected) {
       return ajaxErrorMessage(
         this.i18nService.translate('delete.failure', { group: 'global' })
+      );
+    }
+    return ajaxSuccessResult();
+  }
+
+  @Post('/restore/:id', { summary: '恢复软删除租户' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async restoreDeleteAdmin(@Param('id') id: string) {
+    const result = await this.tenantService.restoreDeleteObject(id);
+    if (!result.affected) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('restore.failure', { group: 'global' })
       );
     }
     return ajaxSuccessResult();

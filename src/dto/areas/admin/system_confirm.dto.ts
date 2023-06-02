@@ -1,15 +1,8 @@
-import { OmitDto, Rule, RuleType } from '@midwayjs/validate';
+import { Rule, RuleType } from '@midwayjs/validate';
 import { handleError, handleErrors } from '../../../error';
 import { ApiProperty } from '@midwayjs/swagger';
 
 export class SystemConfigDTO {
-  @ApiProperty({
-    example: '50e743d998244f81a46db4acc6aa2d8d',
-    description: '系统编号',
-  })
-  @Rule(RuleType.string().max(36).required().trim(true))
-  id: string;
-
   @ApiProperty({ example: '智能安防系统', description: '系统名称' })
   @Rule(
     RuleType.string()
@@ -71,4 +64,4 @@ export class SystemConfigDTO {
   options: object;
 }
 
-export class UpdateSystemConfigDTO extends OmitDto(SystemConfigDTO, ['id']) {}
+export class UpdateSystemConfigDTO extends SystemConfigDTO {}
