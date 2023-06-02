@@ -22,6 +22,7 @@
   "longitude.base.message": "请输入正确的经度",
   "enabled.base.message": "请输入正确的租户状态",
   "options.base.message": "请输入正确的租户扩展配置信息",
+  "sequence.base.message": "请输入正确的租户顺序",
   "operation.list": "按钮列表",
   "create": "新增租户",
   "update": "修改租户",

@@ -53,6 +53,9 @@ export class Tenant {
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
 
+  @Column({ default: 0, comment: '租户顺序' })
+  sequence: number;
+
   @CreateDateColumn({
     name: 'created_date',
     type: 'timestamp',
@@ -75,6 +78,7 @@ export class Tenant {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 

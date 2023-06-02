@@ -187,6 +187,17 @@ export class TenantDTO {
     )
   )
   options: object;
+
+  @ApiProperty({ example: 0, description: '租户顺序' })
+  @Rule(
+    RuleType.number().error(
+      handleError({
+        message: 'i18n:sequence.base.message',
+        options: { group: 'tenant' },
+      })
+    )
+  )
+  sequence: number;
 }
 
 export class CreateTenantDTO extends TenantDTO {}
