@@ -64,6 +64,14 @@ export default {
         name: 'system_config',
         description: 'System Config API Document',
       },
+      {
+        name: 'admin',
+        description: 'Admin API Document',
+      },
+      {
+        name: 'module',
+        description: 'Module API Document',
+      },
     ],
   },
   i18n: {
@@ -79,10 +87,10 @@ export default {
       },
       zh_CN: {
         // default: require('../../locales/zh_CN'),
-        // module: require('../../locales/zh-CN/module'),
         // user: require('../../locales/zh-CN/user'),
         // employee: require('../../locales/zh-CN/employee'),
         admin: require('../locales/zh-CN/admin'),
+        module: require('../locales/zh-CN/module'),
         tenant: require('../locales/zh-CN/tenant'),
         system: require('../locales/zh-CN/system'),
         global: require('../locales/zh-CN/global'),

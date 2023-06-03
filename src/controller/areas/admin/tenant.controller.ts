@@ -26,7 +26,7 @@ import { Tenant } from '../../../entity/tenant.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 // import { Validate } from '@midwayjs/validate';
 
 @ApiTags(['tenant'])
@@ -79,7 +79,7 @@ export class TenantController {
       );
     }
     const mdl = await this.tenantService.createObject(<Tenant>dto);
-    return ajaxSuccessResult(mdl);
+    return ajaxSuccessResult(omit(mdl, ['deletedDate']));
   }
 
   @Put('/:id', { summary: '修改租户' })

@@ -26,7 +26,7 @@ import {
 import { Admin } from '../../../entity/admin.entity';
 import { Like } from 'typeorm';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
 
 @ApiTags(['admin'])
@@ -75,8 +75,14 @@ export class AdminController {
         this.i18nService.translate('name.exist.message', { group: 'admin' })
       );
     }
-    const mdl = await this.adminService.createAdmin(<Admin>dto);
-    return ajaxSuccessResult(mdl);
+    const { hash, salt } = encrypt(dto.password);
+    const mdl = await this.adminService.createObject(
+      <Admin>Object.assign({}, dto, {
+        password: hash,
+        salt,
+      })
+    );
+    return ajaxSuccessResult(omit(mdl, ['password', 'salt', 'deletedDate']));
   }
 
   @Put('/:id', { summary: '修改管理员' })

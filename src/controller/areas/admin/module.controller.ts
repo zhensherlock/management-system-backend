@@ -26,7 +26,7 @@ import { Module } from '../../../entity/module.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 
 @ApiTags(['module'])
 @Controller('/api/admin/module')
@@ -64,6 +64,15 @@ export class ModuleController {
     return ajaxListResult({ result });
   }
 
+  @Get('/tree', { summary: '查询模块树形列表' })
+  @ApiQuery({})
+  async getModuleTreeList(@Query() query: GetModuleListDTO) {
+    const list = await this.moduleService.getTreeList(query.keyword);
+    return ajaxListResult({
+      result: [list, list.length],
+    });
+  }
+
   @Post('/create', { summary: '新建模块' })
   @ApiBody({ description: '模块信息' })
   async createModule(@Body() dto: CreateModuleDTO) {
@@ -73,7 +82,7 @@ export class ModuleController {
       );
     }
     const mdl = await this.moduleService.createObject(<Module>dto);
-    return ajaxSuccessResult(mdl);
+    return ajaxSuccessResult(omit(mdl, ['deletedDate']));
   }
 
   @Put('/:id', { summary: '修改模块' })
