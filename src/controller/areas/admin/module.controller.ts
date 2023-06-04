@@ -81,6 +81,20 @@ export class ModuleController {
         this.i18nService.translate('name.exist.message', { group: 'module' })
       );
     }
+    if (
+      !isEmpty(dto.parentId) &&
+      !(await this.moduleService.exist({
+        where: {
+          id: dto.parentId,
+        },
+      }))
+    ) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('parent_id.base.message', {
+          group: 'module',
+        })
+      );
+    }
     const mdl = await this.moduleService.createObject(<Module>dto);
     return ajaxSuccessResult(omit(mdl, ['deletedDate']));
   }
@@ -98,6 +112,20 @@ export class ModuleController {
     if (await this.moduleService.checkNameExisted(dto.name, id)) {
       return ajaxErrorMessage(
         this.i18nService.translate('name.exist.message', { group: 'module' })
+      );
+    }
+    if (
+      !isEmpty(dto.parentId) &&
+      !(await this.moduleService.exist({
+        where: {
+          id: dto.parentId,
+        },
+      }))
+    ) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('parent_id.base.message', {
+          group: 'module',
+        })
       );
     }
     Object.assign(module, dto);

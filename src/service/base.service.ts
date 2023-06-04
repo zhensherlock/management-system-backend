@@ -30,6 +30,10 @@ export class BaseService<T> {
     });
   }
 
+  async exist(options?: FindManyOptions<T>) {
+    return await this.entityModel.exist(options);
+  }
+
   async getCount(options?: FindManyOptions<T>): Promise<number> {
     return await this.entityModel.count(options);
   }

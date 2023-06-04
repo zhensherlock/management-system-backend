@@ -21,7 +21,7 @@
   "url.base.message": "请输入正确的模块链接",
   "enabled.base.message": "请输入正确的模块状态",
   "options.base.message": "请输入正确的模块扩展配置信息",
-  "parent_id.base.message": "请输入正确的父级模块编号",
+  "parent_id.base.message": "请输入正确的父级模块",
   "is_leaf.base.message": "请输入正确的叶子节点标识",
   "expand.base.message": "请输入正确的默认展开标识",
   "sequence.base.message": "请输入正确的模块顺序",

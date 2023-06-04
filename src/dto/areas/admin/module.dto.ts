@@ -170,7 +170,7 @@ export class ModuleDTO {
   )
   url: string;
 
-  @ApiProperty({ example: true, description: '租户是否可用' })
+  @ApiProperty({ example: true, description: '模块是否可用' })
   @Rule(
     RuleType.boolean().error(
       handleError({
@@ -181,7 +181,7 @@ export class ModuleDTO {
   )
   enabled: boolean;
 
-  @ApiProperty({ example: {}, description: '租户扩展配置信息' })
+  @ApiProperty({ example: {}, description: '模块扩展配置信息' })
   @Rule(
     RuleType.object().error(
       handleError({
