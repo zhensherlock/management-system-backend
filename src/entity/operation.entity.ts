@@ -10,7 +10,11 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Module } from './module.entity';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 
 @Entity({
   name: 'operation',
@@ -25,7 +29,7 @@ export class Operation {
   @Column({ length: 191, nullable: true, comment: '操作按钮简介' })
   description: string;
 
-  @Column({ length: 191, nullable: true, comment: '操作按钮编号' })
+  @Column({ length: 191, nullable: true, comment: '操作按钮代码' })
   code: string;
 
   @Column({ default: true, comment: '操作按钮是否可用' })
@@ -42,7 +46,7 @@ export class Operation {
     length: 36,
     type: 'uuid',
     nullable: true,
-    comment: '模块编号',
+    comment: '所属模块编号',
   })
   moduleId: string;
 
@@ -50,6 +54,7 @@ export class Operation {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -58,6 +63,7 @@ export class Operation {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
@@ -66,6 +72,7 @@ export class Operation {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 
