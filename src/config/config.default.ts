@@ -76,6 +76,10 @@ export default {
         name: 'operation',
         description: 'Operation API Document',
       },
+      {
+        name: 'role',
+        description: 'Role API Document',
+      },
     ],
   },
   i18n: {
@@ -95,6 +99,8 @@ export default {
         // employee: require('../../locales/zh-CN/employee'),
         admin: require('../locales/zh-CN/admin'),
         module: require('../locales/zh-CN/module'),
+        operation: require('../locales/zh-CN/operation'),
+        role: require('../locales/zh-CN/role'),
         tenant: require('../locales/zh-CN/tenant'),
         system: require('../locales/zh-CN/system'),
         global: require('../locales/zh-CN/global'),

@@ -1,0 +1,15 @@
+{
+  "role": "角色",
+  "name.placeholder": "请输入角色名称",
+  "name.search.placeholder": "请输入角色名称",
+  "name.required.message": "请输入角色名称",
+  "name.exist.message": "角色名称已存在！",
+  "name.length.message": "角色名称请控制在100字符以内！",
+  "name.base.message": "请输入正确的角色名称",
+  "description.length.message": "角色介绍长度在150个字符以内",
+  "description.base.message": "请输入正确的角色介绍",
+  "enabled.base.message": "请输入正确的角色状态",
+  "options.base.message": "请输入正确的角色扩展配置信息",
+  "delete.success": "角色删除成功！",
+  "restore.success": "角色恢复成功！"
+}

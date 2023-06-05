@@ -8,7 +8,11 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 import { UserRoleMapping } from './user_role_mapping.entity';
 import { ModuleRoleMapping } from './module_role_mapping.entity';
 
@@ -35,6 +39,7 @@ export class Role {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -43,6 +48,7 @@ export class Role {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
@@ -51,6 +57,7 @@ export class Role {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 
