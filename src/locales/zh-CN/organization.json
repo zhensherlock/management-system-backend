@@ -1,0 +1,20 @@
+{
+  "organization": "组织",
+  "name.placeholder": "请输入组织名称",
+  "name.search.placeholder": "请输入组织名称",
+  "name.required.message": "请输入组织名称",
+  "name.exist.message": "组织名称已存在",
+  "name.length.message": "组织名称请控制在100字符以内",
+  "name.base.message": "请输入正确的组织名称",
+  "description.length.message": "组织介绍长度在150个字符以内",
+  "description.base.message": "请输入正确的组织介绍",
+  "type.base.message": "请输入正确的组织类型",
+  "code.length.message": "组织代码长度在100个字符以内",
+  "code.base.message": "请输入正确的组织代码",
+  "enabled.base.message": "请输入正确的组织状态",
+  "options.base.message": "请输入正确的组织扩展配置信息",
+  "tenant_id.base.message": "请选择正确的租户",
+  "parent_id.base.message": "请选择正确的父级组织",
+  "delete.success": "组织删除成功！",
+  "restore.success": "组织恢复成功！"
+}

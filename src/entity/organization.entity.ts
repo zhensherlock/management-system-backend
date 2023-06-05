@@ -10,7 +10,11 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 import { Tenant } from './tenant.entity';
 import { Device } from './device.entity';
 import { OrganizationUserMapping } from './organization_user_mapping.entity';
@@ -31,7 +35,7 @@ export class Organization {
   @Column({ comment: '组织类型' })
   type: number;
 
-  @Column({ length: 191, nullable: true, comment: '组织编号' })
+  @Column({ length: 191, nullable: true, comment: '组织代码' })
   code: string;
 
   @Column({ default: true, comment: '组织是否可用' })
@@ -62,6 +66,7 @@ export class Organization {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -70,6 +75,7 @@ export class Organization {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
@@ -78,6 +84,7 @@ export class Organization {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 

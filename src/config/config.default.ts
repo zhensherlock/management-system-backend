@@ -80,6 +80,10 @@ export default {
         name: 'role',
         description: 'Role API Document',
       },
+      {
+        name: 'organization',
+        description: 'Organization API Document',
+      },
     ],
   },
   i18n: {
@@ -102,6 +106,7 @@ export default {
         operation: require('../locales/zh-CN/operation'),
         role: require('../locales/zh-CN/role'),
         tenant: require('../locales/zh-CN/tenant'),
+        organization: require('../locales/zh-CN/organization'),
         system: require('../locales/zh-CN/system'),
         global: require('../locales/zh-CN/global'),
         validation: require('../locales/zh-CN/validation'),

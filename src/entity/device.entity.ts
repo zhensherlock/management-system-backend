@@ -11,7 +11,11 @@ import {
 } from 'typeorm';
 import { Tenant } from './tenant.entity';
 import { Organization } from './organization.entity';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 
 @Entity({
   name: 'device',
@@ -75,6 +79,7 @@ export class Device {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -83,6 +88,7 @@ export class Device {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
