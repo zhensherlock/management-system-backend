@@ -5,7 +5,7 @@
   "name.placeholder": "请输入管理员登录名",
   "name.search.placeholder": "请输入管理员登录名",
   "name.required.message": "请输入管理员登录名",
-  "name.exist.message": "管理员登录名已存在！",
+  "name.exist.message": "管理员登录名已存在",
   "name.length.message": "管理员登录名请控制在100字符以内！",
   "name.base.message": "请输入正确的管理员登录名",
   "password.required.message": "请输入管理员登录密码",

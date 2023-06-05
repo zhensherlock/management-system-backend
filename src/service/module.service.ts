@@ -25,26 +25,26 @@ export class ModuleService extends BaseService<Module> {
   }
 
   async getTreeList(keyword) {
-    const modules = await this.getList({
+    const list = await this.getList({
       where: {
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
       },
     });
-    const rootModules = modules.filter(module => !module.parentId);
+    const rootModules = list.filter(item => !item.parentId);
     const hierarchicalModules = [];
     for (const rootModule of rootModules) {
-      hierarchicalModules.push(this.getModuleTree(rootModule, modules));
+      hierarchicalModules.push(this.getModuleTree(rootModule, list));
     }
     return hierarchicalModules;
   }
 
-  private getModuleTree(module: Module, allModules: Module[]) {
-    const children = allModules.filter(child => child.parentId === module.id);
+  private getModuleTree(mdl: Module, allModules: Module[]) {
+    const children = allModules.filter(item => item.parentId === item.id);
     if (children.length > 0) {
-      module.children = children.map(child =>
+      mdl.children = children.map(child =>
         this.getModuleTree(child, allModules)
       );
     }
-    return module;
+    return mdl;
   }
 }
