@@ -111,6 +111,7 @@ export class OperationDTO {
   @ApiProperty({ example: null, description: '所属模块编号' })
   @Rule(
     RuleType.string()
+      .required()
       .uuid({ separator: false })
       .error(
         handleError({
@@ -126,4 +127,18 @@ export class CreateOperationDTO extends OperationDTO {}
 
 export class UpdateOperationDTO extends OperationDTO {}
 
-export class GetOperationListDTO extends GetListBaseDTO {}
+export class GetOperationListDTO extends GetListBaseDTO {
+  @ApiProperty({ description: '所属模块编号', example: null })
+  @Rule(
+    RuleType.string()
+      .uuid({ separator: false })
+      .empty('')
+      .error(
+        handleError({
+          message: 'i18n:module_id.base.message',
+          options: { group: 'operation' },
+        })
+      )
+  )
+  module: string;
+}

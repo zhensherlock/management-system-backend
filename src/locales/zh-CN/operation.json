@@ -12,7 +12,7 @@
   "enabled.base.message": "请输入正确的操作按钮状态",
   "options.base.message": "请输入正确的操作按钮扩展配置信息",
   "sequence.base.message": "请输入正确的操作按钮顺序",
-  "module_id.base.message": "请输入正确的模块",
+  "module_id.base.message": "请输入选择的所属模块",
   "delete.success": "操作按钮删除成功！",
   "restore.success": "操作按钮恢复成功！"
 }

@@ -38,7 +38,7 @@ export class Operation {
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
 
-  @Column({ comment: '操作按钮顺序' })
+  @Column({ default: 0, comment: '操作按钮顺序' })
   sequence: number;
 
   @Column({

@@ -72,6 +72,10 @@ export default {
         name: 'module',
         description: 'Module API Document',
       },
+      {
+        name: 'operation',
+        description: 'Operation API Document',
+      },
     ],
   },
   i18n: {

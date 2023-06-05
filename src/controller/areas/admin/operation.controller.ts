@@ -62,6 +62,7 @@ export class OperationController {
           ...(isEmpty(query.keyword)
             ? {}
             : { name: Like(`%${query.keyword}%`) }),
+          ...(isEmpty(query.module) ? {} : { moduleId: query.module }),
         },
       }
     );
