@@ -24,7 +24,7 @@ export class Device {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '设备编号' })
   id: string;
 
-  @Column({ length: 191, comment: '设备名字' })
+  @Column({ length: 191, comment: '设备名称' })
   name: string;
 
   @Column({ length: 191, nullable: true, comment: '设备简介' })
@@ -60,6 +60,9 @@ export class Device {
 
   @Column({ type: 'double', nullable: true, comment: '设备经度' })
   longitude: number;
+
+  @Column({ default: true, comment: '设备是否可用' })
+  enabled: boolean;
 
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
@@ -97,6 +100,7 @@ export class Device {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 
