@@ -30,7 +30,7 @@ import { isEmpty, omit } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
 
 @ApiTags(['user'])
-@Controller('/api/user/user')
+@Controller('/api/admin/user')
 export class UserController {
   @Inject()
   ctx: Context;
