@@ -92,6 +92,10 @@ export default {
         name: 'device',
         description: 'Device API Document',
       },
+      {
+        name: 'user',
+        description: 'User API Document',
+      },
     ],
   },
   i18n: {
@@ -107,9 +111,9 @@ export default {
       },
       zh_CN: {
         // default: require('../../locales/zh_CN'),
-        // user: require('../../locales/zh-CN/user'),
         // employee: require('../../locales/zh-CN/employee'),
         admin: require('../locales/zh-CN/admin'),
+        user: require('../../locales/zh-CN/user'),
         module: require('../locales/zh-CN/module'),
         operation: require('../locales/zh-CN/operation'),
         role: require('../locales/zh-CN/role'),

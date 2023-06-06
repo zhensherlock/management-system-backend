@@ -10,7 +10,11 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 import { UserRoleMapping } from './user_role_mapping.entity';
 import { OrganizationUserMapping } from './organization_user_mapping.entity';
 import { Tenant } from './tenant.entity';
@@ -25,10 +29,16 @@ export class User {
   @Column({ length: 191, comment: '用户名' })
   name: string;
 
-  @Column({ length: 191, nullable: true, comment: '用户密码' })
+  @Column({ length: 191, nullable: true, comment: '管理员邮箱' })
+  email: string;
+
+  @Column({ length: 1, comment: '用户类型' })
+  type: string;
+
+  @Column({ length: 191, comment: '用户密码', select: false })
   password: string;
 
-  @Column({ length: 191, nullable: true, comment: '用户密码盐' })
+  @Column({ length: 191, comment: '用户密码盐', select: false })
   salt: string;
 
   @Column({
@@ -42,8 +52,8 @@ export class User {
   @Column({ length: 191, nullable: true, comment: '用户简介' })
   description: string;
 
-  @Column({ type: 'int', comment: '用户类型' })
-  type: number;
+  @Column({ default: true, comment: '用户是否可用' })
+  enabled: boolean;
 
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
@@ -55,6 +65,7 @@ export class User {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -63,6 +74,7 @@ export class User {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
@@ -71,6 +83,7 @@ export class User {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 
