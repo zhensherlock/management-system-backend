@@ -60,6 +60,7 @@ export class OrganizationController {
       {
         where: {
           type: query.type,
+          tenantId: query.tenantId,
           ...(isEmpty(query.keyword)
             ? {}
             : { name: Like(`%${query.keyword}%`) }),
@@ -72,7 +73,11 @@ export class OrganizationController {
   @Get('/tree', { summary: '查询组织树形列表' })
   @ApiQuery({})
   async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
-    const list = await this.organizationService.getTreeList(query.keyword);
+    const list = await this.organizationService.getTreeList(
+      query.tenantId,
+      query.type,
+      query.keyword
+    );
     return ajaxListResult({
       result: [list, list.length],
     });

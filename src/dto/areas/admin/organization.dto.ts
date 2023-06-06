@@ -145,6 +145,20 @@ export class CreateOrganizationDTO extends OrganizationDTO {}
 export class UpdateOrganizationDTO extends OrganizationDTO {}
 
 export class GetOrganizationListDTO extends GetListBaseDTO {
+  @ApiProperty({ example: null, description: '租户编号' })
+  @Rule(
+    RuleType.string()
+      .required()
+      .uuid({ separator: false })
+      .error(
+        handleError({
+          message: 'i18n:tenant_id.base.message',
+          options: { group: 'organization' },
+        })
+      )
+  )
+  tenantId: string;
+
   @ApiProperty({ example: 1, description: '组织类型' })
   @Rule(
     RuleType.number()

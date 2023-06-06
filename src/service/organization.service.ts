@@ -14,10 +14,12 @@ export class OrganizationService extends BaseService<Organization> {
     super();
   }
 
-  async getTreeListByJoin(keyword) {
+  async getTreeListByJoin(tenantId, type, keyword) {
     const query = this.entityModel
       .createQueryBuilder('organization')
-      .where('organization.parent_id IS NULL');
+      .where('organization.parent_id IS NULL')
+      .andWhere('organization.tenant_id = :tenantId', { tenantId })
+      .andWhere('organization.type = :type', { type });
     if (!isEmpty(keyword)) {
       query.andWhere('organization.name LIKE :name', { name: `%${keyword}%` });
     }
@@ -26,9 +28,11 @@ export class OrganizationService extends BaseService<Organization> {
       .getMany();
   }
 
-  async getTreeList(keyword) {
+  async getTreeList(tenantId, type, keyword) {
     const list = await this.getList({
       where: {
+        type,
+        tenantId,
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
       },
     });
