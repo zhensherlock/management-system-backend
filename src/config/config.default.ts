@@ -88,6 +88,10 @@ export default {
         name: 'employee',
         description: 'Employee API Document',
       },
+      {
+        name: 'device',
+        description: 'Device API Document',
+      },
     ],
   },
   i18n: {
@@ -112,6 +116,7 @@ export default {
         tenant: require('../locales/zh-CN/tenant'),
         organization: require('../locales/zh-CN/organization'),
         employee: require('../locales/zh-CN/employee'),
+        device: require('../locales/zh-CN/device'),
         system: require('../locales/zh-CN/system'),
         global: require('../locales/zh-CN/global'),
         validation: require('../locales/zh-CN/validation'),

@@ -68,7 +68,6 @@ export class EmployeeDTO {
     RuleType.string()
       .required()
       .max(1)
-      .empty('')
       .trim(true)
       .valid(...Object.values(EmployeeSex))
       .error(
