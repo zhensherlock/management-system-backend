@@ -11,7 +11,11 @@ import {
 } from 'typeorm';
 import { Tenant } from './tenant.entity';
 import { Organization } from './organization.entity';
-import { generateUUID } from '../util';
+import {
+  createDateTransformer,
+  generateUUID,
+  updatedDateTransformer,
+} from '../util';
 
 @Entity({
   name: 'employee',
@@ -19,6 +23,9 @@ import { generateUUID } from '../util';
 export class Employee {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '员工编号' })
   id: string;
+
+  @Column({ name: 'job_number', length: 191, comment: '员工工号' })
+  jobNumber: string;
 
   @Column({ length: 191, comment: '员工姓名' })
   name: string;
@@ -43,6 +50,9 @@ export class Employee {
   })
   idCard: string;
 
+  @Column({ default: '1', length: 1, comment: '员工状态' })
+  status: string;
+
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
 
@@ -61,6 +71,7 @@ export class Employee {
     name: 'created_date',
     type: 'timestamp',
     comment: '添加时间',
+    transformer: createDateTransformer,
   })
   createdDate: Date;
 
@@ -69,6 +80,7 @@ export class Employee {
     type: 'timestamp',
     nullable: true,
     comment: '修改时间',
+    transformer: updatedDateTransformer,
   })
   updatedDate: Date;
 
@@ -77,6 +89,7 @@ export class Employee {
     type: 'timestamp',
     nullable: true,
     comment: '删除时间',
+    select: false,
   })
   deletedDate: Date;
 
