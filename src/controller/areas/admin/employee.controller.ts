@@ -63,6 +63,10 @@ export class EmployeeController {
       query.pageSize,
       {
         where: {
+          tenantId: query.tenantId,
+          ...(isEmpty(query.organizationId)
+            ? {}
+            : { organizationId: query.organizationId }),
           ...(isEmpty(query.keyword)
             ? {}
             : { name: Like(`%${query.keyword}%`) }),
