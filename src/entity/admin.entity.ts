@@ -26,12 +26,11 @@ export class Admin {
   @Column({ length: 191, nullable: true, comment: '管理员邮箱' })
   email: string;
 
-  @Column({ length: 191, nullable: true, comment: '管理员密码', select: false })
+  @Column({ length: 191, comment: '管理员密码', select: false })
   password: string;
 
   @Column({
     length: 191,
-    nullable: true,
     comment: '管理员密码盐',
     select: false,
   })

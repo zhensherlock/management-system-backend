@@ -70,11 +70,11 @@ export class AdminDTO {
         handleErrors({
           'string.max': {
             message: 'i18n:real_name.length.message',
-            options: { group: 'tenant' },
+            options: { group: 'admin' },
           },
           '*': {
             message: 'i18n:real_name.base.message',
-            options: { group: 'tenant' },
+            options: { group: 'admin' },
           },
         })
       )
@@ -91,11 +91,11 @@ export class AdminDTO {
         handleErrors({
           'string.max': {
             message: 'i18n:description.length.message',
-            options: { group: 'tenant' },
+            options: { group: 'admin' },
           },
           '*': {
             message: 'i18n:description.base.message',
-            options: { group: 'tenant' },
+            options: { group: 'admin' },
           },
         })
       )
@@ -107,7 +107,7 @@ export class AdminDTO {
     RuleType.boolean().error(
       handleError({
         message: 'i18n:enabled.base.message',
-        options: { group: 'tenant' },
+        options: { group: 'admin' },
       })
     )
   )
@@ -118,7 +118,7 @@ export class AdminDTO {
     RuleType.object().error(
       handleError({
         message: 'i18n:options.base.message',
-        options: { group: 'tenant' },
+        options: { group: 'admin' },
       })
     )
   )
