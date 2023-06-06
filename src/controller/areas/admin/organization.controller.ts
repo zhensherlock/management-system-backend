@@ -59,6 +59,7 @@ export class OrganizationController {
       query.pageSize,
       {
         where: {
+          type: query.type,
           ...(isEmpty(query.keyword)
             ? {}
             : { name: Like(`%${query.keyword}%`) }),
@@ -148,6 +149,19 @@ export class OrganizationController {
     ) {
       return ajaxErrorMessage(
         this.i18nService.translate('parent_id.base.message', {
+          group: 'organization',
+        })
+      );
+    }
+    if (
+      !(await this.tenantService.exist({
+        where: {
+          id: dto.tenantId,
+        },
+      }))
+    ) {
+      return ajaxErrorMessage(
+        this.i18nService.translate('tenant_id.base.message', {
           group: 'organization',
         })
       );

@@ -58,6 +58,7 @@ export class OrganizationDTO {
   @ApiProperty({ example: 1, description: '组织类型' })
   @Rule(
     RuleType.number()
+      .required()
       .valid(...Object.values(OrganizationType))
       .error(
         handleError({
@@ -143,4 +144,18 @@ export class CreateOrganizationDTO extends OrganizationDTO {}
 
 export class UpdateOrganizationDTO extends OrganizationDTO {}
 
-export class GetOrganizationListDTO extends GetListBaseDTO {}
+export class GetOrganizationListDTO extends GetListBaseDTO {
+  @ApiProperty({ example: 1, description: '组织类型' })
+  @Rule(
+    RuleType.number()
+      .required()
+      .valid(...Object.values(OrganizationType))
+      .error(
+        handleError({
+          message: 'i18n:type.base.message',
+          options: { group: 'organization' },
+        })
+      )
+  )
+  type: number;
+}
