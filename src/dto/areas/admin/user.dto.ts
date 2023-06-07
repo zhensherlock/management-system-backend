@@ -60,6 +60,23 @@ export class UserDTO {
   )
   email: string;
 
+  @ApiProperty({ example: '123456789999', description: '用户电话' })
+  @Rule(
+    RuleType.string()
+      .empty('')
+      .trim(true)
+      .pattern(
+        /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/
+      )
+      .error(
+        handleError({
+          message: 'i18n:tel.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  tel: string;
+
   @ApiProperty({ example: '1', description: '用户类型' })
   @Rule(
     RuleType.string()

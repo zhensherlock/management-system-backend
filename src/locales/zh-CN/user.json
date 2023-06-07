@@ -13,6 +13,7 @@
   "password.base.message": "请输入有效的用户登录密码（必须包含大小写字母和数字的组合，支持特殊字符，长度在8-10之间）",
   "email.length.message": "用户邮箱长度在100个字符以内",
   "email.base.message": "请输入正确的用户邮箱",
+  "tel.base.message": "请输入正确的电话号码",
   "real_name.length.message": "用户真实姓名长度在100个字符以内",
   "real_name.base.message": "请输入正确的用户真实姓名",
   "description.length.message": "用户介绍长度在150个字符以内",

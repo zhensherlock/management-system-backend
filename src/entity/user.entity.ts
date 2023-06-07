@@ -29,8 +29,11 @@ export class User {
   @Column({ length: 191, comment: '用户名' })
   name: string;
 
-  @Column({ length: 191, nullable: true, comment: '管理员邮箱' })
+  @Column({ length: 191, nullable: true, comment: '用邮箱' })
   email: string;
+
+  @Column({ length: 191, nullable: true, comment: '用户电话' })
+  tel: string;
 
   @Column({ length: 1, comment: '用户类型' })
   type: string;
