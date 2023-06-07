@@ -27,10 +27,11 @@ import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
+import { BaseAdminController } from './base/base.admin.controller';
 
 @ApiTags(['module'])
 @Controller('/api/admin/module')
-export class ModuleController {
+export class ModuleController extends BaseAdminController {
   @Inject()
   ctx: Context;
 

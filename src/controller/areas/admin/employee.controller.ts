@@ -29,10 +29,11 @@ import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { TenantService } from '../../../service/tenant.service';
 import { OrganizationService } from '../../../service/organization.service';
+import { BaseAdminController } from './base/base.admin.controller';
 
 @ApiTags(['employee'])
 @Controller('/api/admin/employee')
-export class EmployeeController {
+export class EmployeeController extends BaseAdminController {
   @Inject()
   ctx: Context;
 

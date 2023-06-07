@@ -5,10 +5,11 @@ import { SystemConfigService } from '../../../service/system_config.service';
 import { UpdateSystemConfigDTO } from '../../../dto/areas/admin/system_confirm.dto';
 import { SystemConfig } from '../../../entity/system_config.entity';
 import { ApiBody, ApiTags } from '@midwayjs/swagger';
+import { BaseAdminController } from './base/base.admin.controller';
 
 @ApiTags(['system_config'])
 @Controller('/api/admin/sys')
-export class SystemConfigController {
+export class SystemConfigController extends BaseAdminController {
   @Inject()
   ctx: Context;
 

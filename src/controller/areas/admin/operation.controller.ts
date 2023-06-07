@@ -28,10 +28,11 @@ import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { ModuleService } from '../../../service/module.service';
+import { BaseAdminController } from './base/base.admin.controller';
 
 @ApiTags(['operation'])
 @Controller('/api/admin/operation')
-export class OperationController {
+export class OperationController extends BaseAdminController {
   @Inject()
   ctx: Context;
 
