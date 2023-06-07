@@ -60,6 +60,23 @@ export class AdminDTO {
   )
   email: string;
 
+  @ApiProperty({ example: '123456789999', description: '管理员电话' })
+  @Rule(
+    RuleType.string()
+      .empty('')
+      .trim(true)
+      .pattern(
+        /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/
+      )
+      .error(
+        handleError({
+          message: 'i18n:tel.base.message',
+          options: { group: 'admin' },
+        })
+      )
+  )
+  tel: string;
+
   @ApiProperty({ example: 'Michael', description: '管理员真实姓名' })
   @Rule(
     RuleType.string()
