@@ -13,6 +13,9 @@ import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
 import { ValidateErrorFilter } from './filter/validate.filter';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 @Configuration({
   imports: [

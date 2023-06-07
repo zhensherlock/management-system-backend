@@ -12,6 +12,10 @@ export default {
       default: {
         type: 'mysql',
         timezone: '+08:00',
+        host: process.env.MYSQL_HOST,
+        port: parseInt(process.env.MYSQL_PORT),
+        username: process.env.MYSQL_USERNAME,
+        password: process.env.MYSQL_PASSWORD,
         database: 'smart_security',
         charset: 'utf8mb4',
         synchronize: true, // 如果第一次使用，不存在表，有同步的需求可以写 true，注意会丢数据
@@ -23,6 +27,9 @@ export default {
   },
   redis: {
     client: {
+      port: process.env.REDIS_PORT,
+      host: process.env.REDIS_HOST,
+      password: process.env.REDIS_PASSWORD,
       db: 0,
     },
     globalConfig: {
