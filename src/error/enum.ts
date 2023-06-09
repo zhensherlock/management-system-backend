@@ -1,7 +1,8 @@
 import { registerErrorCode } from '@midwayjs/core';
 
 export const FrameworkErrorEnum = registerErrorCode('hy', {
-  UNKNOWN: 10000,
-  COMMON: 10001,
-  PARAM: 10002,
+  WARNING: 10000,
+  UNKNOWN: 10001,
+  COMMON: 10002,
+  PARAM: 10003,
 } as const);

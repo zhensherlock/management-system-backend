@@ -17,6 +17,7 @@ import { TranslateValidateErrorFilter } from './filter/translate.validate.filter
 import * as dotenv from 'dotenv';
 import { ParameterErrorFilter } from './filter/parameter.error.filter';
 import { CommonErrorFilter } from './filter/common.error.filter';
+import { CommonWarningFilter } from './filter/common.warning.filter';
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ export class ContainerLifeCycle {
     this.app.useFilter([
       NotFoundFilter,
       CommonErrorFilter,
+      CommonWarningFilter,
       ParameterErrorFilter,
       ValidateErrorFilter,
       TranslateValidateErrorFilter,
