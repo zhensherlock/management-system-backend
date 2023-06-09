@@ -1,8 +1,8 @@
-import ms, { StringValue } from 'ms';
-import * as dayjs from 'dayjs';
+import ms from 'ms';
+import dayjs from 'dayjs';
 import { isNil, isDate } from 'lodash';
 
-export const formatToMS = (value: StringValue): number => {
+export const formatToMS = value => {
   return ms(value);
 };
 

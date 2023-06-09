@@ -19,5 +19,5 @@ export const tryParseJSON = str => {
     // handle error
   }
 
-  return str;
+  return void 0;
 };
