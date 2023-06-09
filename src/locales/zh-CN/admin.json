@@ -30,5 +30,7 @@
   "create": "新增管理员",
   "update": "修改管理员",
   "delete.confirm.content": "确定要删除 {name} 管理员？",
-  "delete.success": "管理员删除成功！"
+  "delete.success": "管理员删除成功！",
+  "admin.nonexistence.message": "管理员不存在",
+  "admin.disabled.message": "此管理员已被禁用"
 }

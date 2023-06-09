@@ -3,14 +3,13 @@ import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
 import { PickKeysByType } from 'typeorm/common/PickKeysByType';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { isEmpty } from 'lodash';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
 export class BaseService<T> {
   entityModel: Repository<T | any>;
 
-  async getOneObject(): Promise<T> {
-    return await this.entityModel.findOne({
-      where: {},
-    });
+  async getOneObject(options: FindOneOptions<T> = { where: {} }): Promise<T> {
+    return await this.entityModel.findOne(options);
   }
 
   async getObjectById(id: string): Promise<T> {
