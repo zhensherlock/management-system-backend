@@ -1,5 +1,7 @@
 import { MidwayConfig } from '@midwayjs/core';
 
+const redisGlobalConfigPrefix = 'ss';
+
 export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1684229751344_9182',
@@ -33,7 +35,7 @@ export default {
       db: 0,
     },
     globalConfig: {
-      Prefix: 'ss:',
+      prefix: redisGlobalConfigPrefix,
     },
   },
   jwt: {
@@ -43,6 +45,7 @@ export default {
       expiresIn: '5d',
     },
     expiresIn: '1m', // https://github.com/vercel/ms
+    cacheKeyPrefix: `${redisGlobalConfigPrefix}:passport`,
   },
   midwayLogger: {
     default: {

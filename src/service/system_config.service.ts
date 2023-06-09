@@ -26,7 +26,7 @@ export class SystemConfigService extends BaseService<SystemConfig> {
 
   async getSystemConfig(): Promise<SystemConfig> {
     let mdl: SystemConfig;
-    const redisKey = `${this.redisConfig.globalPrefix}${this.key}`;
+    const redisKey = `${this.redisConfig.prefix}:${this.key}`;
     const exist = (await this.redisService.exists(redisKey)) === 1;
     if (exist) {
       mdl = JSON.parse(await this.redisService.get(redisKey));
@@ -40,7 +40,7 @@ export class SystemConfigService extends BaseService<SystemConfig> {
   async updateSystemConfig(entity: SystemConfig): Promise<SystemConfig> {
     const mdl = await this.getSystemConfig();
     const result = await this.updateObject(mdl.id, entity);
-    const redisKey = `${this.redisConfig.globalPrefix}${this.key}`;
+    const redisKey = `${this.redisConfig.prefix}:${this.key}`;
     this.redisService.del(redisKey);
     return result;
   }
