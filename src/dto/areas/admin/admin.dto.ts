@@ -1,7 +1,7 @@
 import { Rule, RuleType } from '@midwayjs/validate';
 import { ApiProperty } from '@midwayjs/swagger';
 import { GetListBaseDTO } from '../../base.dto';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 
 export class AdminDTO {
   @ApiProperty({ example: 'admin1', description: '管理员登录名' })
@@ -11,7 +11,7 @@ export class AdminDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'admin' },
@@ -42,7 +42,7 @@ export class AdminDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:email.length.message',
             options: { group: 'admin' },
@@ -69,7 +69,7 @@ export class AdminDTO {
         /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/
       )
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tel.base.message',
           options: { group: 'admin' },
         })
@@ -84,7 +84,7 @@ export class AdminDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:real_name.length.message',
             options: { group: 'admin' },
@@ -105,7 +105,7 @@ export class AdminDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'admin' },
@@ -122,7 +122,7 @@ export class AdminDTO {
   @ApiProperty({ example: true, description: '管理员是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'admin' },
       })
@@ -133,7 +133,7 @@ export class AdminDTO {
   @ApiProperty({ example: {}, description: '管理员扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'admin' },
       })
@@ -143,14 +143,14 @@ export class AdminDTO {
 }
 
 export class CreateAdminDTO extends AdminDTO {
-  @ApiProperty({ example: {}, description: '管理员密码' })
+  @ApiProperty({ example: '', description: '管理员密码' })
   @Rule(
     RuleType.string()
       .required()
       .trim(true)
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:password.required.message',
             options: { group: 'admin' },
@@ -170,13 +170,13 @@ export class CreateAdminDTO extends AdminDTO {
 }
 
 export class UpdateAdminDTO extends AdminDTO {
-  @ApiProperty({ example: {}, description: '管理员新密码' })
+  @ApiProperty({ example: '', description: '管理员新密码' })
   @Rule(
     RuleType.string()
       .trim(true)
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:new_password.base.message',
           options: { group: 'admin' },
         })
@@ -193,14 +193,14 @@ export class UpdateAdminPasswordDTO {
   // @Rule(RuleType.string().max(36).required().trim(true))
   // id: string;
 
-  @ApiProperty({ example: {}, description: '管理员旧密码' })
+  @ApiProperty({ example: '', description: '管理员旧密码' })
   @Rule(
     RuleType.string()
       .max(100)
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:old_password.required.message',
             options: { group: 'admin' },
@@ -218,7 +218,7 @@ export class UpdateAdminPasswordDTO {
   )
   old_password: string;
 
-  @ApiProperty({ example: {}, description: '管理员新密码' })
+  @ApiProperty({ example: '', description: '管理员新密码' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -229,7 +229,7 @@ export class UpdateAdminPasswordDTO {
   )
   new_password: string;
 
-  @ApiProperty({ example: {}, description: '管理员确认新密码' })
+  @ApiProperty({ example: '', description: '管理员确认新密码' })
   @Rule(
     RuleType.string()
       .max(100)

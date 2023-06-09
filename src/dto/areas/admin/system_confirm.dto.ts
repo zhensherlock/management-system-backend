@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { ApiProperty } from '@midwayjs/swagger';
 
 export class SystemConfigDTO {
@@ -10,7 +10,7 @@ export class SystemConfigDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'system' },
@@ -38,7 +38,7 @@ export class SystemConfigDTO {
       .max(150)
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'system' },
@@ -55,7 +55,7 @@ export class SystemConfigDTO {
   @ApiProperty({ example: {}, description: '系统扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'system' },
       })

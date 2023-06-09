@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
@@ -11,7 +11,7 @@ export class ModuleDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'module' },
@@ -40,7 +40,7 @@ export class ModuleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'module' },
@@ -57,7 +57,7 @@ export class ModuleDTO {
   @ApiProperty({ example: 1, description: '模块级别' })
   @Rule(
     RuleType.number().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:level.base.message',
         options: { group: 'module' },
       })
@@ -72,7 +72,7 @@ export class ModuleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:code.length.message',
             options: { group: 'module' },
@@ -93,7 +93,7 @@ export class ModuleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:icon.length.message',
             options: { group: 'module' },
@@ -114,7 +114,7 @@ export class ModuleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:target.length.message',
             options: { group: 'module' },
@@ -135,7 +135,7 @@ export class ModuleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:component.length.message',
             options: { group: 'module' },
@@ -156,7 +156,7 @@ export class ModuleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:url.length.message',
             options: { group: 'module' },
@@ -173,7 +173,7 @@ export class ModuleDTO {
   @ApiProperty({ example: true, description: '模块是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'module' },
       })
@@ -184,7 +184,7 @@ export class ModuleDTO {
   @ApiProperty({ example: {}, description: '模块扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'module' },
       })
@@ -197,7 +197,7 @@ export class ModuleDTO {
     RuleType.string()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:parent_id.base.message',
           options: { group: 'module' },
         })
@@ -208,7 +208,7 @@ export class ModuleDTO {
   @ApiProperty({ example: true, description: '是否叶子节点' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:is_leaf.base.message',
         options: { group: 'module' },
       })
@@ -219,7 +219,7 @@ export class ModuleDTO {
   @ApiProperty({ example: false, description: '默认是否展开' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:expand.base.message',
         options: { group: 'module' },
       })
@@ -230,7 +230,7 @@ export class ModuleDTO {
   @ApiProperty({ example: 0, description: '模块顺序' })
   @Rule(
     RuleType.number().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:sequence.base.message',
         options: { group: 'module' },
       })

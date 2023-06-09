@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
@@ -11,7 +11,7 @@ export class TenantDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'tenant' },
@@ -40,7 +40,7 @@ export class TenantDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'tenant' },
@@ -61,7 +61,7 @@ export class TenantDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:address.length.message',
             options: { group: 'tenant' },
@@ -82,7 +82,7 @@ export class TenantDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:country.length.message',
             options: { group: 'tenant' },
@@ -103,7 +103,7 @@ export class TenantDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:province.length.message',
             options: { group: 'tenant' },
@@ -124,7 +124,7 @@ export class TenantDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:city.length.message',
             options: { group: 'tenant' },
@@ -144,7 +144,7 @@ export class TenantDTO {
       .min(-90)
       .max(90)
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:latitude.base.message',
           options: { group: 'tenant' },
         })
@@ -158,7 +158,7 @@ export class TenantDTO {
       .min(-180)
       .max(180)
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:longitude.base.message',
           options: { group: 'tenant' },
         })
@@ -169,7 +169,7 @@ export class TenantDTO {
   @ApiProperty({ example: true, description: '租户是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'tenant' },
       })
@@ -180,7 +180,7 @@ export class TenantDTO {
   @ApiProperty({ example: {}, description: '租户扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'tenant' },
       })
@@ -191,7 +191,7 @@ export class TenantDTO {
   @ApiProperty({ example: 0, description: '租户顺序' })
   @Rule(
     RuleType.number().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:sequence.base.message',
         options: { group: 'tenant' },
       })

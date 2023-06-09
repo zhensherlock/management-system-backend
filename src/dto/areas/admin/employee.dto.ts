@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 import { EmployeeSex, EmployeeStatus } from '../../../constant';
@@ -12,7 +12,7 @@ export class EmployeeDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:job_number.required.message',
             options: { group: 'employee' },
@@ -41,7 +41,7 @@ export class EmployeeDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'employee' },
@@ -71,7 +71,7 @@ export class EmployeeDTO {
       .trim(true)
       .valid(...Object.values(EmployeeSex))
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:sex.base.message',
           options: { group: 'employee' },
         })
@@ -86,7 +86,7 @@ export class EmployeeDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:avatar.length.message',
             options: { group: 'employee' },
@@ -107,7 +107,7 @@ export class EmployeeDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'employee' },
@@ -124,7 +124,7 @@ export class EmployeeDTO {
   @ApiProperty({ example: new Date(), description: '员工生日' })
   @Rule(
     RuleType.date().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:birthday.base.message',
         options: { group: 'employee' },
       })
@@ -139,7 +139,7 @@ export class EmployeeDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:id_card.length.message',
             options: { group: 'employee' },
@@ -162,7 +162,7 @@ export class EmployeeDTO {
       .trim(true)
       .valid(...Object.values(EmployeeStatus))
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:status.base.message',
           options: { group: 'employee' },
         })
@@ -173,7 +173,7 @@ export class EmployeeDTO {
   @ApiProperty({ example: {}, description: '员工扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'employee' },
       })
@@ -187,7 +187,7 @@ export class EmployeeDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tenant_id.base.message',
           options: { group: 'employee' },
         })
@@ -201,7 +201,7 @@ export class EmployeeDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:organization_id.base.message',
           options: { group: 'employee' },
         })
@@ -221,7 +221,7 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tenant_id.base.message',
           options: { group: 'employee' },
         })
@@ -235,7 +235,7 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
       .empty('')
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:organization_id.base.message',
           options: { group: 'employee' },
         })

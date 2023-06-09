@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
@@ -11,7 +11,7 @@ export class OperationDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'operation' },
@@ -40,7 +40,7 @@ export class OperationDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'operation' },
@@ -61,7 +61,7 @@ export class OperationDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:code.length.message',
             options: { group: 'operation' },
@@ -78,7 +78,7 @@ export class OperationDTO {
   @ApiProperty({ example: true, description: '操作按钮是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'operation' },
       })
@@ -89,7 +89,7 @@ export class OperationDTO {
   @ApiProperty({ example: {}, description: '操作按钮扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'operation' },
       })
@@ -100,7 +100,7 @@ export class OperationDTO {
   @ApiProperty({ example: 0, description: '操作按钮顺序' })
   @Rule(
     RuleType.number().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:sequence.base.message',
         options: { group: 'operation' },
       })
@@ -114,7 +114,7 @@ export class OperationDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:module_id.base.message',
           options: { group: 'operation' },
         })
@@ -134,7 +134,7 @@ export class GetOperationListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .empty('')
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:module_id.base.message',
           options: { group: 'operation' },
         })

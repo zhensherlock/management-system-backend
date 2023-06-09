@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 import { OrganizationType } from '../../../constant';
@@ -12,7 +12,7 @@ export class OrganizationDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'organization' },
@@ -41,7 +41,7 @@ export class OrganizationDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'organization' },
@@ -61,7 +61,7 @@ export class OrganizationDTO {
       .required()
       .valid(...Object.values(OrganizationType))
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:type.base.message',
           options: { group: 'organization' },
         })
@@ -76,7 +76,7 @@ export class OrganizationDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:code.length.message',
             options: { group: 'organization' },
@@ -93,7 +93,7 @@ export class OrganizationDTO {
   @ApiProperty({ example: true, description: '组织是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'organization' },
       })
@@ -104,7 +104,7 @@ export class OrganizationDTO {
   @ApiProperty({ example: {}, description: '组织扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'organization' },
       })
@@ -118,7 +118,7 @@ export class OrganizationDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tenant_id.base.message',
           options: { group: 'organization' },
         })
@@ -131,7 +131,7 @@ export class OrganizationDTO {
     RuleType.string()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:parent_id.base.message',
           options: { group: 'organization' },
         })
@@ -151,7 +151,7 @@ export class GetOrganizationListDTO extends GetListBaseDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tenant_id.base.message',
           options: { group: 'organization' },
         })
@@ -165,7 +165,7 @@ export class GetOrganizationListDTO extends GetListBaseDTO {
       .required()
       .valid(...Object.values(OrganizationType))
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:type.base.message',
           options: { group: 'organization' },
         })

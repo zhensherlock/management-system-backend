@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError } from '../error';
+import { handleParameterError } from '../error';
 import { ApiProperty } from '@midwayjs/swagger';
 
 export class GetListBaseDTO {
@@ -12,7 +12,7 @@ export class GetListBaseDTO {
     RuleType.number()
       .integer()
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:current_page.validate.base.message',
           options: { group: 'validation' },
         })
@@ -25,7 +25,7 @@ export class GetListBaseDTO {
     RuleType.number()
       .integer()
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:page_size.validate.base.message',
           options: { group: 'validation' },
         })

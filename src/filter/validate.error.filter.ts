@@ -9,17 +9,18 @@ import { tryParseJSON } from '../util';
 export class ValidateErrorFilter {
   async catch(err: MidwayValidationError, ctx: Context) {
     let message = err.message;
+    const code = err.code;
     const i18nService = await ctx.requestContext.getAsync(MidwayI18nService);
     const obj = tryParseJSON(err.message);
     if (isObject(obj)) {
-      message = obj.message;
-      if (obj.message.startsWith('i18n:')) {
-        const i18nKey = obj.message.match(/^i18n:(.*)$/)[1];
+      message = obj.text;
+      if (message.startsWith('i18n:')) {
+        const i18nKey = message.match(/^i18n:(.*)$/)[1];
         message = i18nService.translate(i18nKey, obj.options);
       }
     }
     return {
-      status: 422,
+      code,
       message,
     };
   }

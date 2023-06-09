@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
@@ -11,7 +11,7 @@ export class RoleDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'role' },
@@ -40,7 +40,7 @@ export class RoleDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'role' },
@@ -57,7 +57,7 @@ export class RoleDTO {
   @ApiProperty({ example: true, description: '角色是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'role' },
       })
@@ -68,7 +68,7 @@ export class RoleDTO {
   @ApiProperty({ example: {}, description: '角色扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'role' },
       })
@@ -88,7 +88,7 @@ export class GetRoleListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .empty('')
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:module_id.base.message',
           options: { group: 'role' },
         })

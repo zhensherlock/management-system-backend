@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleError, handleErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 import { DeviceBrand } from '../../../constant';
@@ -12,7 +12,7 @@ export class DeviceDTO {
       .required()
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.empty': {
             message: 'i18n:name.required.message',
             options: { group: 'device' },
@@ -41,7 +41,7 @@ export class DeviceDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:description.length.message',
             options: { group: 'device' },
@@ -62,7 +62,7 @@ export class DeviceDTO {
       .empty('')
       .trim(true)
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:ip.base.message',
           options: { group: 'device' },
         })
@@ -77,7 +77,7 @@ export class DeviceDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:login_name.length.message',
             options: { group: 'device' },
@@ -98,7 +98,7 @@ export class DeviceDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:login_password.length.message',
             options: { group: 'device' },
@@ -120,7 +120,7 @@ export class DeviceDTO {
       .trim(true)
       .valid(...Object.values(DeviceBrand))
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:brand.length.message',
             options: { group: 'device' },
@@ -141,7 +141,7 @@ export class DeviceDTO {
       .empty('')
       .trim(true)
       .error(
-        handleErrors({
+        handleParameterErrors({
           'string.max': {
             message: 'i18n:rtsp.length.message',
             options: { group: 'device' },
@@ -161,7 +161,7 @@ export class DeviceDTO {
       .min(-90)
       .max(90)
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:latitude.base.message',
           options: { group: 'device' },
         })
@@ -175,7 +175,7 @@ export class DeviceDTO {
       .min(-180)
       .max(180)
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:longitude.base.message',
           options: { group: 'tendeviceant' },
         })
@@ -186,7 +186,7 @@ export class DeviceDTO {
   @ApiProperty({ example: true, description: '设备是否可用' })
   @Rule(
     RuleType.boolean().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:enabled.base.message',
         options: { group: 'device' },
       })
@@ -197,7 +197,7 @@ export class DeviceDTO {
   @ApiProperty({ example: {}, description: '设备扩展配置信息' })
   @Rule(
     RuleType.object().error(
-      handleError({
+      handleParameterError({
         message: 'i18n:options.base.message',
         options: { group: 'device' },
       })
@@ -211,7 +211,7 @@ export class DeviceDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tenant_id.base.message',
           options: { group: 'device' },
         })
@@ -225,7 +225,7 @@ export class DeviceDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:organization_id.base.message',
           options: { group: 'device' },
         })
@@ -245,7 +245,7 @@ export class GetDeviceListDTO extends GetListBaseDTO {
       .required()
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:tenant_id.base.message',
           options: { group: 'device' },
         })
@@ -259,7 +259,7 @@ export class GetDeviceListDTO extends GetListBaseDTO {
       .empty('')
       .uuid({ separator: false })
       .error(
-        handleError({
+        handleParameterError({
           message: 'i18n:organization_id.base.message',
           options: { group: 'device' },
         })

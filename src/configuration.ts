@@ -12,8 +12,11 @@ import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
 import { ReportMiddleware } from './middleware/report.middleware';
-import { ValidateErrorFilter } from './filter/validate.filter';
+import { ValidateErrorFilter } from './filter/validate.error.filter';
+import { TranslateValidateErrorFilter } from './filter/translate.validate.filter';
 import * as dotenv from 'dotenv';
+import { ParameterErrorFilter } from './filter/parameter.error.filter';
+import { CommonErrorFilter } from './filter/common.error.filter';
 
 dotenv.config();
 
@@ -44,7 +47,10 @@ export class ContainerLifeCycle {
     // add filter
     this.app.useFilter([
       NotFoundFilter,
+      CommonErrorFilter,
+      ParameterErrorFilter,
       ValidateErrorFilter,
+      TranslateValidateErrorFilter,
       DefaultErrorFilter,
     ]);
   }
