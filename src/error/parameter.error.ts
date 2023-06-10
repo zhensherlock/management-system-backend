@@ -1,12 +1,11 @@
 import { TranslateOptions } from '@midwayjs/i18n';
-import { MidwayError } from '@midwayjs/core';
-import { FrameworkErrorEnum } from './enum';
-import { TranslateValidateError } from './validate.error';
+import { FrameworkErrorEnum } from './index';
 import { RuleType } from '@midwayjs/validate';
+import { BaseError } from './base.error';
 
-export class ParameterError extends MidwayError {
-  constructor(text?: string, options?: TranslateOptions) {
-    super(JSON.stringify({ text, options }), FrameworkErrorEnum.PARAM);
+export class ParameterError extends BaseError {
+  constructor(message?: string, options?: TranslateOptions) {
+    super(message, FrameworkErrorEnum.PARAM, options);
   }
 }
 
@@ -17,7 +16,7 @@ interface ErrorMessages {
 
 export const handleParameterError = (obj: ErrorMessages) => {
   return () => {
-    return new TranslateValidateError(obj.message, obj.options);
+    return new ParameterError(obj.message, obj.options);
   };
 };
 
@@ -37,7 +36,7 @@ export const handleParameterErrors = (messages: {
         error.prefs.messages[error.prefs.errors.language][
           error.code
         ].toString(),
-        null
+        void 0
       );
       // return new MidwayValidationError(
       //   error.prefs.messages[error.prefs.errors.language][

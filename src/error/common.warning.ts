@@ -1,9 +1,9 @@
 import { TranslateOptions } from '@midwayjs/i18n';
-import { MidwayError } from '@midwayjs/core';
-import { FrameworkErrorEnum } from './enum';
+import { FrameworkErrorEnum } from './index';
+import { BaseError } from './base.error';
 
-export class CommonWarning extends MidwayError {
-  constructor(text?: string, options?: TranslateOptions) {
-    super(JSON.stringify({ text, options }), FrameworkErrorEnum.WARNING);
+export class CommonWarning extends BaseError {
+  constructor(message?: string, options?: TranslateOptions) {
+    super(message, FrameworkErrorEnum.WARNING, options);
   }
 }
