@@ -12,12 +12,6 @@ import {
 import { Context } from '@midwayjs/koa';
 import { ModuleService } from '../../../service/module.service';
 import {
-  ajaxErrorMessage,
-  ajaxListResult,
-  ajaxSuccessMessage,
-  ajaxSuccessResult,
-} from '../../../util';
-import {
   CreateModuleDTO,
   GetModuleListDTO,
   UpdateModuleDTO,
@@ -28,6 +22,7 @@ import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
+import { CommonError } from '../../../error';
 
 @ApiTags(['module'])
 @Controller('/api/admin/module')
@@ -45,42 +40,47 @@ export class ModuleController extends BaseAdminController {
   @ApiParam({ name: 'id', description: '编号' })
   async getModule(@Param('id') id: string) {
     const mdl = await this.moduleService.getObjectById(id);
-    return ajaxSuccessResult(mdl);
+    if (!mdl) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    return mdl;
   }
 
   @Get('/list', { summary: '查询模块列表' })
   @ApiQuery({})
   async getModuleList(@Query() query: GetModuleListDTO) {
-    const result = await this.moduleService.getPaginatedList(
-      query.currentPage,
-      query.pageSize,
-      {
-        where: {
-          ...(isEmpty(query.keyword)
-            ? {}
-            : { name: Like(`%${query.keyword}%`) }),
-        },
-      }
-    );
-    return ajaxListResult({ result });
+    const [list, count, currentPage, pageSize] =
+      await this.moduleService.getPaginatedList(
+        query.currentPage,
+        query.pageSize,
+        {
+          where: {
+            ...(isEmpty(query.keyword)
+              ? {}
+              : { name: Like(`%${query.keyword}%`) }),
+          },
+        }
+      );
+    return {
+      list,
+      count,
+      currentPage,
+      pageSize,
+    };
   }
 
   @Get('/tree', { summary: '查询模块树形列表' })
   @ApiQuery({})
   async getModuleTreeList(@Query() query: GetModuleListDTO) {
     const list = await this.moduleService.getTreeList(query.keyword);
-    return ajaxListResult({
-      result: [list, list.length],
-    });
+    return { list };
   }
 
   @Post('/create', { summary: '新建模块' })
   @ApiBody({ description: '模块信息' })
   async createModule(@Body() dto: CreateModuleDTO) {
     if (await this.moduleService.checkNameExisted(dto.name)) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('name.exist.message', { group: 'module' })
-      );
+      throw new CommonError('name.exist.message', { group: 'module' });
     }
     if (
       !isEmpty(dto.parentId) &&
@@ -90,14 +90,10 @@ export class ModuleController extends BaseAdminController {
         },
       }))
     ) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('parent_id.base.message', {
-          group: 'module',
-        })
-      );
+      throw new CommonError('parent_id.base.message', { group: 'module' });
     }
     const mdl = await this.moduleService.createObject(<Module>dto);
-    return ajaxSuccessResult(omit(mdl, ['deletedDate']));
+    return omit(mdl, ['deletedDate']);
   }
 
   @Put('/:id', { summary: '修改模块' })
@@ -106,14 +102,10 @@ export class ModuleController extends BaseAdminController {
   async updateModule(@Param('id') id: string, @Body() dto: UpdateModuleDTO) {
     const module = await this.moduleService.getObjectById(id);
     if (!module) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.moduleService.checkNameExisted(dto.name, id)) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('name.exist.message', { group: 'module' })
-      );
+      throw new CommonError('name.exist.message', { group: 'module' });
     }
     if (
       !isEmpty(dto.parentId) &&
@@ -123,53 +115,37 @@ export class ModuleController extends BaseAdminController {
         },
       }))
     ) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('parent_id.base.message', {
-          group: 'module',
-        })
-      );
+      throw new CommonError('parent_id.base.message', { group: 'module' });
     }
     Object.assign(module, dto);
-    const mdl = await this.moduleService.updateObject(id, module);
-    return ajaxSuccessResult(mdl);
+    const mdl = await this.moduleService.updateObject(module);
+    return omit(mdl, ['deletedDate']);
   }
 
   @Del('/:id', { summary: '删除模块' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteModule(@Param('id') id: string) {
     if (!(await this.moduleService.existObjectById(id))) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     const result = await this.moduleService.deleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('delete.failure', { group: 'global' })
-      );
+      throw new CommonError('delete.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('delete.success', { group: 'global' })
-    );
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
   @Del('/soft/:id', { summary: '软删除模块' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteModule(@Param('id') id: string) {
     if (!(await this.moduleService.existObjectById(id))) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     const result = await this.moduleService.softDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('delete.failure', { group: 'global' })
-      );
+      throw new CommonError('delete.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('delete.success', { group: 'global' })
-    );
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
   @Post('/restore/:id', { summary: '恢复软删除模块' })
@@ -177,12 +153,8 @@ export class ModuleController extends BaseAdminController {
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.moduleService.restoreDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('restore.failure', { group: 'global' })
-      );
+      throw new CommonError('restore.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('restore.success', { group: 'global' })
-    );
+    return this.i18nService.translate('restore.success', { group: 'global' });
   }
 }

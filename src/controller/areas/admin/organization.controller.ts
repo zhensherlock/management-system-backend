@@ -12,12 +12,6 @@ import {
 import { Context } from '@midwayjs/koa';
 import { OrganizationService } from '../../../service/organization.service';
 import {
-  ajaxErrorMessage,
-  ajaxListResult,
-  ajaxSuccessMessage,
-  ajaxSuccessResult,
-} from '../../../util';
-import {
   CreateOrganizationDTO,
   GetOrganizationListDTO,
   UpdateOrganizationDTO,
@@ -29,6 +23,7 @@ import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { TenantService } from '../../../service/tenant.service';
 import { BaseAdminController } from './base/base.admin.controller';
+import { CommonError } from '../../../error';
 
 @ApiTags(['organization'])
 @Controller('/api/admin/organization')
@@ -49,26 +44,35 @@ export class OrganizationController extends BaseAdminController {
   @ApiParam({ name: 'id', description: '编号' })
   async getOrganization(@Param('id') id: string) {
     const mdl = await this.organizationService.getObjectById(id);
-    return ajaxSuccessResult(mdl);
+    if (!mdl) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    return mdl;
   }
 
   @Get('/list', { summary: '查询组织列表' })
   @ApiQuery({})
   async getOrganizationList(@Query() query: GetOrganizationListDTO) {
-    const result = await this.organizationService.getPaginatedList(
-      query.currentPage,
-      query.pageSize,
-      {
-        where: {
-          type: query.type,
-          tenantId: query.tenantId,
-          ...(isEmpty(query.keyword)
-            ? {}
-            : { name: Like(`%${query.keyword}%`) }),
-        },
-      }
-    );
-    return ajaxListResult({ result });
+    const [list, count, currentPage, pageSize] =
+      await this.organizationService.getPaginatedList(
+        query.currentPage,
+        query.pageSize,
+        {
+          where: {
+            type: query.type,
+            tenantId: query.tenantId,
+            ...(isEmpty(query.keyword)
+              ? {}
+              : { name: Like(`%${query.keyword}%`) }),
+          },
+        }
+      );
+    return {
+      list,
+      count,
+      currentPage,
+      pageSize,
+    };
   }
 
   @Get('/tree', { summary: '查询组织树形列表' })
@@ -79,20 +83,14 @@ export class OrganizationController extends BaseAdminController {
       query.type,
       query.keyword
     );
-    return ajaxListResult({
-      result: [list, list.length],
-    });
+    return { list };
   }
 
   @Post('/create', { summary: '新建组织' })
   @ApiBody({ description: '组织信息' })
   async createOrganization(@Body() dto: CreateOrganizationDTO) {
     if (await this.organizationService.checkNameExisted(dto.name)) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('name.exist.message', {
-          group: 'organization',
-        })
-      );
+      throw new CommonError('name.exist.message', { group: 'organization' });
     }
     if (
       !isEmpty(dto.parentId) &&
@@ -102,11 +100,9 @@ export class OrganizationController extends BaseAdminController {
         },
       }))
     ) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('parent_id.base.message', {
-          group: 'organization',
-        })
-      );
+      throw new CommonError('parent_id.base.message', {
+        group: 'organization',
+      });
     }
     if (
       !(await this.tenantService.exist({
@@ -115,14 +111,12 @@ export class OrganizationController extends BaseAdminController {
         },
       }))
     ) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('tenant_id.base.message', {
-          group: 'organization',
-        })
-      );
+      throw new CommonError('tenant_id.base.message', {
+        group: 'organization',
+      });
     }
     const mdl = await this.organizationService.createObject(<Organization>dto);
-    return ajaxSuccessResult(omit(mdl, ['deletedDate']));
+    return omit(mdl, ['deletedDate']);
   }
 
   @Put('/:id', { summary: '修改组织' })
@@ -134,16 +128,10 @@ export class OrganizationController extends BaseAdminController {
   ) {
     const organization = await this.organizationService.getObjectById(id);
     if (!organization) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.organizationService.checkNameExisted(dto.name, id)) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('name.exist.message', {
-          group: 'organization',
-        })
-      );
+      throw new CommonError('name.exist.message', { group: 'organization' });
     }
     if (
       !isEmpty(dto.parentId) &&
@@ -153,11 +141,9 @@ export class OrganizationController extends BaseAdminController {
         },
       }))
     ) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('parent_id.base.message', {
-          group: 'organization',
-        })
-      );
+      throw new CommonError('parent_id.base.message', {
+        group: 'organization',
+      });
     }
     if (
       !(await this.tenantService.exist({
@@ -166,53 +152,39 @@ export class OrganizationController extends BaseAdminController {
         },
       }))
     ) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('tenant_id.base.message', {
-          group: 'organization',
-        })
-      );
+      throw new CommonError('tenant_id.base.message', {
+        group: 'organization',
+      });
     }
     Object.assign(organization, dto);
-    const mdl = await this.organizationService.updateObject(id, organization);
-    return ajaxSuccessResult(mdl);
+    const mdl = await this.organizationService.updateObject(organization);
+    return omit(mdl, ['deletedDate']);
   }
 
   @Del('/:id', { summary: '删除组织' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteOrganization(@Param('id') id: string) {
     if (!(await this.organizationService.existObjectById(id))) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     const result = await this.organizationService.deleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('delete.failure', { group: 'global' })
-      );
+      throw new CommonError('delete.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('delete.success', { group: 'global' })
-    );
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
   @Del('/soft/:id', { summary: '软删除组织' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteOrganization(@Param('id') id: string) {
     if (!(await this.organizationService.existObjectById(id))) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     const result = await this.organizationService.softDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('delete.failure', { group: 'global' })
-      );
+      throw new CommonError('delete.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('delete.success', { group: 'global' })
-    );
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
   @Post('/restore/:id', { summary: '恢复软删除组织' })
@@ -220,12 +192,8 @@ export class OrganizationController extends BaseAdminController {
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.organizationService.restoreDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('restore.failure', { group: 'global' })
-      );
+      throw new CommonError('restore.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('restore.success', { group: 'global' })
-    );
+    return this.i18nService.translate('restore.success', { group: 'global' });
   }
 }

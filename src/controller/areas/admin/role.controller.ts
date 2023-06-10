@@ -12,12 +12,6 @@ import {
 import { Context } from '@midwayjs/koa';
 import { RoleService } from '../../../service/role.service';
 import {
-  ajaxErrorMessage,
-  ajaxListResult,
-  ajaxSuccessMessage,
-  ajaxSuccessResult,
-} from '../../../util';
-import {
   CreateRoleDTO,
   GetRoleListDTO,
   UpdateRoleDTO,
@@ -28,6 +22,7 @@ import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
+import { CommonError } from '../../../error';
 
 @ApiTags(['role'])
 @Controller('/api/admin/role')
@@ -45,36 +40,43 @@ export class RoleController extends BaseAdminController {
   @ApiParam({ name: 'id', description: '编号' })
   async getRole(@Param('id') id: string) {
     const mdl = await this.roleService.getObjectById(id);
-    return ajaxSuccessResult(mdl);
+    if (!mdl) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    return mdl;
   }
 
   @Get('/list', { summary: '查询角色列表' })
   @ApiQuery({})
   async getRoleList(@Query() query: GetRoleListDTO) {
-    const result = await this.roleService.getPaginatedList(
-      query.currentPage,
-      query.pageSize,
-      {
-        where: {
-          ...(isEmpty(query.keyword)
-            ? {}
-            : { name: Like(`%${query.keyword}%`) }),
-        },
-      }
-    );
-    return ajaxListResult({ result });
+    const [list, count, currentPage, pageSize] =
+      await this.roleService.getPaginatedList(
+        query.currentPage,
+        query.pageSize,
+        {
+          where: {
+            ...(isEmpty(query.keyword)
+              ? {}
+              : { name: Like(`%${query.keyword}%`) }),
+          },
+        }
+      );
+    return {
+      list,
+      count,
+      currentPage,
+      pageSize,
+    };
   }
 
   @Post('/create', { summary: '新建角色' })
   @ApiBody({ description: '角色信息' })
   async createRole(@Body() dto: CreateRoleDTO) {
     if (await this.roleService.checkNameExisted(dto.name)) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('name.exist.message', { group: 'role' })
-      );
+      throw new CommonError('name.exist.message', { group: 'role' });
     }
     const mdl = await this.roleService.createObject(<Role>dto);
-    return ajaxSuccessResult(omit(mdl, ['deletedDate']));
+    return omit(mdl, ['deletedDate']);
   }
 
   @Put('/:id', { summary: '修改角色' })
@@ -83,56 +85,40 @@ export class RoleController extends BaseAdminController {
   async updateRole(@Param('id') id: string, @Body() dto: UpdateRoleDTO) {
     const role = await this.roleService.getObjectById(id);
     if (!role) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.roleService.checkNameExisted(dto.name, id)) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('name.exist.message', { group: 'role' })
-      );
+      throw new CommonError('name.exist.message', { group: 'role' });
     }
     Object.assign(role, dto);
-    const mdl = await this.roleService.updateObject(id, role);
-    return ajaxSuccessResult(mdl);
+    const mdl = await this.roleService.updateObject(role);
+    return omit(mdl, ['deletedDate']);
   }
 
   @Del('/:id', { summary: '删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteRole(@Param('id') id: string) {
     if (!(await this.roleService.existObjectById(id))) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     const result = await this.roleService.deleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('delete.failure', { group: 'global' })
-      );
+      throw new CommonError('delete.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('delete.success', { group: 'global' })
-    );
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
   @Del('/soft/:id', { summary: '软删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteRole(@Param('id') id: string) {
     if (!(await this.roleService.existObjectById(id))) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('not.exist', { group: 'global' })
-      );
+      throw new CommonError('not.exist', { group: 'global' });
     }
     const result = await this.roleService.softDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('delete.failure', { group: 'global' })
-      );
+      throw new CommonError('delete.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('delete.success', { group: 'global' })
-    );
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
   @Post('/restore/:id', { summary: '恢复软删除角色' })
@@ -140,12 +126,8 @@ export class RoleController extends BaseAdminController {
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.roleService.restoreDeleteObject(id);
     if (!result.affected) {
-      return ajaxErrorMessage(
-        this.i18nService.translate('restore.failure', { group: 'global' })
-      );
+      throw new CommonError('restore.failure', { group: 'global' });
     }
-    return ajaxSuccessMessage(
-      this.i18nService.translate('restore.success', { group: 'global' })
-    );
+    return this.i18nService.translate('restore.success', { group: 'global' });
   }
 }
