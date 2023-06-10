@@ -56,17 +56,21 @@ export class BaseService<T> {
     currentPage = 1,
     pageSize = 20,
     options?: FindManyOptions<T>
-  ): Promise<[T[], number]> {
-    return await this.entityModel.findAndCount({
-      skip: (currentPage - 1) * pageSize,
-      take: pageSize,
-      ...options,
-    });
+  ): Promise<[T[], number, number, number]> {
+    return [
+      ...(await this.entityModel.findAndCount({
+        skip: (currentPage - 1) * pageSize,
+        take: pageSize,
+        ...options,
+      })),
+      currentPage,
+      pageSize,
+    ];
   }
 
   async saveObject(entity: T): Promise<T> {
     if (this.entityModel.hasId(entity)) {
-      return await this.updateObject(this.entityModel.getId(entity), entity);
+      return await this.updateObject(entity);
     } else {
       return await this.createObject(entity);
     }
@@ -78,10 +82,14 @@ export class BaseService<T> {
     return await this.entityModel.save(mdl);
   }
 
-  async updateObject(id: string, entity: T): Promise<T> {
+  async updateObjectById(id: string, entity: T): Promise<T> {
     const mdl = await this.getObjectById(id);
     Object.assign(mdl, entity);
     return await this.entityModel.save(mdl);
+  }
+
+  async updateObject(entity: T): Promise<T> {
+    return await this.entityModel.save(entity);
   }
 
   async existObjectById(id: string): Promise<boolean> {

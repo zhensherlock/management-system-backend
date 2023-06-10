@@ -36,17 +36,17 @@ export class AdminService extends BaseService<Admin> {
       },
     });
     if (!mdl) {
-      throw new CommonError('i18n:user.nonexistence.message', {
+      throw new CommonError('user.nonexistence.message', {
         group: 'passport',
       });
     }
     if (!mdl.enabled) {
-      throw new CommonError('i18n:user.disabled.message', {
+      throw new CommonError('user.disabled.message', {
         group: 'passport',
       });
     }
     if (mdl.password !== encrypt(password, mdl.salt).hash) {
-      throw new CommonError('i18n:user.error.password.message', {
+      throw new CommonError('user.error.password.message', {
         group: 'passport',
       });
     }

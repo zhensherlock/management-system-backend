@@ -39,7 +39,8 @@ export class SystemConfigService extends BaseService<SystemConfig> {
 
   async updateSystemConfig(entity: SystemConfig): Promise<SystemConfig> {
     const mdl = await this.getSystemConfig();
-    const result = await this.updateObject(mdl.id, entity);
+    Object.assign(mdl, entity);
+    const result = await this.updateObject(entity);
     const redisKey = `${this.redisConfig.prefix}:${this.key}`;
     this.redisService.del(redisKey);
     return result;

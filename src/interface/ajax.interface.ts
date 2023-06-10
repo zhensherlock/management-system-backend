@@ -1,5 +1,5 @@
 export interface AjaxResultListOptions {
-  result: [any[], number];
+  result: [any[], number, number, number];
   extra?: any;
   message?: string;
   status?: number;

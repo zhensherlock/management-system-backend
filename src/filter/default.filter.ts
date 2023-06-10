@@ -1,6 +1,6 @@
 import { Catch } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-import { FrameworkErrorEnum } from '../error/enum';
+import { FrameworkErrorEnum } from '../error';
 
 @Catch()
 export class DefaultErrorFilter {
