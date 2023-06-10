@@ -18,6 +18,7 @@ import * as dotenv from 'dotenv';
 import { ParameterErrorFilter } from './filter/parameter.error.filter';
 import { CommonErrorFilter } from './filter/common.error.filter';
 import { CommonWarningFilter } from './filter/common.warning.filter';
+import { FormatMiddleware } from './middleware/format.middleware';
 
 dotenv.config();
 
@@ -44,7 +45,7 @@ export class ContainerLifeCycle {
 
   async onReady() {
     // add middleware
-    this.app.useMiddleware([ReportMiddleware]);
+    this.app.useMiddleware([ReportMiddleware, FormatMiddleware]);
     // add filter
     this.app.useFilter([
       NotFoundFilter,

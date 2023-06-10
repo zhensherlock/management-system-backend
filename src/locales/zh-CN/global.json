@@ -50,6 +50,8 @@
   "delete.failure": "删除失败",
   "restore.success": "恢复成功",
   "restore.failure": "恢复失败",
+  "reset.success": "重置成功",
+  "reset.failure": "重置失败",
   "not.exist": "数据不存在",
   "dialog.title": "系统提示",
   "confirm.title": "警告提示",
