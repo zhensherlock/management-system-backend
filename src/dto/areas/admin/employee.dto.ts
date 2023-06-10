@@ -14,19 +14,19 @@ export class EmployeeDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:job_number.required.message',
+            message: 'job_number.required.message',
             options: { group: 'employee' },
           },
           'any.required': {
-            message: 'i18n:job_number.required.message',
+            message: 'job_number.required.message',
             options: { group: 'employee' },
           },
           'string.max': {
-            message: 'i18n:job_number.length.message',
+            message: 'job_number.length.message',
             options: { group: 'employee' },
           },
           '*': {
-            message: 'i18n:job_number.base.message',
+            message: 'job_number.base.message',
             options: { group: 'employee' },
           },
         })
@@ -43,19 +43,19 @@ export class EmployeeDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'employee' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'employee' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'employee' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'employee' },
           },
         })
@@ -72,7 +72,7 @@ export class EmployeeDTO {
       .valid(...Object.values(EmployeeSex))
       .error(
         handleParameterError({
-          message: 'i18n:sex.base.message',
+          message: 'sex.base.message',
           options: { group: 'employee' },
         })
       )
@@ -88,11 +88,11 @@ export class EmployeeDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:avatar.length.message',
+            message: 'avatar.length.message',
             options: { group: 'employee' },
           },
           '*': {
-            message: 'i18n:avatar.base.message',
+            message: 'avatar.base.message',
             options: { group: 'employee' },
           },
         })
@@ -109,11 +109,11 @@ export class EmployeeDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'employee' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'employee' },
           },
         })
@@ -125,7 +125,7 @@ export class EmployeeDTO {
   @Rule(
     RuleType.date().error(
       handleParameterError({
-        message: 'i18n:birthday.base.message',
+        message: 'birthday.base.message',
         options: { group: 'employee' },
       })
     )
@@ -141,11 +141,11 @@ export class EmployeeDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:id_card.length.message',
+            message: 'id_card.length.message',
             options: { group: 'employee' },
           },
           '*': {
-            message: 'i18n:id_card.base.message',
+            message: 'id_card.base.message',
             options: { group: 'employee' },
           },
         })
@@ -163,7 +163,7 @@ export class EmployeeDTO {
       .valid(...Object.values(EmployeeStatus))
       .error(
         handleParameterError({
-          message: 'i18n:status.base.message',
+          message: 'status.base.message',
           options: { group: 'employee' },
         })
       )
@@ -174,7 +174,7 @@ export class EmployeeDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'employee' },
       })
     )
@@ -188,7 +188,7 @@ export class EmployeeDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:tenant_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'employee' },
         })
       )
@@ -202,7 +202,7 @@ export class EmployeeDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:organization_id.base.message',
+          message: 'organization_id.base.message',
           options: { group: 'employee' },
         })
       )
@@ -222,7 +222,7 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:tenant_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'employee' },
         })
       )
@@ -236,7 +236,7 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:organization_id.base.message',
+          message: 'organization_id.base.message',
           options: { group: 'employee' },
         })
       )

@@ -13,19 +13,19 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'module' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'module' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'module' },
           },
         })
@@ -42,11 +42,11 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'module' },
           },
         })
@@ -58,7 +58,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.number().error(
       handleParameterError({
-        message: 'i18n:level.base.message',
+        message: 'level.base.message',
         options: { group: 'module' },
       })
     )
@@ -74,11 +74,11 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:code.length.message',
+            message: 'code.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:code.base.message',
+            message: 'code.base.message',
             options: { group: 'module' },
           },
         })
@@ -95,11 +95,11 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:icon.length.message',
+            message: 'icon.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:icon.base.message',
+            message: 'icon.base.message',
             options: { group: 'module' },
           },
         })
@@ -116,11 +116,11 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:target.length.message',
+            message: 'target.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:target.base.message',
+            message: 'target.base.message',
             options: { group: 'module' },
           },
         })
@@ -137,11 +137,11 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:component.length.message',
+            message: 'component.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:component.base.message',
+            message: 'component.base.message',
             options: { group: 'module' },
           },
         })
@@ -158,11 +158,11 @@ export class ModuleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:url.length.message',
+            message: 'url.length.message',
             options: { group: 'module' },
           },
           '*': {
-            message: 'i18n:url.base.message',
+            message: 'url.base.message',
             options: { group: 'module' },
           },
         })
@@ -174,7 +174,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:enabled.base.message',
+        message: 'enabled.base.message',
         options: { group: 'module' },
       })
     )
@@ -185,7 +185,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'module' },
       })
     )
@@ -198,7 +198,7 @@ export class ModuleDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:parent_id.base.message',
+          message: 'parent_id.base.message',
           options: { group: 'module' },
         })
       )
@@ -209,7 +209,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:is_leaf.base.message',
+        message: 'is_leaf.base.message',
         options: { group: 'module' },
       })
     )
@@ -220,7 +220,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:expand.base.message',
+        message: 'expand.base.message',
         options: { group: 'module' },
       })
     )
@@ -231,7 +231,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.number().error(
       handleParameterError({
-        message: 'i18n:sequence.base.message',
+        message: 'sequence.base.message',
         options: { group: 'module' },
       })
     )

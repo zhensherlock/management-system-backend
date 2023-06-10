@@ -14,19 +14,19 @@ export class DeviceDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'device' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'device' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'device' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'device' },
           },
         })
@@ -43,11 +43,11 @@ export class DeviceDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'device' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'device' },
           },
         })
@@ -63,7 +63,7 @@ export class DeviceDTO {
       .trim(true)
       .error(
         handleParameterError({
-          message: 'i18n:ip.base.message',
+          message: 'ip.base.message',
           options: { group: 'device' },
         })
       )
@@ -79,11 +79,11 @@ export class DeviceDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:login_name.length.message',
+            message: 'login_name.length.message',
             options: { group: 'device' },
           },
           '*': {
-            message: 'i18n:login_name.base.message',
+            message: 'login_name.base.message',
             options: { group: 'device' },
           },
         })
@@ -100,11 +100,11 @@ export class DeviceDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:login_password.length.message',
+            message: 'login_password.length.message',
             options: { group: 'device' },
           },
           '*': {
-            message: 'i18n:login_password.base.message',
+            message: 'login_password.base.message',
             options: { group: 'device' },
           },
         })
@@ -122,11 +122,11 @@ export class DeviceDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:brand.length.message',
+            message: 'brand.length.message',
             options: { group: 'device' },
           },
           '*': {
-            message: 'i18n:brand.base.message',
+            message: 'brand.base.message',
             options: { group: 'device' },
           },
         })
@@ -143,11 +143,11 @@ export class DeviceDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:rtsp.length.message',
+            message: 'rtsp.length.message',
             options: { group: 'device' },
           },
           '*': {
-            message: 'i18n:rtsp.base.message',
+            message: 'rtsp.base.message',
             options: { group: 'device' },
           },
         })
@@ -162,7 +162,7 @@ export class DeviceDTO {
       .max(90)
       .error(
         handleParameterError({
-          message: 'i18n:latitude.base.message',
+          message: 'latitude.base.message',
           options: { group: 'device' },
         })
       )
@@ -176,7 +176,7 @@ export class DeviceDTO {
       .max(180)
       .error(
         handleParameterError({
-          message: 'i18n:longitude.base.message',
+          message: 'longitude.base.message',
           options: { group: 'tendeviceant' },
         })
       )
@@ -187,7 +187,7 @@ export class DeviceDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:enabled.base.message',
+        message: 'enabled.base.message',
         options: { group: 'device' },
       })
     )
@@ -198,7 +198,7 @@ export class DeviceDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'device' },
       })
     )
@@ -212,7 +212,7 @@ export class DeviceDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:tenant_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'device' },
         })
       )
@@ -226,7 +226,7 @@ export class DeviceDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:organization_id.base.message',
+          message: 'organization_id.base.message',
           options: { group: 'device' },
         })
       )
@@ -246,7 +246,7 @@ export class GetDeviceListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:tenant_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'device' },
         })
       )
@@ -260,7 +260,7 @@ export class GetDeviceListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:organization_id.base.message',
+          message: 'organization_id.base.message',
           options: { group: 'device' },
         })
       )

@@ -13,19 +13,19 @@ export class RoleDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'role' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'role' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'role' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'role' },
           },
         })
@@ -42,11 +42,11 @@ export class RoleDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'role' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'role' },
           },
         })
@@ -58,7 +58,7 @@ export class RoleDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:enabled.base.message',
+        message: 'enabled.base.message',
         options: { group: 'role' },
       })
     )
@@ -69,7 +69,7 @@ export class RoleDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'role' },
       })
     )
@@ -89,7 +89,7 @@ export class GetRoleListDTO extends GetListBaseDTO {
       .empty('')
       .error(
         handleParameterError({
-          message: 'i18n:module_id.base.message',
+          message: 'module_id.base.message',
           options: { group: 'role' },
         })
       )

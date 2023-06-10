@@ -14,19 +14,19 @@ export class OrganizationDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'organization' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'organization' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'organization' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'organization' },
           },
         })
@@ -43,11 +43,11 @@ export class OrganizationDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'organization' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'organization' },
           },
         })
@@ -62,7 +62,7 @@ export class OrganizationDTO {
       .valid(...Object.values(OrganizationType))
       .error(
         handleParameterError({
-          message: 'i18n:type.base.message',
+          message: 'type.base.message',
           options: { group: 'organization' },
         })
       )
@@ -78,11 +78,11 @@ export class OrganizationDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:code.length.message',
+            message: 'code.length.message',
             options: { group: 'organization' },
           },
           '*': {
-            message: 'i18n:code.base.message',
+            message: 'code.base.message',
             options: { group: 'organization' },
           },
         })
@@ -94,7 +94,7 @@ export class OrganizationDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:enabled.base.message',
+        message: 'enabled.base.message',
         options: { group: 'organization' },
       })
     )
@@ -105,7 +105,7 @@ export class OrganizationDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'organization' },
       })
     )
@@ -119,7 +119,7 @@ export class OrganizationDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:tenant_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'organization' },
         })
       )
@@ -132,7 +132,7 @@ export class OrganizationDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:parent_id.base.message',
+          message: 'parent_id.base.message',
           options: { group: 'organization' },
         })
       )
@@ -152,7 +152,7 @@ export class GetOrganizationListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:tenant_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'organization' },
         })
       )
@@ -166,7 +166,7 @@ export class GetOrganizationListDTO extends GetListBaseDTO {
       .valid(...Object.values(OrganizationType))
       .error(
         handleParameterError({
-          message: 'i18n:type.base.message',
+          message: 'type.base.message',
           options: { group: 'organization' },
         })
       )

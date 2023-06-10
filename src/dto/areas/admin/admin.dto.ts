@@ -13,19 +13,19 @@ export class AdminDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'admin' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'admin' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'admin' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'admin' },
           },
         })
@@ -44,15 +44,15 @@ export class AdminDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:email.length.message',
+            message: 'email.length.message',
             options: { group: 'admin' },
           },
           'string.email': {
-            message: 'i18n:email.base.message',
+            message: 'email.base.message',
             options: { group: 'admin' },
           },
           '*': {
-            message: 'i18n:email.base.message',
+            message: 'email.base.message',
             options: { group: 'admin' },
           },
         })
@@ -70,7 +70,7 @@ export class AdminDTO {
       )
       .error(
         handleParameterError({
-          message: 'i18n:tel.base.message',
+          message: 'tel.base.message',
           options: { group: 'admin' },
         })
       )
@@ -86,11 +86,11 @@ export class AdminDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:real_name.length.message',
+            message: 'real_name.length.message',
             options: { group: 'admin' },
           },
           '*': {
-            message: 'i18n:real_name.base.message',
+            message: 'real_name.base.message',
             options: { group: 'admin' },
           },
         })
@@ -107,11 +107,11 @@ export class AdminDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'admin' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'admin' },
           },
         })
@@ -123,7 +123,7 @@ export class AdminDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:enabled.base.message',
+        message: 'enabled.base.message',
         options: { group: 'admin' },
       })
     )
@@ -134,7 +134,7 @@ export class AdminDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'admin' },
       })
     )
@@ -152,15 +152,15 @@ export class CreateAdminDTO extends AdminDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:password.required.message',
+            message: 'password.required.message',
             options: { group: 'admin' },
           },
           'any.required': {
-            message: 'i18n:password.required.message',
+            message: 'password.required.message',
             options: { group: 'admin' },
           },
           '*': {
-            message: 'i18n:password.base.message',
+            message: 'password.base.message',
             options: { group: 'admin' },
           },
         })
@@ -177,7 +177,7 @@ export class UpdateAdminDTO extends AdminDTO {
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
       .error(
         handleParameterError({
-          message: 'i18n:new_password.base.message',
+          message: 'new_password.base.message',
           options: { group: 'admin' },
         })
       )
@@ -202,15 +202,15 @@ export class UpdateAdminPasswordDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:old_password.required.message',
+            message: 'old_password.required.message',
             options: { group: 'admin' },
           },
           'any.required': {
-            message: 'i18n:old_password.required.message',
+            message: 'old_password.required.message',
             options: { group: 'admin' },
           },
           '*': {
-            message: 'i18n:old_password.base.message',
+            message: 'old_password.base.message',
             options: { group: 'admin' },
           },
         })

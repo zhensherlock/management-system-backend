@@ -12,15 +12,15 @@ export class LoginDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'passport' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'passport' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'passport' },
           },
         })
@@ -37,15 +37,15 @@ export class LoginDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:password.required.message',
+            message: 'password.required.message',
             options: { group: 'passport' },
           },
           'any.required': {
-            message: 'i18n:password.required.message',
+            message: 'password.required.message',
             options: { group: 'passport' },
           },
           '*': {
-            message: 'i18n:password.base.message',
+            message: 'password.base.message',
             options: { group: 'passport' },
           },
         })

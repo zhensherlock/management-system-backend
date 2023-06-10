@@ -14,19 +14,19 @@ export class UserDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'user' },
           },
           'any.required': {
-            message: 'i18n:name.required.message',
+            message: 'name.required.message',
             options: { group: 'user' },
           },
           'string.max': {
-            message: 'i18n:name.length.message',
+            message: 'name.length.message',
             options: { group: 'user' },
           },
           '*': {
-            message: 'i18n:name.base.message',
+            message: 'name.base.message',
             options: { group: 'user' },
           },
         })
@@ -44,15 +44,15 @@ export class UserDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:email.length.message',
+            message: 'email.length.message',
             options: { group: 'user' },
           },
           'string.email': {
-            message: 'i18n:email.base.message',
+            message: 'email.base.message',
             options: { group: 'user' },
           },
           '*': {
-            message: 'i18n:email.base.message',
+            message: 'email.base.message',
             options: { group: 'user' },
           },
         })
@@ -70,7 +70,7 @@ export class UserDTO {
       )
       .error(
         handleParameterError({
-          message: 'i18n:tel.base.message',
+          message: 'tel.base.message',
           options: { group: 'user' },
         })
       )
@@ -86,7 +86,7 @@ export class UserDTO {
       .valid(...Object.values(UserType))
       .error(
         handleParameterError({
-          message: 'i18n:type.base.message',
+          message: 'type.base.message',
           options: { group: 'user' },
         })
       )
@@ -102,11 +102,11 @@ export class UserDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:real_name.length.message',
+            message: 'real_name.length.message',
             options: { group: 'user' },
           },
           '*': {
-            message: 'i18n:real_name.base.message',
+            message: 'real_name.base.message',
             options: { group: 'user' },
           },
         })
@@ -123,11 +123,11 @@ export class UserDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'i18n:description.length.message',
+            message: 'description.length.message',
             options: { group: 'user' },
           },
           '*': {
-            message: 'i18n:description.base.message',
+            message: 'description.base.message',
             options: { group: 'user' },
           },
         })
@@ -139,7 +139,7 @@ export class UserDTO {
   @Rule(
     RuleType.boolean().error(
       handleParameterError({
-        message: 'i18n:enabled.base.message',
+        message: 'enabled.base.message',
         options: { group: 'user' },
       })
     )
@@ -150,7 +150,7 @@ export class UserDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'i18n:options.base.message',
+        message: 'options.base.message',
         options: { group: 'user' },
       })
     )
@@ -164,7 +164,7 @@ export class UserDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:user_id.base.message',
+          message: 'user_id.base.message',
           options: { group: 'user' },
         })
       )
@@ -182,15 +182,15 @@ export class CreateUserDTO extends UserDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:password.required.message',
+            message: 'password.required.message',
             options: { group: 'user' },
           },
           'any.required': {
-            message: 'i18n:password.required.message',
+            message: 'password.required.message',
             options: { group: 'user' },
           },
           '*': {
-            message: 'i18n:password.base.message',
+            message: 'password.base.message',
             options: { group: 'user' },
           },
         })
@@ -207,7 +207,7 @@ export class UpdateUserDTO extends UserDTO {
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
       .error(
         handleParameterError({
-          message: 'i18n:new_password.base.message',
+          message: 'new_password.base.message',
           options: { group: 'user' },
         })
       )
@@ -232,15 +232,15 @@ export class UpdateUserPasswordDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'i18n:old_password.required.message',
+            message: 'old_password.required.message',
             options: { group: 'user' },
           },
           'any.required': {
-            message: 'i18n:old_password.required.message',
+            message: 'old_password.required.message',
             options: { group: 'user' },
           },
           '*': {
-            message: 'i18n:old_password.base.message',
+            message: 'old_password.base.message',
             options: { group: 'user' },
           },
         })
@@ -280,7 +280,7 @@ export class GetUserListDTO extends GetListBaseDTO {
       .valid(...Object.values(UserType))
       .error(
         handleParameterError({
-          message: 'i18n:type.base.message',
+          message: 'type.base.message',
           options: { group: 'user' },
         })
       )
@@ -294,7 +294,7 @@ export class GetUserListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'i18n:user_id.base.message',
+          message: 'user_id.base.message',
           options: { group: 'user' },
         })
       )
