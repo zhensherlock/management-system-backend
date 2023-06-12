@@ -44,15 +44,15 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
       try {
         const adminService = await ctx.requestContext.getAsync(AdminService);
         const userService = await ctx.requestContext.getAsync(UserService);
-        const { passportId, passportType } =
-          await passportService.verifyAccessToken(token);
-        if (passportType === PassportType.Admin) {
-          const admin = await adminService.getObjectById(passportId);
+        const passport = await passportService.verifyAccessToken(token);
+        ctx.currentPassport = passport;
+        if (passport.passportType === PassportType.Admin) {
+          const admin = await adminService.getObjectById(passport.passportId);
           if (admin) {
             ctx.currentAdmin = admin;
           }
         } else {
-          const user = await userService.getObjectById(passportId);
+          const user = await userService.getObjectById(passport.passportId);
           if (user) {
             ctx.currentUser = user;
           }

@@ -4,6 +4,7 @@ import { RedisService } from '@midwayjs/redis';
 import { formatToMS } from '../util';
 import { Config } from '@midwayjs/decorator';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { PassportOptions } from '../interface';
 
 @Provide()
 export class PassportService {
@@ -53,7 +54,7 @@ export class PassportService {
 
   async verifyAccessToken(token: string) {
     await this.jwtService.verify(token, { complete: true });
-    const user = (await this.jwtService.decode(token)) as any;
+    const user = (await this.jwtService.decode(token)) as PassportOptions;
     if (
       user &&
       (await this.redisService.exists(
@@ -69,7 +70,7 @@ export class PassportService {
     await this.jwtService.verify(token, this.jwtConfig.refreshToken.secret, {
       complete: true,
     });
-    const user = (await this.jwtService.decode(token)) as any;
+    const user = (await this.jwtService.decode(token)) as PassportOptions;
     if (
       user &&
       (await this.redisService.exists(
