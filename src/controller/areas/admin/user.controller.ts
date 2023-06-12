@@ -24,6 +24,7 @@ import { isEmpty, omit } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
+import { Role } from '../../../decorator/role.decorator';
 
 @ApiTags(['user'])
 @Controller('/api/admin/user')
@@ -37,6 +38,7 @@ export class UserController extends BaseAdminController {
   @Inject()
   i18nService: MidwayI18nService;
 
+  @Role(['admin'])
   @Get('/:id', { summary: '查询单个用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async getUser(@Param('id') id: string) {
@@ -47,6 +49,7 @@ export class UserController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Get('/list', { summary: '查询用户列表' })
   @ApiQuery({})
   async getUserList(@Query() query: GetUserListDTO) {
@@ -74,6 +77,7 @@ export class UserController extends BaseAdminController {
     };
   }
 
+  @Role(['admin'])
   @Post('/create', { summary: '新建用户' })
   @ApiBody({ description: '用户信息' })
   async createUser(@Body() dto: CreateUserDTO) {
@@ -90,6 +94,7 @@ export class UserController extends BaseAdminController {
     return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/:id', { summary: '修改用户' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '用户信息' })
@@ -111,6 +116,7 @@ export class UserController extends BaseAdminController {
     return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/password/:id', { summary: '重置用户密码' })
   @ApiParam({ name: 'id', description: '编号' })
   async resetUserPassword(@Param('id') id: string) {
@@ -126,6 +132,7 @@ export class UserController extends BaseAdminController {
     return { newPassword };
   }
 
+  @Role(['admin'])
   @Del('/:id', { summary: '删除用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteUser(@Param('id') id: string) {
@@ -139,6 +146,7 @@ export class UserController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/soft/:id', { summary: '软删除用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteUser(@Param('id') id: string) {
@@ -152,6 +160,7 @@ export class UserController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Post('/restore/:id', { summary: '恢复软删除用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteUser(@Param('id') id: string) {

@@ -19,7 +19,7 @@ import { ModuleRoleMapping } from './module_role_mapping.entity';
 @Entity({
   name: 'role',
 })
-export class Role {
+export class RoleEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '角色编号' })
   id: string;
 

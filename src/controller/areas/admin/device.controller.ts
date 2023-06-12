@@ -25,6 +25,7 @@ import { TenantService } from '../../../service/tenant.service';
 import { OrganizationService } from '../../../service/organization.service';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
+import { Role } from '../../../decorator/role.decorator';
 
 @ApiTags(['device'])
 @Controller('/api/admin/device')
@@ -44,6 +45,7 @@ export class DeviceController extends BaseAdminController {
   @Inject()
   i18nService: MidwayI18nService;
 
+  @Role(['admin'])
   @Get('/:id', { summary: '查询单个设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async getDevice(@Param('id') id: string) {
@@ -54,6 +56,7 @@ export class DeviceController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Get('/list', { summary: '查询设备列表' })
   @ApiQuery({})
   async getDeviceList(@Query() query: GetDeviceListDTO) {
@@ -81,6 +84,7 @@ export class DeviceController extends BaseAdminController {
     };
   }
 
+  @Role(['admin'])
   @Post('/create', { summary: '新建设备' })
   @ApiBody({ description: '设备信息' })
   async createDevice(@Body() dto: CreateDeviceDTO) {
@@ -113,6 +117,7 @@ export class DeviceController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/:id', { summary: '修改设备' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '设备信息' })
@@ -150,6 +155,7 @@ export class DeviceController extends BaseAdminController {
     return omit(await this.deviceService.updateObject(mdl), ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Del('/:id', { summary: '删除设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteDevice(@Param('id') id: string) {
@@ -163,6 +169,7 @@ export class DeviceController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/soft/:id', { summary: '软删除设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteDevice(@Param('id') id: string) {
@@ -176,6 +183,7 @@ export class DeviceController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Post('/restore/:id', { summary: '恢复软删除设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {

@@ -7,6 +7,7 @@ import { ApiBody, ApiTags } from '@midwayjs/swagger';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
 import { omit } from 'lodash';
+import { Role } from '../../../decorator/role.decorator';
 
 @ApiTags(['system_config'])
 @Controller('/api/admin/sys')
@@ -17,6 +18,7 @@ export class SystemConfigController extends BaseAdminController {
   @Inject()
   systemConfigService: SystemConfigService;
 
+  @Role(['admin'])
   @Get('/get', { summary: '查询系统信息' })
   async getSystemConfig() {
     const mdl = await this.systemConfigService.getSystemConfig();
@@ -26,6 +28,7 @@ export class SystemConfigController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Put('/set', { summary: '修改系统信息' })
   @ApiBody({ description: '系统信息' })
   async updateSystemConfig(@Body() dto: UpdateSystemConfigDTO) {

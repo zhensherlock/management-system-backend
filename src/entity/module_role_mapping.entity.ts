@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Module } from './module.entity';
-import { Role } from './role.entity';
+import { RoleEntity } from './role.entity';
 
 @Entity({
   name: 'module_role_mapping',
@@ -39,7 +39,7 @@ export class ModuleRoleMapping {
   @JoinColumn({ name: 'module_id' })
   module: Module;
 
-  @ManyToOne(() => Role, node => node.userRoleMappings)
+  @ManyToOne(() => RoleEntity, node => node.userRoleMappings)
   @JoinColumn({ name: 'role_id' })
-  role: Role;
+  role: RoleEntity;
 }

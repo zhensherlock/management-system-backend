@@ -23,6 +23,7 @@ import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
+import { Role } from '../../../decorator/role.decorator';
 // import { Validate } from '@midwayjs/validate';
 
 @ApiTags(['tenant'])
@@ -37,6 +38,7 @@ export class TenantController extends BaseAdminController {
   @Inject()
   i18nService: MidwayI18nService;
 
+  @Role(['admin'])
   @Get('/:id', { summary: '查询单个租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async getTenant(@Param('id') id: string) {
@@ -47,6 +49,7 @@ export class TenantController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Get('/list', { summary: '查询租户列表' })
   @ApiQuery({})
   async getTenantList(@Query() query: GetTenantListDTO) {
@@ -75,6 +78,7 @@ export class TenantController extends BaseAdminController {
   // @Validate({
   //   errorStatus: 422,
   // })
+  @Role(['admin'])
   @Post('/create', { summary: '新建租户' })
   @ApiBody({ description: '租户信息' })
   async createTenant(@Body() dto: CreateTenantDTO) {
@@ -85,6 +89,7 @@ export class TenantController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/:id', { summary: '修改租户' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '租户信息' })
@@ -101,6 +106,7 @@ export class TenantController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Del('/:id', { summary: '删除租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteTenant(@Param('id') id: string) {
@@ -114,6 +120,7 @@ export class TenantController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/soft/:id', { summary: '软删除租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteTenant(@Param('id') id: string) {
@@ -127,6 +134,7 @@ export class TenantController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Post('/restore/:id', { summary: '恢复软删除租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {

@@ -25,6 +25,7 @@ import { TenantService } from '../../../service/tenant.service';
 import { OrganizationService } from '../../../service/organization.service';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
+import { Role } from '../../../decorator/role.decorator';
 
 @ApiTags(['employee'])
 @Controller('/api/admin/employee')
@@ -44,6 +45,7 @@ export class EmployeeController extends BaseAdminController {
   @Inject()
   i18nService: MidwayI18nService;
 
+  @Role(['admin'])
   @Get('/:id', { summary: '查询单个员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async getEmployee(@Param('id') id: string) {
@@ -54,6 +56,7 @@ export class EmployeeController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Get('/list', { summary: '查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
@@ -81,6 +84,7 @@ export class EmployeeController extends BaseAdminController {
     };
   }
 
+  @Role(['admin'])
   @Post('/create', { summary: '新建员工' })
   @ApiBody({ description: '员工信息' })
   async createEmployee(@Body() dto: CreateEmployeeDTO) {
@@ -111,6 +115,7 @@ export class EmployeeController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/:id', { summary: '修改员工' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '员工信息' })
@@ -151,6 +156,7 @@ export class EmployeeController extends BaseAdminController {
     return omit(await this.employeeService.updateObject(mdl), ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Del('/:id', { summary: '删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteEmployee(@Param('id') id: string) {
@@ -164,6 +170,7 @@ export class EmployeeController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/soft/:id', { summary: '软删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteEmployee(@Param('id') id: string) {
@@ -177,6 +184,7 @@ export class EmployeeController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Post('/restore/:id', { summary: '恢复软删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {

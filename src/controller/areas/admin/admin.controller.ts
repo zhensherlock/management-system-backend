@@ -24,6 +24,7 @@ import { isEmpty, omit } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
+import { Role } from '../../../decorator/role.decorator';
 
 @ApiTags(['admin'])
 @Controller('/api/admin/admin')
@@ -37,6 +38,7 @@ export class AdminController extends BaseAdminController {
   @Inject()
   i18nService: MidwayI18nService;
 
+  @Role(['admin'])
   @Get('/:id', { summary: '查询单个管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   async getAdmin(@Param('id') id: string) {
@@ -47,6 +49,7 @@ export class AdminController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Get('/list', { summary: '查询管理员列表' })
   @ApiQuery({})
   async getAdminList(@Query() query: GetAdminListDTO) {
@@ -72,6 +75,7 @@ export class AdminController extends BaseAdminController {
     };
   }
 
+  @Role(['admin'])
   @Post('/create', { summary: '新建管理员' })
   @ApiBody({ description: '管理员信息' })
   async createAdmin(@Body() dto: CreateAdminDTO) {
@@ -88,6 +92,7 @@ export class AdminController extends BaseAdminController {
     return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/:id', { summary: '修改管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '管理员信息' })
@@ -108,6 +113,7 @@ export class AdminController extends BaseAdminController {
     return omit(await this.adminService.updateObject(mdl), ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/password/:id', { summary: '重置管理员密码' })
   @ApiParam({ name: 'id', description: '编号' })
   async resetAdminPassword(@Param('id') id: string) {
@@ -122,6 +128,7 @@ export class AdminController extends BaseAdminController {
     return this.i18nService.translate('reset.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/:id', { summary: '删除管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteAdmin(@Param('id') id: string) {
@@ -135,6 +142,7 @@ export class AdminController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/soft/:id', { summary: '软删除管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteAdmin(@Param('id') id: string) {
@@ -148,6 +156,7 @@ export class AdminController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Post('/restore/:id', { summary: '恢复软删除管理员' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {

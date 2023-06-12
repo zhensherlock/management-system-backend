@@ -22,6 +22,7 @@ import { CommonWarningFilter } from './filter/common.warning.filter';
 import { FormatMiddleware } from './middleware/format.middleware';
 // import { JwtPassportMiddleware } from './middleware/jwt.middleware';
 import { SecurityMiddleware } from './middleware/security.middleware';
+import { AuthGuard } from './guard/auth.guard';
 
 dotenv.config();
 
@@ -55,6 +56,8 @@ export class ContainerLifeCycle {
       // JwtPassportMiddleware,
       SecurityMiddleware,
     ]);
+    // add guard
+    this.app.useGuard([AuthGuard]);
     // add filter
     this.app.useFilter([
       NotFoundFilter,

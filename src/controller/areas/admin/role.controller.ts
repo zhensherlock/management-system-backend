@@ -16,13 +16,14 @@ import {
   GetRoleListDTO,
   UpdateRoleDTO,
 } from '../../../dto/areas/admin/role.dto';
-import { Role } from '../../../entity/role.entity';
+import { RoleEntity } from '../../../entity/role.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
+import { Role } from '../../../decorator/role.decorator';
 
 @ApiTags(['role'])
 @Controller('/api/admin/role')
@@ -36,6 +37,7 @@ export class RoleController extends BaseAdminController {
   @Inject()
   i18nService: MidwayI18nService;
 
+  @Role(['admin'])
   @Get('/:id', { summary: '查询单个角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async getRole(@Param('id') id: string) {
@@ -46,6 +48,7 @@ export class RoleController extends BaseAdminController {
     return mdl;
   }
 
+  @Role(['admin'])
   @Get('/list', { summary: '查询角色列表' })
   @ApiQuery({})
   async getRoleList(@Query() query: GetRoleListDTO) {
@@ -75,7 +78,7 @@ export class RoleController extends BaseAdminController {
     if (await this.roleService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'role' });
     }
-    const mdl = await this.roleService.createObject(<Role>dto);
+    const mdl = await this.roleService.createObject(<RoleEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 
