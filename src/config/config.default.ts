@@ -10,6 +10,7 @@ export default {
     security: {
       prefix: `${koaGlobalPrefix}/api`,
       ignore: [
+        `${koaGlobalPrefix}`,
         `${koaGlobalPrefix}/api/admin/passport/login`,
         `${koaGlobalPrefix}/api/admin/passport/refreshToken`,
       ],
