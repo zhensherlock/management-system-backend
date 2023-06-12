@@ -5,5 +5,9 @@
   "password.base.message": "请输入正确的密码",
   "user.nonexistence.message": "该用户不存在，请重新输入",
   "user.disabled.message": "该用户已被禁用，请联系管理员",
-  "user.error.password.message": "密码有误，请重新输入"
+  "user.error.password.message": "密码有误，请重新输入",
+  "refresh_token.required.message": "请输入RefreshToken",
+  "refresh_token.base.message": "请输入正确的RefreshToken",
+  "token.required.message": "缺少访问凭证，请添加Header[Authorization=Bearer accessToken]",
+  "token.base.message": "请填写正确的凭证"
 }

@@ -16,13 +16,13 @@ export class PassportService {
   @Config('jwt')
   jwtConfig;
 
-  async generateAccessToken(userId, userType) {
+  async generateAccessToken(passportId, passportType) {
     const accessToken = await this.jwtService.sign({
-      userId,
-      userType,
+      passportId,
+      passportType,
     });
     this.redisService.set(
-      `${this.jwtConfig.cacheKeyPrefix}:accessToken:${userId}`,
+      `${this.jwtConfig.cacheKeyPrefix}:accessToken:${passportId}`,
       accessToken,
       'PX',
       formatToMS(this.jwtConfig.expiresIn)
@@ -30,11 +30,11 @@ export class PassportService {
     return accessToken;
   }
 
-  async generateRefreshToken(userId, userType) {
+  async generateRefreshToken(passportId, passportType) {
     const refreshToken = await this.jwtService.sign(
       {
-        userId,
-        userType,
+        passportId,
+        passportType,
         type: 'refresh',
       },
       this.jwtConfig.refreshToken.secret,
@@ -43,7 +43,7 @@ export class PassportService {
       }
     );
     this.redisService.set(
-      `${this.jwtConfig.cacheKeyPrefix}:refreshToken:${userId}`,
+      `${this.jwtConfig.cacheKeyPrefix}:refreshToken:${passportId}`,
       refreshToken,
       'PX',
       formatToMS(this.jwtConfig.refreshToken.expiresIn)
@@ -57,7 +57,7 @@ export class PassportService {
     if (
       user &&
       (await this.redisService.exists(
-        `${this.jwtConfig.cacheKeyPrefix}:accessToken:${user.id}`
+        `${this.jwtConfig.cacheKeyPrefix}:accessToken:${user.passportId}`
       )) === 1
     ) {
       return user;
@@ -73,7 +73,7 @@ export class PassportService {
     if (
       user &&
       (await this.redisService.exists(
-        `${this.jwtConfig.cacheKeyPrefix}:accessToken:${user.id}`
+        `${this.jwtConfig.cacheKeyPrefix}:refreshToken:${user.passportId}`
       )) === 1
     ) {
       return user;

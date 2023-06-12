@@ -53,3 +53,29 @@ export class LoginDTO {
   )
   password: string;
 }
+
+export class RefreshTokenDTO {
+  @ApiProperty({ example: '', description: 'RefreshToken' })
+  @Rule(
+    RuleType.string()
+      .required()
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          'string.empty': {
+            message: 'refresh_token.required.message',
+            options: { group: 'passport' },
+          },
+          'any.required': {
+            message: 'refresh_token.required.message',
+            options: { group: 'passport' },
+          },
+          '*': {
+            message: 'refresh_token.base.message',
+            options: { group: 'passport' },
+          },
+        })
+      )
+  )
+  refreshToken: string;
+}

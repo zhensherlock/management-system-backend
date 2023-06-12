@@ -1,13 +1,23 @@
 import { MidwayConfig } from '@midwayjs/core';
 
 const redisGlobalConfigPrefix = 'ss';
+const koaGlobalPrefix = '/v1';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
-  keys: '1684229751344_9182',
+  keys: '-ZfVcx5Ed048VT1D',
+  app: {
+    security: {
+      prefix: `${koaGlobalPrefix}/api`,
+      ignore: [
+        `${koaGlobalPrefix}/api/admin/passport/login`,
+        `${koaGlobalPrefix}/api/admin/passport/refreshToken`,
+      ],
+    },
+  },
   koa: {
     port: 7001,
-    globalPrefix: '/v1',
+    globalPrefix: koaGlobalPrefix,
   },
   typeorm: {
     dataSource: {

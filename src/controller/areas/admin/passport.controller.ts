@@ -1,9 +1,13 @@
-import { Body, Controller, Inject, Post } from '@midwayjs/core';
-import { LoginDTO } from '../../../dto/areas/admin/passport.dto';
+import { Body, Controller, Get, Inject, Post, Query } from '@midwayjs/core';
+import {
+  LoginDTO,
+  RefreshTokenDTO,
+} from '../../../dto/areas/admin/passport.dto';
 import { Context } from '@midwayjs/koa';
 import { AdminService } from '../../../service/admin.service';
-import { ApiBody } from '@midwayjs/swagger';
+import { ApiBody, ApiQuery } from '@midwayjs/swagger';
 import { PassportService } from '../../../service/passport.service';
+import { PassportType } from '../../../constant/passport.constant';
 
 @Controller('/api/admin/passport')
 export class PassportController {
@@ -22,14 +26,33 @@ export class PassportController {
     const admin = await this.adminService.tryLogin(dto.username, dto.password);
     const accessToken = await this.passportService.generateAccessToken(
       admin.id,
-      'admin'
+      PassportType.Admin
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       admin.id,
-      'admin'
+      PassportType.Admin
     );
     return {
       admin,
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  @Get('/refreshToken', { summary: '更新AccessToken' })
+  @ApiQuery({ description: 'RefreshToken凭证' })
+  async refreshToken(@Query() query: RefreshTokenDTO) {
+    const { passportId, passportType } =
+      await this.passportService.verifyRefreshToken(query.refreshToken);
+    const accessToken = await this.passportService.generateAccessToken(
+      passportId,
+      passportType
+    );
+    const refreshToken = await this.passportService.generateRefreshToken(
+      passportId,
+      passportType
+    );
+    return {
       accessToken,
       refreshToken,
     };

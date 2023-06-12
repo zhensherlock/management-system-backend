@@ -8,6 +8,7 @@ import * as upload from '@midwayjs/upload';
 import * as i18n from '@midwayjs/i18n';
 import * as orm from '@midwayjs/typeorm';
 import * as swagger from '@midwayjs/swagger';
+import * as passport from '@midwayjs/passport';
 import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
@@ -19,6 +20,8 @@ import { ParameterErrorFilter } from './filter/parameter.error.filter';
 import { CommonErrorFilter } from './filter/common.error.filter';
 import { CommonWarningFilter } from './filter/common.warning.filter';
 import { FormatMiddleware } from './middleware/format.middleware';
+// import { JwtPassportMiddleware } from './middleware/jwt.middleware';
+import { SecurityMiddleware } from './middleware/security.middleware';
 
 dotenv.config();
 
@@ -32,6 +35,7 @@ dotenv.config();
     i18n,
     orm,
     swagger,
+    passport,
     {
       component: info,
       enabledEnvironment: ['local'],
@@ -45,7 +49,12 @@ export class ContainerLifeCycle {
 
   async onReady() {
     // add middleware
-    this.app.useMiddleware([ReportMiddleware, FormatMiddleware]);
+    this.app.useMiddleware([
+      ReportMiddleware,
+      FormatMiddleware,
+      // JwtPassportMiddleware,
+      SecurityMiddleware,
+    ]);
     // add filter
     this.app.useFilter([
       NotFoundFilter,
