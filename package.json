@@ -6,6 +6,7 @@
   "dependencies": {
     "@midwayjs/bootstrap": "^3.11.6",
     "@midwayjs/captcha": "^3.11.10",
+    "@midwayjs/code-dye": "^3.11.10",
     "@midwayjs/core": "^3.11.6",
     "@midwayjs/decorator": "^3.11.6",
     "@midwayjs/i18n": "^3.11.10",
