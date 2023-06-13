@@ -119,6 +119,9 @@ export default {
       },
     ],
   },
+  codeDye: {
+    matchQueryKey: 'codeDye',
+  },
   i18n: {
     writeCookie: true,
     defaultLocale: 'zh_CN',

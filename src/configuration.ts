@@ -9,6 +9,7 @@ import * as i18n from '@midwayjs/i18n';
 import * as orm from '@midwayjs/typeorm';
 import * as swagger from '@midwayjs/swagger';
 import * as passport from '@midwayjs/passport';
+import * as codeDye from '@midwayjs/code-dye';
 import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
@@ -37,6 +38,10 @@ dotenv.config();
     orm,
     swagger,
     passport,
+    {
+      component: codeDye,
+      enabledEnvironment: ['local'],
+    },
     {
       component: info,
       enabledEnvironment: ['local'],
