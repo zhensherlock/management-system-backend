@@ -2,9 +2,10 @@ import { Guard, IGuard, getPropertyMetadata } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { ROLE_META_KEY } from '../decorator/role.decorator';
 import { Config } from '@midwayjs/decorator';
+import { CommonError } from '../error';
 
 @Guard()
-export class AuthGuard implements IGuard<Context> {
+export class PassportGuard implements IGuard<Context> {
   @Config('app.security')
   securityConfig;
 
@@ -23,16 +24,15 @@ export class AuthGuard implements IGuard<Context> {
     }
 
     // 从类元数据上获取角色信息
-    const roleNameList = getPropertyMetadata<string[]>(
-      ROLE_META_KEY,
-      supplierClz,
-      methodName
-    );
-    if (roleNameList && roleNameList.length && context.currentPassport) {
-      // 直接判断是否包含该角色
-      return roleNameList.includes(context.currentPassport.passportType);
+    const roleNameList =
+      getPropertyMetadata<string[]>(ROLE_META_KEY, supplierClz, methodName) ||
+      [];
+    if (
+      roleNameList.includes(context.currentPassport?.passportType || void 0)
+    ) {
+      return true;
     }
 
-    return false;
+    throw new CommonError('access_denied.message', { group: 'passport' });
   }
 }
