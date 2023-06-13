@@ -19,7 +19,7 @@ export class SystemConfigController extends BaseAdminController {
   systemConfigService: SystemConfigService;
 
   @Role(['admin'])
-  @Get('/get', { summary: '查询系统信息' })
+  @Get('/get', { summary: '管理员-查询系统信息' })
   async getSystemConfig() {
     const mdl = await this.systemConfigService.getSystemConfig();
     if (!mdl) {
@@ -29,7 +29,7 @@ export class SystemConfigController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/set', { summary: '修改系统信息' })
+  @Put('/set', { summary: '管理员-修改系统信息' })
   @ApiBody({ description: '系统信息' })
   async updateSystemConfig(@Body() dto: UpdateSystemConfigDTO) {
     const mdl = await this.systemConfigService.updateSystemConfig(

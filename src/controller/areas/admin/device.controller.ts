@@ -46,7 +46,7 @@ export class DeviceController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个设备' })
+  @Get('/:id', { summary: '管理员-查询单个设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async getDevice(@Param('id') id: string) {
     const mdl = await this.deviceService.getObjectById(id);
@@ -57,7 +57,7 @@ export class DeviceController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询设备列表' })
+  @Get('/list', { summary: '管理员-查询设备列表' })
   @ApiQuery({})
   async getDeviceList(@Query() query: GetDeviceListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -85,7 +85,7 @@ export class DeviceController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/create', { summary: '新建设备' })
+  @Post('/create', { summary: '管理员-新建设备' })
   @ApiBody({ description: '设备信息' })
   async createDevice(@Body() dto: CreateDeviceDTO) {
     if (await this.deviceService.checkNameExisted(dto.name)) {
@@ -118,7 +118,7 @@ export class DeviceController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改设备' })
+  @Put('/:id', { summary: '管理员-修改设备' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '设备信息' })
   async updateDevice(@Param('id') id: string, @Body() dto: UpdateDeviceDTO) {
@@ -156,7 +156,7 @@ export class DeviceController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除设备' })
+  @Del('/:id', { summary: '管理员-删除设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteDevice(@Param('id') id: string) {
     if (!(await this.deviceService.existObjectById(id))) {
@@ -170,7 +170,7 @@ export class DeviceController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/soft/:id', { summary: '软删除设备' })
+  @Del('/soft/:id', { summary: '管理员-软删除设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteDevice(@Param('id') id: string) {
     if (!(await this.deviceService.existObjectById(id))) {
@@ -184,7 +184,7 @@ export class DeviceController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/restore/:id', { summary: '恢复软删除设备' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除设备' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.deviceService.restoreDeleteObject(id);

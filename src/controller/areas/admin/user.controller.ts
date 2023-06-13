@@ -39,7 +39,7 @@ export class UserController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个用户' })
+  @Get('/:id', { summary: '管理员-查询单个用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async getUser(@Param('id') id: string) {
     const mdl = await this.userService.getObjectById(id);
@@ -50,7 +50,7 @@ export class UserController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询用户列表' })
+  @Get('/list', { summary: '管理员-查询用户列表' })
   @ApiQuery({})
   async getUserList(@Query() query: GetUserListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -78,7 +78,7 @@ export class UserController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/create', { summary: '新建用户' })
+  @Post('/create', { summary: '管理员-新建用户' })
   @ApiBody({ description: '用户信息' })
   async createUser(@Body() dto: CreateUserDTO) {
     if (await this.userService.checkNameExisted(dto.name)) {
@@ -95,7 +95,7 @@ export class UserController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改用户' })
+  @Put('/:id', { summary: '管理员-修改用户' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '用户信息' })
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDTO) {
@@ -117,7 +117,7 @@ export class UserController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/password/:id', { summary: '重置用户密码' })
+  @Put('/password/:id', { summary: '管理员-重置用户密码' })
   @ApiParam({ name: 'id', description: '编号' })
   async resetUserPassword(@Param('id') id: string) {
     const user = await this.userService.getObjectById(id);
@@ -133,7 +133,7 @@ export class UserController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除用户' })
+  @Del('/:id', { summary: '管理员-删除用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteUser(@Param('id') id: string) {
     if (!(await this.userService.existObjectById(id))) {

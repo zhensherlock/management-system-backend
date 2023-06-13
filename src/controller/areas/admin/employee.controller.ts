@@ -46,7 +46,7 @@ export class EmployeeController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个员工' })
+  @Get('/:id', { summary: '管理员-查询单个员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async getEmployee(@Param('id') id: string) {
     const mdl = await this.employeeService.getObjectById(id);
@@ -57,7 +57,7 @@ export class EmployeeController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询员工列表' })
+  @Get('/list', { summary: '管理员-查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -85,7 +85,7 @@ export class EmployeeController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/create', { summary: '新建员工' })
+  @Post('/create', { summary: '管理员-新建员工' })
   @ApiBody({ description: '员工信息' })
   async createEmployee(@Body() dto: CreateEmployeeDTO) {
     if (await this.employeeService.checkNameExisted(dto.name)) {
@@ -116,7 +116,7 @@ export class EmployeeController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改员工' })
+  @Put('/:id', { summary: '管理员-修改员工' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '员工信息' })
   async updateEmployee(
@@ -157,7 +157,7 @@ export class EmployeeController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除员工' })
+  @Del('/:id', { summary: '管理员-删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteEmployee(@Param('id') id: string) {
     if (!(await this.employeeService.existObjectById(id))) {
@@ -171,7 +171,7 @@ export class EmployeeController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/soft/:id', { summary: '软删除员工' })
+  @Del('/soft/:id', { summary: '管理员-软删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteEmployee(@Param('id') id: string) {
     if (!(await this.employeeService.existObjectById(id))) {
@@ -185,7 +185,7 @@ export class EmployeeController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/restore/:id', { summary: '恢复软删除员工' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.employeeService.restoreDeleteObject(id);

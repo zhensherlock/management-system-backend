@@ -39,7 +39,7 @@ export class TenantController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个租户' })
+  @Get('/:id', { summary: '管理员-查询单个租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async getTenant(@Param('id') id: string) {
     const mdl = await this.tenantService.getObjectById(id);
@@ -50,7 +50,7 @@ export class TenantController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询租户列表' })
+  @Get('/list', { summary: '管理员-查询租户列表' })
   @ApiQuery({})
   async getTenantList(@Query() query: GetTenantListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -79,7 +79,7 @@ export class TenantController extends BaseAdminController {
   //   errorStatus: 422,
   // })
   @Role(['admin'])
-  @Post('/create', { summary: '新建租户' })
+  @Post('/create', { summary: '管理员-新建租户' })
   @ApiBody({ description: '租户信息' })
   async createTenant(@Body() dto: CreateTenantDTO) {
     if (await this.tenantService.checkNameExisted(dto.name)) {
@@ -90,7 +90,7 @@ export class TenantController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改租户' })
+  @Put('/:id', { summary: '管理员-修改租户' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '租户信息' })
   async updateTenant(@Param('id') id: string, @Body() dto: UpdateTenantDTO) {
@@ -107,7 +107,7 @@ export class TenantController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除租户' })
+  @Del('/:id', { summary: '管理员-删除租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteTenant(@Param('id') id: string) {
     if (!(await this.tenantService.existObjectById(id))) {
@@ -121,7 +121,7 @@ export class TenantController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/soft/:id', { summary: '软删除租户' })
+  @Del('/soft/:id', { summary: '管理员-软删除租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteTenant(@Param('id') id: string) {
     if (!(await this.tenantService.existObjectById(id))) {
@@ -135,7 +135,7 @@ export class TenantController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/restore/:id', { summary: '恢复软删除租户' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除租户' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.tenantService.restoreDeleteObject(id);

@@ -117,6 +117,10 @@ export default {
         name: 'user',
         description: 'User API Document',
       },
+      {
+        name: 'passport',
+        description: 'Passport API Document',
+      },
     ],
   },
   codeDye: {

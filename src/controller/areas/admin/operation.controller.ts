@@ -42,7 +42,7 @@ export class OperationController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个操作按钮' })
+  @Get('/:id', { summary: '管理员-查询单个操作按钮' })
   @ApiParam({ name: 'id', description: '编号' })
   async getOperation(@Param('id') id: string) {
     const mdl = await this.operationService.getObjectById(id);
@@ -53,7 +53,7 @@ export class OperationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询操作按钮列表' })
+  @Get('/list', { summary: '管理员-查询操作按钮列表' })
   @ApiQuery({})
   async getOperationList(@Query() query: GetOperationListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -78,7 +78,7 @@ export class OperationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/create', { summary: '新建操作按钮' })
+  @Post('/create', { summary: '管理员-新建操作按钮' })
   @ApiBody({ description: '操作按钮信息' })
   async createOperation(@Body() dto: CreateOperationDTO) {
     if (await this.operationService.checkNameExisted(dto.name)) {
@@ -99,7 +99,7 @@ export class OperationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改操作按钮' })
+  @Put('/:id', { summary: '管理员-修改操作按钮' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '操作按钮信息' })
   async updateOperation(
@@ -129,7 +129,7 @@ export class OperationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除操作按钮' })
+  @Del('/:id', { summary: '管理员-删除操作按钮' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteOperation(@Param('id') id: string) {
     if (!(await this.operationService.existObjectById(id))) {
@@ -143,7 +143,7 @@ export class OperationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/soft/:id', { summary: '软删除操作按钮' })
+  @Del('/soft/:id', { summary: '管理员-软删除操作按钮' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteOperation(@Param('id') id: string) {
     if (!(await this.operationService.existObjectById(id))) {
@@ -157,7 +157,7 @@ export class OperationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/restore/:id', { summary: '恢复软删除操作按钮' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除操作按钮' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.operationService.restoreDeleteObject(id);

@@ -38,7 +38,7 @@ export class RoleController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个角色' })
+  @Get('/:id', { summary: '管理员-查询单个角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async getRole(@Param('id') id: string) {
     const mdl = await this.roleService.getObjectById(id);
@@ -49,7 +49,7 @@ export class RoleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询角色列表' })
+  @Get('/list', { summary: '管理员-查询角色列表' })
   @ApiQuery({})
   async getRoleList(@Query() query: GetRoleListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -72,7 +72,7 @@ export class RoleController extends BaseAdminController {
     };
   }
 
-  @Post('/create', { summary: '新建角色' })
+  @Post('/create', { summary: '管理员-新建角色' })
   @ApiBody({ description: '角色信息' })
   async createRole(@Body() dto: CreateRoleDTO) {
     if (await this.roleService.checkNameExisted(dto.name)) {
@@ -82,7 +82,7 @@ export class RoleController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
-  @Put('/:id', { summary: '修改角色' })
+  @Put('/:id', { summary: '管理员-修改角色' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '角色信息' })
   async updateRole(@Param('id') id: string, @Body() dto: UpdateRoleDTO) {
@@ -98,7 +98,7 @@ export class RoleController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
-  @Del('/:id', { summary: '删除角色' })
+  @Del('/:id', { summary: '管理员-删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteRole(@Param('id') id: string) {
     if (!(await this.roleService.existObjectById(id))) {
@@ -111,7 +111,7 @@ export class RoleController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
-  @Del('/soft/:id', { summary: '软删除角色' })
+  @Del('/soft/:id', { summary: '管理员-软删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteRole(@Param('id') id: string) {
     if (!(await this.roleService.existObjectById(id))) {
@@ -124,7 +124,7 @@ export class RoleController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
-  @Post('/restore/:id', { summary: '恢复软删除角色' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.roleService.restoreDeleteObject(id);

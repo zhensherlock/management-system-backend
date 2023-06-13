@@ -42,7 +42,7 @@ export class OrganizationController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个组织' })
+  @Get('/:id', { summary: '管理员-查询单个组织' })
   @ApiParam({ name: 'id', description: '编号' })
   async getOrganization(@Param('id') id: string) {
     const mdl = await this.organizationService.getObjectById(id);
@@ -53,7 +53,7 @@ export class OrganizationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询组织列表' })
+  @Get('/list', { summary: '管理员-查询组织列表' })
   @ApiQuery({})
   async getOrganizationList(@Query() query: GetOrganizationListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -79,7 +79,7 @@ export class OrganizationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/tree', { summary: '查询组织树形列表' })
+  @Get('/tree', { summary: '管理员-查询组织树形列表' })
   @ApiQuery({})
   async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
     const list = await this.organizationService.getTreeList(
@@ -91,7 +91,7 @@ export class OrganizationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/create', { summary: '新建组织' })
+  @Post('/create', { summary: '管理员-新建组织' })
   @ApiBody({ description: '组织信息' })
   async createOrganization(@Body() dto: CreateOrganizationDTO) {
     if (await this.organizationService.checkNameExisted(dto.name)) {
@@ -120,12 +120,14 @@ export class OrganizationController extends BaseAdminController {
         group: 'organization',
       });
     }
-    const mdl = await this.organizationService.createObject(<OrganizationEntity>dto);
+    const mdl = await this.organizationService.createObject(
+      <OrganizationEntity>dto
+    );
     return omit(mdl, ['deletedDate']);
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改组织' })
+  @Put('/:id', { summary: '管理员-修改组织' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '组织信息' })
   async updateOrganization(
@@ -168,7 +170,7 @@ export class OrganizationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除组织' })
+  @Del('/:id', { summary: '管理员-删除组织' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteOrganization(@Param('id') id: string) {
     if (!(await this.organizationService.existObjectById(id))) {
@@ -182,7 +184,7 @@ export class OrganizationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/soft/:id', { summary: '软删除组织' })
+  @Del('/soft/:id', { summary: '管理员-软删除组织' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteOrganization(@Param('id') id: string) {
     if (!(await this.organizationService.existObjectById(id))) {
@@ -196,7 +198,7 @@ export class OrganizationController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/restore/:id', { summary: '恢复软删除组织' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除组织' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.organizationService.restoreDeleteObject(id);

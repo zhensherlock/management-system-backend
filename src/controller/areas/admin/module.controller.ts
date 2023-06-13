@@ -38,7 +38,7 @@ export class ModuleController extends BaseAdminController {
   i18nService: MidwayI18nService;
 
   @Role(['admin'])
-  @Get('/:id', { summary: '查询单个模块' })
+  @Get('/:id', { summary: '管理员-查询单个模块' })
   @ApiParam({ name: 'id', description: '编号' })
   async getModule(@Param('id') id: string) {
     const mdl = await this.moduleService.getObjectById(id);
@@ -49,7 +49,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/list', { summary: '查询模块列表' })
+  @Get('/list', { summary: '管理员-查询模块列表' })
   @ApiQuery({})
   async getModuleList(@Query() query: GetModuleListDTO) {
     const [list, count, currentPage, pageSize] =
@@ -73,7 +73,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Get('/tree', { summary: '查询模块树形列表' })
+  @Get('/tree', { summary: '管理员-查询模块树形列表' })
   @ApiQuery({})
   async getModuleTreeList(@Query() query: GetModuleListDTO) {
     const list = await this.moduleService.getTreeList(query.keyword);
@@ -81,7 +81,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/create', { summary: '新建模块' })
+  @Post('/create', { summary: '管理员-新建模块' })
   @ApiBody({ description: '模块信息' })
   async createModule(@Body() dto: CreateModuleDTO) {
     if (await this.moduleService.checkNameExisted(dto.name)) {
@@ -102,7 +102,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Put('/:id', { summary: '修改模块' })
+  @Put('/:id', { summary: '管理员-修改模块' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '模块信息' })
   async updateModule(@Param('id') id: string, @Body() dto: UpdateModuleDTO) {
@@ -129,7 +129,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/:id', { summary: '删除模块' })
+  @Del('/:id', { summary: '管理员-删除模块' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteModule(@Param('id') id: string) {
     if (!(await this.moduleService.existObjectById(id))) {
@@ -143,7 +143,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Del('/soft/:id', { summary: '软删除模块' })
+  @Del('/soft/:id', { summary: '管理员-软删除模块' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteModule(@Param('id') id: string) {
     if (!(await this.moduleService.existObjectById(id))) {
@@ -157,7 +157,7 @@ export class ModuleController extends BaseAdminController {
   }
 
   @Role(['admin'])
-  @Post('/restore/:id', { summary: '恢复软删除模块' })
+  @Post('/restore/:id', { summary: '管理员-恢复软删除模块' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {
     const result = await this.moduleService.restoreDeleteObject(id);
