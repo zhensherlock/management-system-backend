@@ -5,13 +5,13 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { RoleEntity } from './role.entity';
 
 @Entity({
   name: 'user_role_mapping',
 })
-export class UserRoleMapping {
+export class UserRoleMappingEntity {
   @PrimaryColumn('uuid', {
     name: 'user_id',
     length: 36,
@@ -31,9 +31,9 @@ export class UserRoleMapping {
   })
   createdDate: Date;
 
-  @ManyToOne(() => User, node => node.userRoleMappings)
+  @ManyToOne(() => UserEntity, node => node.userRoleMappings)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: UserEntity;
 
   @ManyToOne(() => RoleEntity, node => node.userRoleMappings)
   @JoinColumn({ name: 'role_id' })

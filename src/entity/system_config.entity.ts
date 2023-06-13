@@ -12,7 +12,7 @@ import { generateUUID, updatedDateTransformer } from '../util';
 @Entity({
   name: 'system_config',
 })
-export class SystemConfig {
+export class SystemConfigEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '系统编号' })
   id: string;
 

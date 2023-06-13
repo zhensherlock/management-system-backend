@@ -16,7 +16,7 @@ import {
   GetEmployeeListDTO,
   UpdateEmployeeDTO,
 } from '../../../dto/areas/admin/employee.dto';
-import { Employee } from '../../../entity/employee.entity';
+import { EmployeeEntity } from '../../../entity/employee.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
@@ -111,7 +111,7 @@ export class EmployeeController extends BaseAdminController {
     ) {
       throw new CommonError('tenant_id.base.message', { group: 'employee' });
     }
-    const mdl = await this.employeeService.createObject(<Employee>dto);
+    const mdl = await this.employeeService.createObject(<EmployeeEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 

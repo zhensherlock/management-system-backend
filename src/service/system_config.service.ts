@@ -1,18 +1,18 @@
 import { Inject, Provide, MidwayConfigService, Config } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { SystemConfig } from '../entity/system_config.entity';
+import { SystemConfigEntity } from '../entity/system_config.entity';
 import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { RedisService } from '@midwayjs/redis';
 
 @Provide()
-export class SystemConfigService extends BaseService<SystemConfig> {
+export class SystemConfigService extends BaseService<SystemConfigEntity> {
   private key = 'system_config';
   @Inject()
   configService: MidwayConfigService;
 
-  @InjectEntityModel(SystemConfig)
-  entityModel: Repository<SystemConfig>;
+  @InjectEntityModel(SystemConfigEntity)
+  entityModel: Repository<SystemConfigEntity>;
 
   @Inject()
   redisService: RedisService;
@@ -24,8 +24,8 @@ export class SystemConfigService extends BaseService<SystemConfig> {
     super();
   }
 
-  async getSystemConfig(): Promise<SystemConfig> {
-    let mdl: SystemConfig;
+  async getSystemConfig(): Promise<SystemConfigEntity> {
+    let mdl: SystemConfigEntity;
     const redisKey = `${this.redisConfig.prefix}:${this.key}`;
     const exist = (await this.redisService.exists(redisKey)) === 1;
     if (exist) {
@@ -37,7 +37,7 @@ export class SystemConfigService extends BaseService<SystemConfig> {
     return mdl;
   }
 
-  async updateSystemConfig(entity: SystemConfig): Promise<SystemConfig> {
+  async updateSystemConfig(entity: SystemConfigEntity): Promise<SystemConfigEntity> {
     const mdl = await this.getSystemConfig();
     Object.assign(mdl, entity);
     const result = await this.updateObject(entity);

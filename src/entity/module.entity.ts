@@ -15,13 +15,13 @@ import {
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { Operation } from './operation.entity';
-import { ModuleRoleMapping } from './module_role_mapping.entity';
+import { OperationEntity } from './operation.entity';
+import { ModuleRoleMappingEntity } from './module_role_mapping.entity';
 
 @Entity({
   name: 'module',
 })
-export class Module {
+export class ModuleEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '模块编号' })
   id: string;
 
@@ -99,18 +99,18 @@ export class Module {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => Module, node => node.children)
+  @ManyToOne(() => ModuleEntity, node => node.children)
   @JoinColumn({ name: 'parent_id' })
-  parent: Module;
+  parent: ModuleEntity;
 
-  @OneToMany(() => Module, node => node.parent)
-  children: Module[];
+  @OneToMany(() => ModuleEntity, node => node.parent)
+  children: ModuleEntity[];
 
-  @OneToMany(() => Operation, node => node.module)
-  operations: Operation[];
+  @OneToMany(() => OperationEntity, node => node.module)
+  operations: OperationEntity[];
 
-  @OneToMany(() => ModuleRoleMapping, node => node.module)
-  moduleRoleMappings: ModuleRoleMapping[];
+  @OneToMany(() => ModuleRoleMappingEntity, node => node.module)
+  moduleRoleMappings: ModuleRoleMappingEntity[];
 
   @BeforeInsert()
   generateId() {

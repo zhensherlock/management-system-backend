@@ -5,13 +5,13 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Organization } from './organization.entity';
-import { User } from './user.entity';
+import { OrganizationEntity } from './organization.entity';
+import { UserEntity } from './user.entity';
 
 @Entity({
   name: 'organization_user_mapping',
 })
-export class OrganizationUserMapping {
+export class OrganizationUserMappingEntity {
   @PrimaryColumn('uuid', {
     name: 'organization_id',
     length: 36,
@@ -31,11 +31,11 @@ export class OrganizationUserMapping {
   })
   createdDate: Date;
 
-  @ManyToOne(() => Organization, node => node.organizationUserMappings)
+  @ManyToOne(() => OrganizationEntity, node => node.organizationUserMappings)
   @JoinColumn({ name: 'organization_id' })
-  organization: Organization;
+  organization: OrganizationEntity;
 
-  @ManyToOne(() => User, node => node.organizationUserMappings)
+  @ManyToOne(() => UserEntity, node => node.organizationUserMappings)
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: UserEntity;
 }

@@ -16,7 +16,7 @@ import {
 @Entity({
   name: 'admin',
 })
-export class Admin {
+export class AdminEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '管理员编号' })
   id: string;
 

@@ -1,14 +1,14 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Organization } from '../entity/organization.entity';
+import { OrganizationEntity } from '../entity/organization.entity';
 import { Like, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isEmpty } from 'lodash';
 
 @Provide()
-export class OrganizationService extends BaseService<Organization> {
-  @InjectEntityModel(Organization)
-  entityModel: Repository<Organization>;
+export class OrganizationService extends BaseService<OrganizationEntity> {
+  @InjectEntityModel(OrganizationEntity)
+  entityModel: Repository<OrganizationEntity>;
 
   constructor() {
     super();
@@ -47,8 +47,8 @@ export class OrganizationService extends BaseService<Organization> {
   }
 
   private getOrganizationTree(
-    mdl: Organization,
-    allOrganizations: Organization[]
+    mdl: OrganizationEntity,
+    allOrganizations: OrganizationEntity[]
   ) {
     const children = allOrganizations.filter(item => item.parentId === mdl.id);
     if (children.length > 0) {

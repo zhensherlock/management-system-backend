@@ -1,18 +1,18 @@
 import { ILogger, Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Admin } from '../entity/admin.entity';
+import { AdminEntity } from '../entity/admin.entity';
 import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { encrypt } from '../util';
 import { CommonError } from '../error';
 
 @Provide()
-export class AdminService extends BaseService<Admin> {
+export class AdminService extends BaseService<AdminEntity> {
   @Inject()
   logger: ILogger;
 
-  @InjectEntityModel(Admin)
-  entityModel: Repository<Admin>;
+  @InjectEntityModel(AdminEntity)
+  entityModel: Repository<AdminEntity>;
 
   constructor() {
     super();

@@ -16,7 +16,7 @@ import {
   GetModuleListDTO,
   UpdateModuleDTO,
 } from '../../../dto/areas/admin/module.dto';
-import { Module } from '../../../entity/module.entity';
+import { ModuleEntity } from '../../../entity/module.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
@@ -97,7 +97,7 @@ export class ModuleController extends BaseAdminController {
     ) {
       throw new CommonError('parent_id.base.message', { group: 'module' });
     }
-    const mdl = await this.moduleService.createObject(<Module>dto);
+    const mdl = await this.moduleService.createObject(<ModuleEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 

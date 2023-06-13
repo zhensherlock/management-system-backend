@@ -15,14 +15,14 @@ import {
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { UserRoleMapping } from './user_role_mapping.entity';
-import { OrganizationUserMapping } from './organization_user_mapping.entity';
-import { Tenant } from './tenant.entity';
+import { UserRoleMappingEntity } from './user_role_mapping.entity';
+import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
+import { TenantEntity } from './tenant.entity';
 
 @Entity({
   name: 'user',
 })
-export class User {
+export class UserEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '用户编号' })
   id: string;
 
@@ -90,15 +90,15 @@ export class User {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => Tenant, node => node.devices)
+  @ManyToOne(() => TenantEntity, node => node.devices)
   @JoinColumn({ name: 'tenant_id' })
-  tenant: Tenant;
+  tenant: TenantEntity;
 
-  @OneToMany(() => UserRoleMapping, node => node.user)
-  userRoleMappings: UserRoleMapping[];
+  @OneToMany(() => UserRoleMappingEntity, node => node.user)
+  userRoleMappings: UserRoleMappingEntity[];
 
-  @OneToMany(() => OrganizationUserMapping, node => node.user)
-  organizationUserMappings: OrganizationUserMapping[];
+  @OneToMany(() => OrganizationUserMappingEntity, node => node.user)
+  organizationUserMappings: OrganizationUserMappingEntity[];
 
   @BeforeInsert()
   generateId() {

@@ -1,14 +1,14 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Module } from '../entity/module.entity';
+import { ModuleEntity } from '../entity/module.entity';
 import { Like, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isEmpty } from 'lodash';
 
 @Provide()
-export class ModuleService extends BaseService<Module> {
-  @InjectEntityModel(Module)
-  entityModel: Repository<Module>;
+export class ModuleService extends BaseService<ModuleEntity> {
+  @InjectEntityModel(ModuleEntity)
+  entityModel: Repository<ModuleEntity>;
 
   constructor() {
     super();
@@ -38,7 +38,7 @@ export class ModuleService extends BaseService<Module> {
     return hierarchicalModules;
   }
 
-  private getModuleTree(mdl: Module, allModules: Module[]) {
+  private getModuleTree(mdl: ModuleEntity, allModules: ModuleEntity[]) {
     const children = allModules.filter(item => item.parentId === item.id);
     if (children.length > 0) {
       mdl.children = children.map(child =>

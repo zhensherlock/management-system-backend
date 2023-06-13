@@ -6,13 +6,13 @@ import {
   Column,
   JoinColumn,
 } from 'typeorm';
-import { Module } from './module.entity';
+import { ModuleEntity } from './module.entity';
 import { RoleEntity } from './role.entity';
 
 @Entity({
   name: 'module_role_mapping',
 })
-export class ModuleRoleMapping {
+export class ModuleRoleMappingEntity {
   @PrimaryColumn('uuid', {
     name: 'module_id',
     length: 36,
@@ -35,9 +35,9 @@ export class ModuleRoleMapping {
   })
   createdDate: Date;
 
-  @ManyToOne(() => Module, node => node.moduleRoleMappings)
+  @ManyToOne(() => ModuleEntity, node => node.moduleRoleMappings)
   @JoinColumn({ name: 'module_id' })
-  module: Module;
+  module: ModuleEntity;
 
   @ManyToOne(() => RoleEntity, node => node.userRoleMappings)
   @JoinColumn({ name: 'role_id' })

@@ -13,8 +13,8 @@ import {
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { UserRoleMapping } from './user_role_mapping.entity';
-import { ModuleRoleMapping } from './module_role_mapping.entity';
+import { UserRoleMappingEntity } from './user_role_mapping.entity';
+import { ModuleRoleMappingEntity } from './module_role_mapping.entity';
 
 @Entity({
   name: 'role',
@@ -61,11 +61,11 @@ export class RoleEntity {
   })
   deletedDate: Date;
 
-  @OneToMany(() => UserRoleMapping, node => node.role)
-  userRoleMappings: UserRoleMapping[];
+  @OneToMany(() => UserRoleMappingEntity, node => node.role)
+  userRoleMappings: UserRoleMappingEntity[];
 
-  @OneToMany(() => ModuleRoleMapping, node => node.role)
-  moduleRoleMappings: ModuleRoleMapping[];
+  @OneToMany(() => ModuleRoleMappingEntity, node => node.role)
+  moduleRoleMappings: ModuleRoleMappingEntity[];
 
   @BeforeInsert()
   generateId() {

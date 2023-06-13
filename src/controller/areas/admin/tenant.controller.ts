@@ -16,7 +16,7 @@ import {
   GetTenantListDTO,
   UpdateTenantDTO,
 } from '../../../dto/areas/admin/tenant.dto';
-import { Tenant } from '../../../entity/tenant.entity';
+import { TenantEntity } from '../../../entity/tenant.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
@@ -85,7 +85,7 @@ export class TenantController extends BaseAdminController {
     if (await this.tenantService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'tenant' });
     }
-    const mdl = await this.tenantService.createObject(<Tenant>dto);
+    const mdl = await this.tenantService.createObject(<TenantEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 

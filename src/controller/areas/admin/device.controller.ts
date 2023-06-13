@@ -16,7 +16,7 @@ import {
   GetDeviceListDTO,
   UpdateDeviceDTO,
 } from '../../../dto/areas/admin/device.dto';
-import { Device } from '../../../entity/device.entity';
+import { DeviceEntity } from '../../../entity/device.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
@@ -113,7 +113,7 @@ export class DeviceController extends BaseAdminController {
         group: 'device',
       });
     }
-    const mdl = await this.deviceService.createObject(<Device>dto);
+    const mdl = await this.deviceService.createObject(<DeviceEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 

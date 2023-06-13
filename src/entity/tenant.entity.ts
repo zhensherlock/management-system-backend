@@ -8,8 +8,8 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { Device } from './device.entity';
-import { Organization } from './organization.entity';
+import { DeviceEntity } from './device.entity';
+import { OrganizationEntity } from './organization.entity';
 import {
   createDateTransformer,
   generateUUID,
@@ -19,7 +19,7 @@ import {
 @Entity({
   name: 'tenant',
 })
-export class Tenant {
+export class TenantEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '租户编号' })
   id: string;
 
@@ -82,11 +82,11 @@ export class Tenant {
   })
   deletedDate: Date;
 
-  @OneToMany(() => Device, node => node.tenant)
-  devices: Device[];
+  @OneToMany(() => DeviceEntity, node => node.tenant)
+  devices: DeviceEntity[];
 
-  @OneToMany(() => Organization, node => node.tenant)
-  organizations: Organization[];
+  @OneToMany(() => OrganizationEntity, node => node.tenant)
+  organizations: OrganizationEntity[];
 
   // @OneToMany(() => User, user => user.tenant)
   // users: User[];

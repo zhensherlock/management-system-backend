@@ -17,7 +17,7 @@ import {
   GetAdminListDTO,
   UpdateAdminDTO,
 } from '../../../dto/areas/admin/admin.dto';
-import { Admin } from '../../../entity/admin.entity';
+import { AdminEntity } from '../../../entity/admin.entity';
 import { Like } from 'typeorm';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
@@ -84,7 +84,7 @@ export class AdminController extends BaseAdminController {
     }
     const { hash, salt } = encrypt(dto.password);
     const mdl = await this.adminService.createObject(
-      <Admin>Object.assign({}, dto, {
+      <AdminEntity>Object.assign({}, dto, {
         password: hash,
         salt,
       })

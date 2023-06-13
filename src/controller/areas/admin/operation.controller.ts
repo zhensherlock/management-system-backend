@@ -16,7 +16,7 @@ import {
   GetOperationListDTO,
   UpdateOperationDTO,
 } from '../../../dto/areas/admin/operation.dto';
-import { Operation } from '../../../entity/operation.entity';
+import { OperationEntity } from '../../../entity/operation.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
@@ -94,7 +94,7 @@ export class OperationController extends BaseAdminController {
     ) {
       throw new CommonError('module_id.base.message', { group: 'operation' });
     }
-    const mdl = await this.operationService.createObject(<Operation>dto);
+    const mdl = await this.operationService.createObject(<OperationEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 

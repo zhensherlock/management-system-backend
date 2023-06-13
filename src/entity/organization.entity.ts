@@ -15,14 +15,14 @@ import {
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { Tenant } from './tenant.entity';
-import { Device } from './device.entity';
-import { OrganizationUserMapping } from './organization_user_mapping.entity';
+import { TenantEntity } from './tenant.entity';
+import { DeviceEntity } from './device.entity';
+import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
 
 @Entity({
   name: 'organization',
 })
-export class Organization {
+export class OrganizationEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '组织编号' })
   id: string;
 
@@ -88,22 +88,22 @@ export class Organization {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => Organization, node => node.children)
+  @ManyToOne(() => OrganizationEntity, node => node.children)
   @JoinColumn({ name: 'parent_id' })
-  parent: Organization;
+  parent: OrganizationEntity;
 
-  @OneToMany(() => Organization, node => node.parent)
-  children: Organization[];
+  @OneToMany(() => OrganizationEntity, node => node.parent)
+  children: OrganizationEntity[];
 
-  @ManyToOne(() => Tenant, node => node.organizations)
+  @ManyToOne(() => TenantEntity, node => node.organizations)
   @JoinColumn({ name: 'tenant_id' })
-  tenant: Tenant;
+  tenant: TenantEntity;
 
-  @OneToMany(() => Device, node => node.organization)
-  devices: Device[];
+  @OneToMany(() => DeviceEntity, node => node.organization)
+  devices: DeviceEntity[];
 
-  @OneToMany(() => OrganizationUserMapping, node => node.organization)
-  organizationUserMappings: OrganizationUserMapping[];
+  @OneToMany(() => OrganizationUserMappingEntity, node => node.organization)
+  organizationUserMappings: OrganizationUserMappingEntity[];
 
   @BeforeInsert()
   generateId() {

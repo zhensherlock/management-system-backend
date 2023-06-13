@@ -9,7 +9,7 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { Module } from './module.entity';
+import { ModuleEntity } from './module.entity';
 import {
   createDateTransformer,
   generateUUID,
@@ -19,7 +19,7 @@ import {
 @Entity({
   name: 'operation',
 })
-export class Operation {
+export class OperationEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '操作按钮编号' })
   id: string;
 
@@ -76,9 +76,9 @@ export class Operation {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => Module, node => node.operations)
+  @ManyToOne(() => ModuleEntity, node => node.operations)
   @JoinColumn({ name: 'module_id' })
-  module: Module;
+  module: ModuleEntity;
 
   @BeforeInsert()
   generateId() {

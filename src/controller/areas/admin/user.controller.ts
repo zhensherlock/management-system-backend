@@ -17,7 +17,7 @@ import {
   GetUserListDTO,
   UpdateUserDTO,
 } from '../../../dto/areas/admin/user.dto';
-import { User } from '../../../entity/user.entity';
+import { UserEntity } from '../../../entity/user.entity';
 import { Like } from 'typeorm';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { isEmpty, omit } from 'lodash';
@@ -86,7 +86,7 @@ export class UserController extends BaseAdminController {
     }
     const { hash, salt } = encrypt(dto.password);
     const mdl = await this.userService.createObject(
-      <User>Object.assign({}, dto, {
+      <UserEntity>Object.assign({}, dto, {
         password: hash,
         salt,
       })

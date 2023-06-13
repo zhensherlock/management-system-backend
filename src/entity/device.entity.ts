@@ -9,8 +9,8 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { Tenant } from './tenant.entity';
-import { Organization } from './organization.entity';
+import { TenantEntity } from './tenant.entity';
+import { OrganizationEntity } from './organization.entity';
 import {
   createDateTransformer,
   generateUUID,
@@ -20,7 +20,7 @@ import {
 @Entity({
   name: 'device',
 })
-export class Device {
+export class DeviceEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '设备编号' })
   id: string;
 
@@ -104,13 +104,13 @@ export class Device {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => Tenant, node => node.devices)
+  @ManyToOne(() => TenantEntity, node => node.devices)
   @JoinColumn({ name: 'tenant_id' })
-  tenant: Tenant;
+  tenant: TenantEntity;
 
-  @ManyToOne(() => Organization, node => node.devices)
+  @ManyToOne(() => OrganizationEntity, node => node.devices)
   @JoinColumn({ name: 'organization_id' })
-  organization: Organization;
+  organization: OrganizationEntity;
 
   @BeforeInsert()
   generateId() {

@@ -16,7 +16,7 @@ import {
   GetOrganizationListDTO,
   UpdateOrganizationDTO,
 } from '../../../dto/areas/admin/organization.dto';
-import { Organization } from '../../../entity/organization.entity';
+import { OrganizationEntity } from '../../../entity/organization.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
@@ -120,7 +120,7 @@ export class OrganizationController extends BaseAdminController {
         group: 'organization',
       });
     }
-    const mdl = await this.organizationService.createObject(<Organization>dto);
+    const mdl = await this.organizationService.createObject(<OrganizationEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 
