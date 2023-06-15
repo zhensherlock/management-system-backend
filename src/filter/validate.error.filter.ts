@@ -20,6 +20,7 @@ export class ValidateErrorFilter {
       }
     }
     return {
+      traceId: ctx.traceId,
       code,
       message,
     };

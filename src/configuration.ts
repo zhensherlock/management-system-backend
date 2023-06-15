@@ -10,6 +10,7 @@ import * as orm from '@midwayjs/typeorm';
 import * as swagger from '@midwayjs/swagger';
 import * as passport from '@midwayjs/passport';
 import * as codeDye from '@midwayjs/code-dye';
+import * as otel from '@midwayjs/otel';
 import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
@@ -38,6 +39,7 @@ dotenv.config();
     orm,
     swagger,
     passport,
+    otel,
     {
       component: codeDye,
       enabledEnvironment: ['local'],

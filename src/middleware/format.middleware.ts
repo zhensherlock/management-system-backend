@@ -19,6 +19,7 @@ export class FormatMiddleware implements IMiddleware<Context, NextFunction> {
         data = result;
       }
       return {
+        traceId: ctx.traceId,
         code: ctx.status,
         message,
         data,
