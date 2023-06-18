@@ -11,6 +11,7 @@ import * as swagger from '@midwayjs/swagger';
 import * as passport from '@midwayjs/passport';
 import * as codeDye from '@midwayjs/code-dye';
 import * as otel from '@midwayjs/otel';
+// import * as staticFile from '@midwayjs/static-file';
 import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
@@ -40,6 +41,7 @@ dotenv.config();
     swagger,
     passport,
     otel,
+    // staticFile,
     {
       component: codeDye,
       enabledEnvironment: ['local'],

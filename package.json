@@ -17,6 +17,7 @@
     "@midwayjs/otel": "^3.11.11",
     "@midwayjs/passport": "^3.11.11",
     "@midwayjs/redis": "^3.11.11",
+    "@midwayjs/static-file": "^3.11.11",
     "@midwayjs/swagger": "^3.11.11",
     "@midwayjs/typeorm": "^3.11.11",
     "@midwayjs/upload": "^3.11.11",

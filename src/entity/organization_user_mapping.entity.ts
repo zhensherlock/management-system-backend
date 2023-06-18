@@ -16,13 +16,13 @@ export class OrganizationUserMappingEntity {
     name: 'organization_id',
     length: 36,
   })
-  userId: string;
+  organizationId: string;
 
   @PrimaryColumn('uuid', {
     name: 'user_id',
     length: 36,
   })
-  roleId: string;
+  userId: string;
 
   @CreateDateColumn({
     name: 'created_date',
