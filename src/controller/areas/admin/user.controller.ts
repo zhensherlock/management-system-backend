@@ -17,15 +17,21 @@ import {
   GetUserListDTO,
   UpdateUserDTO,
 } from '../../../dto/areas/admin/user.dto';
-import { UserEntity } from '../../../entity/user.entity';
 import { Like } from 'typeorm';
-import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty, omit } from 'lodash';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@midwayjs/swagger';
+import { isEmpty, omit, isString, isArray } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
 
+@ApiBearerAuth()
 @ApiTags(['user'])
 @Controller('/api/admin/user')
 export class UserController extends BaseAdminController {
@@ -53,12 +59,22 @@ export class UserController extends BaseAdminController {
   @Get('/list', { summary: '管理员-查询用户列表' })
   @ApiQuery({})
   async getUserList(@Query() query: GetUserListDTO) {
+    let organizationUserMappings = [];
+    if (isString(query.organizationIds)) {
+      organizationUserMappings = [{ organizationId: query.organizationIds }];
+    }
+    if (isArray(query.organizationIds)) {
+      organizationUserMappings = (<string[]>query.organizationIds).map(id => ({
+        organizationId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.userService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
+            organizationUserMappings,
             tenantId: query.tenantId,
             ...(isEmpty(query.type) ? {} : { type: query.type }),
             ...(isEmpty(query.keyword)
@@ -84,14 +100,14 @@ export class UserController extends BaseAdminController {
     if (await this.userService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
-    const { hash, salt } = encrypt(dto.password);
-    const mdl = await this.userService.createObject(
-      <UserEntity>Object.assign({}, dto, {
-        password: hash,
-        salt,
-      })
-    );
-    return omit(mdl, ['password', 'salt', 'deletedDate']);
+    const mdl = await this.userService.createUser(dto);
+    return omit(mdl, [
+      'password',
+      'salt',
+      'deletedDate',
+      'organizationUserMappings',
+      'organizationIds',
+    ]);
   }
 
   @Role(['admin'])
@@ -99,21 +115,24 @@ export class UserController extends BaseAdminController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '用户信息' })
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDTO) {
-    const user = await this.userService.getObjectById(id);
+    const user = await this.userService.getOneObject({
+      where: { id },
+      relations: ['organizationUserMappings'],
+    });
     if (!user) {
       throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.userService.checkNameExisted(dto.name, id)) {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
-    Object.assign(user, dto);
-    if (!isEmpty(dto.new_password)) {
-      const { hash, salt } = encrypt(dto.new_password);
-      user.password = hash;
-      user.salt = salt;
-    }
-    const mdl = await this.userService.updateObject(user);
-    return omit(mdl, ['password', 'salt', 'deletedDate']);
+    const mdl = await this.userService.updateUser(user, dto);
+    return omit(mdl, [
+      'password',
+      'salt',
+      'deletedDate',
+      'organizationUserMappings',
+      'organizationIds',
+    ]);
   }
 
   @Role(['admin'])

@@ -164,7 +164,7 @@ export class UserDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'user_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'user' },
         })
       )
@@ -197,6 +197,19 @@ export class CreateUserDTO extends UserDTO {
       )
   )
   password: string;
+
+  @ApiProperty({ example: null, description: '组织编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'organization_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  organizationIds: string[];
 }
 
 export class UpdateUserDTO extends UserDTO {
@@ -213,6 +226,19 @@ export class UpdateUserDTO extends UserDTO {
       )
   )
   new_password: string;
+
+  @ApiProperty({ example: null, description: '组织编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'organization_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  organizationIds: string[];
 }
 
 export class UpdateUserPasswordDTO {
@@ -294,10 +320,26 @@ export class GetUserListDTO extends GetListBaseDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'user_id.base.message',
+          message: 'tenant_id.base.message',
           options: { group: 'user' },
         })
       )
   )
   tenantId: string;
+
+  @ApiProperty({ example: null, description: '组织编号' })
+  @Rule(
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .error(
+        handleParameterError({
+          message: 'organization_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  organizationIds: string[] | string;
 }

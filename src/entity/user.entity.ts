@@ -97,7 +97,9 @@ export class UserEntity {
   @OneToMany(() => UserRoleMappingEntity, node => node.user)
   userRoleMappings: UserRoleMappingEntity[];
 
-  @OneToMany(() => OrganizationUserMappingEntity, node => node.user)
+  @OneToMany(() => OrganizationUserMappingEntity, node => node.user, {
+    cascade: true,
+  })
   organizationUserMappings: OrganizationUserMappingEntity[];
 
   @BeforeInsert()
