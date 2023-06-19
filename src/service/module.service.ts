@@ -21,6 +21,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
     if (!isEmpty(keyword)) {
       query.andWhere('module.name LIKE :name', { name: `%${keyword}%` });
     }
+    query.orderBy('module.sequence', 'DESC');
     return await query.leftJoinAndSelect('module.children', 'child').getMany();
   }
 
@@ -28,6 +29,9 @@ export class ModuleService extends BaseService<ModuleEntity> {
     const list = await this.getList({
       where: {
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
+      },
+      order: {
+        sequence: 'DESC',
       },
     });
     const rootModules = list.filter(item => !item.parentId);
@@ -39,7 +43,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
   }
 
   private getModuleTree(mdl: ModuleEntity, allModules: ModuleEntity[]) {
-    const children = allModules.filter(item => item.parentId === item.id);
+    const children = allModules.filter(item => item.parentId === mdl.id);
     if (children.length > 0) {
       mdl.children = children.map(child =>
         this.getModuleTree(child, allModules)

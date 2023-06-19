@@ -25,7 +25,7 @@ export class SystemConfigController extends BaseAdminController {
     if (!mdl) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    return mdl;
+    return omit(mdl, ['deletedDate']);
   }
 
   @Role(['admin'])
