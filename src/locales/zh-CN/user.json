@@ -22,6 +22,7 @@
   "options.base.message": "请输入正确的用户扩展配置信息",
   "tenant_id.base.message": "请选择正确的租户",
   "organization_id.base.message": "请选择正确的组织",
+  "role_id.base.message": "请选择正确的角色",
   "old_password.required.message": "请输入用户登录旧密码",
   "old_password.base.message": "请输入正确的用户登录旧密码",
   "new_password.required.message": "请输入用户登录新密码",

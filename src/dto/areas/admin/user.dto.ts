@@ -210,6 +210,19 @@ export class CreateUserDTO extends UserDTO {
       )
   )
   organizationIds: string[];
+
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  roleIds: string[];
 }
 
 export class UpdateUserDTO extends UserDTO {
@@ -239,6 +252,19 @@ export class UpdateUserDTO extends UserDTO {
       )
   )
   organizationIds: string[];
+
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  roleIds: string[];
 }
 
 export class UpdateUserPasswordDTO {
@@ -342,4 +368,20 @@ export class GetUserListDTO extends GetListBaseDTO {
       )
   )
   organizationIds: string[] | string;
+
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  roleIds: string[] | string;
 }

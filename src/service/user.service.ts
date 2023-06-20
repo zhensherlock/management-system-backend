@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { differenceWith, isEmpty } from 'lodash';
 import { OrganizationUserMappingService } from './organization_user_mapping.service';
+import { UserRoleMappingService } from './user_role_mapping.service';
 import { CreateUserDTO, UpdateUserDTO } from '../dto/areas/admin/user.dto';
 import { encrypt } from '../util';
 
@@ -15,6 +16,9 @@ export class UserService extends BaseService<UserEntity> {
 
   @Inject()
   organizationUserMappingService: OrganizationUserMappingService;
+
+  @Inject()
+  userRoleMappingService: UserRoleMappingService;
 
   constructor() {
     super();
@@ -27,6 +31,11 @@ export class UserService extends BaseService<UserEntity> {
         organizationUserMappings: dto.organizationIds.map(id =>
           this.organizationUserMappingService.entityModel.create({
             organizationId: id,
+          })
+        ),
+        userRoleMappings: dto.roleIds.map(id =>
+          this.userRoleMappingService.entityModel.create({
+            roleId: id,
           })
         ),
         password: hash,
@@ -42,6 +51,7 @@ export class UserService extends BaseService<UserEntity> {
       user.password = hash;
       user.salt = salt;
     }
+    // organization user mapping
     const removeOrganizationUserMappings = differenceWith(
       user.organizationUserMappings,
       dto.organizationIds,
@@ -53,6 +63,21 @@ export class UserService extends BaseService<UserEntity> {
     user.organizationUserMappings = dto.organizationIds.map(id =>
       this.organizationUserMappingService.entityModel.create({
         organizationId: id,
+        userId: user.id,
+      })
+    );
+    // user role mapping
+    const removeUserRoleMappings = differenceWith(
+      user.userRoleMappings,
+      dto.roleIds,
+      (a, b) => a.roleId === b
+    );
+    await this.userRoleMappingService.entityModel.remove(
+      removeUserRoleMappings
+    );
+    user.userRoleMappings = dto.roleIds.map(id =>
+      this.userRoleMappingService.entityModel.create({
+        roleId: id,
         userId: user.id,
       })
     );

@@ -72,6 +72,7 @@ export class RoleController extends BaseAdminController {
     };
   }
 
+  @Role(['admin'])
   @Post('/create', { summary: '管理员-新建角色' })
   @ApiBody({ description: '角色信息' })
   async createRole(@Body() dto: CreateRoleDTO) {
@@ -82,6 +83,7 @@ export class RoleController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Put('/:id', { summary: '管理员-修改角色' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '角色信息' })
@@ -98,6 +100,7 @@ export class RoleController extends BaseAdminController {
     return omit(mdl, ['deletedDate']);
   }
 
+  @Role(['admin'])
   @Del('/:id', { summary: '管理员-删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteRole(@Param('id') id: string) {
@@ -111,6 +114,7 @@ export class RoleController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Del('/soft/:id', { summary: '管理员-软删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteRole(@Param('id') id: string) {
@@ -124,6 +128,7 @@ export class RoleController extends BaseAdminController {
     return this.i18nService.translate('delete.success', { group: 'global' });
   }
 
+  @Role(['admin'])
   @Post('/restore/:id', { summary: '管理员-恢复软删除角色' })
   @ApiParam({ name: 'id', description: '编号' })
   async restoreDeleteAdmin(@Param('id') id: string) {

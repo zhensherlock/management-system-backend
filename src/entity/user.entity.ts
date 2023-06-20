@@ -94,7 +94,9 @@ export class UserEntity {
   @JoinColumn({ name: 'tenant_id' })
   tenant: TenantEntity;
 
-  @OneToMany(() => UserRoleMappingEntity, node => node.user)
+  @OneToMany(() => UserRoleMappingEntity, node => node.user, {
+    cascade: true,
+  })
   userRoleMappings: UserRoleMappingEntity[];
 
   @OneToMany(() => OrganizationUserMappingEntity, node => node.user, {

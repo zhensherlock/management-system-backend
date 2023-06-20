@@ -68,6 +68,15 @@ export class UserController extends BaseAdminController {
         organizationId: id,
       }));
     }
+    let userRoleMappings = [];
+    if (isString(query.roleIds)) {
+      userRoleMappings = [{ roleId: query.roleIds }];
+    }
+    if (isArray(query.roleIds)) {
+      userRoleMappings = (<string[]>query.roleIds).map(id => ({
+        roleId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.userService.getPaginatedList(
         query.currentPage,
@@ -75,6 +84,7 @@ export class UserController extends BaseAdminController {
         {
           where: {
             organizationUserMappings,
+            userRoleMappings,
             tenantId: query.tenantId,
             ...(isEmpty(query.type) ? {} : { type: query.type }),
             ...(isEmpty(query.keyword)
@@ -107,6 +117,8 @@ export class UserController extends BaseAdminController {
       'deletedDate',
       'organizationUserMappings',
       'organizationIds',
+      'userRoleMappings',
+      'roleIds',
     ]);
   }
 
@@ -132,6 +144,8 @@ export class UserController extends BaseAdminController {
       'deletedDate',
       'organizationUserMappings',
       'organizationIds',
+      'userRoleMappings',
+      'roleIds',
     ]);
   }
 
