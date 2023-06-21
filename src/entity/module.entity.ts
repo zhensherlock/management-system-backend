@@ -109,7 +109,9 @@ export class ModuleEntity {
   @OneToMany(() => OperationEntity, node => node.module)
   operations: OperationEntity[];
 
-  @OneToMany(() => ModuleRoleMappingEntity, node => node.module)
+  @OneToMany(() => ModuleRoleMappingEntity, node => node.module, {
+    cascade: true,
+  })
   moduleRoleMappings: ModuleRoleMappingEntity[];
 
   @BeforeInsert()

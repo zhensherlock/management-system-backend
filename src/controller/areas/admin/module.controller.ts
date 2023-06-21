@@ -20,7 +20,7 @@ import { ModuleEntity } from '../../../entity/module.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty, omit, isString, isArray } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
@@ -52,12 +52,22 @@ export class ModuleController extends BaseAdminController {
   @Get('/list', { summary: '管理员-查询模块列表' })
   @ApiQuery({})
   async getModuleList(@Query() query: GetModuleListDTO) {
+    let moduleRoleMappings = [];
+    if (isString(query.roleIds)) {
+      moduleRoleMappings = [{ roleId: query.roleIds }];
+    }
+    if (isArray(query.roleIds)) {
+      moduleRoleMappings = (<string[]>query.roleIds).map(id => ({
+        roleId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.moduleService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
+            moduleRoleMappings,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
@@ -76,7 +86,10 @@ export class ModuleController extends BaseAdminController {
   @Get('/tree', { summary: '管理员-查询模块树形列表' })
   @ApiQuery({})
   async getModuleTreeList(@Query() query: GetModuleListDTO) {
-    const list = await this.moduleService.getTreeList(query.keyword);
+    const list = await this.moduleService.getTreeList(
+      query.keyword,
+      query.roleIds
+    );
     return { list };
   }
 

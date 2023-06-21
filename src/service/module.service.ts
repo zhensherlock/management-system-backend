@@ -3,7 +3,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { ModuleEntity } from '../entity/module.entity';
 import { Like, Repository } from 'typeorm';
 import { BaseService } from './base.service';
-import { isEmpty } from 'lodash';
+import { isEmpty, isString, isArray } from 'lodash';
 
 @Provide()
 export class ModuleService extends BaseService<ModuleEntity> {
@@ -25,9 +25,19 @@ export class ModuleService extends BaseService<ModuleEntity> {
     return await query.leftJoinAndSelect('module.children', 'child').getMany();
   }
 
-  async getTreeList(keyword) {
+  async getTreeList(keyword, roleIds: string[] | string) {
+    let moduleRoleMappings = [];
+    if (isString(roleIds)) {
+      moduleRoleMappings = [{ roleId: roleIds }];
+    }
+    if (isArray(roleIds)) {
+      moduleRoleMappings = (<string[]>roleIds).map(id => ({
+        roleId: id,
+      }));
+    }
     const list = await this.getList({
       where: {
+        moduleRoleMappings,
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
       },
       order: {

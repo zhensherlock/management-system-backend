@@ -243,4 +243,20 @@ export class CreateModuleDTO extends ModuleDTO {}
 
 export class UpdateModuleDTO extends ModuleDTO {}
 
-export class GetModuleListDTO extends GetListBaseDTO {}
+export class GetModuleListDTO extends GetListBaseDTO {
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'module' },
+        })
+      )
+  )
+  roleIds: string[] | string;
+}
