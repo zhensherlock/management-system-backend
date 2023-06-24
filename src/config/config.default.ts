@@ -76,6 +76,9 @@ export default {
     },
   },
   swagger: {
+    auth: {
+      authType: 'bearer',
+    },
     tags: [
       {
         name: 'tenant',
