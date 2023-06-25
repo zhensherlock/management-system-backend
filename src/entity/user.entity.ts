@@ -101,7 +101,6 @@ export class UserEntity {
 
   @OneToMany(() => OrganizationUserMappingEntity, node => node.user, {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   organizationUserMappings: OrganizationUserMappingEntity[];
 

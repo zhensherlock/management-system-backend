@@ -104,6 +104,10 @@ export class BaseService<T> {
     return await this.entityModel.delete(id);
   }
 
+  async deleteObjectAndRelation(id: string): Promise<DeleteResult> {
+    return await this.entityModel.remove(await this.getObjectById(id));
+  }
+
   async softDeleteObject(id: string): Promise<UpdateResult> {
     return await this.entityModel.softDelete(id);
   }

@@ -31,11 +31,15 @@ export class UserRoleMappingEntity {
   })
   createdDate: Date;
 
-  @ManyToOne(() => UserEntity, node => node.userRoleMappings)
+  @ManyToOne(() => UserEntity, node => node.userRoleMappings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 
-  @ManyToOne(() => RoleEntity, node => node.userRoleMappings)
+  @ManyToOne(() => RoleEntity, node => node.userRoleMappings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;
 }

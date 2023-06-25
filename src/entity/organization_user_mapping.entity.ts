@@ -31,11 +31,15 @@ export class OrganizationUserMappingEntity {
   })
   createdDate: Date;
 
-  @ManyToOne(() => OrganizationEntity, node => node.organizationUserMappings)
+  @ManyToOne(() => OrganizationEntity, node => node.organizationUserMappings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'organization_id' })
   organization: OrganizationEntity;
 
-  @ManyToOne(() => UserEntity, node => node.organizationUserMappings)
+  @ManyToOne(() => UserEntity, node => node.organizationUserMappings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: UserEntity;
 }

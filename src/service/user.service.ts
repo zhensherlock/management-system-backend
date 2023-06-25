@@ -28,12 +28,12 @@ export class UserService extends BaseService<UserEntity> {
     const { hash, salt } = encrypt(dto.password);
     return await this.createObject(
       <UserEntity>Object.assign({}, <any>dto, {
-        organizationUserMappings: dto.organizationIds.map(id =>
+        organizationUserMappings: (dto.organizationIds || []).map(id =>
           this.organizationUserMappingService.entityModel.create({
             organizationId: id,
           })
         ),
-        userRoleMappings: dto.roleIds.map(id =>
+        userRoleMappings: (dto.roleIds || []).map(id =>
           this.userRoleMappingService.entityModel.create({
             roleId: id,
           })

@@ -61,10 +61,14 @@ export class RoleEntity {
   })
   deletedDate: Date;
 
-  @OneToMany(() => UserRoleMappingEntity, node => node.role)
+  @OneToMany(() => UserRoleMappingEntity, node => node.role, {
+    cascade: true,
+  })
   userRoleMappings: UserRoleMappingEntity[];
 
-  @OneToMany(() => ModuleRoleMappingEntity, node => node.role)
+  @OneToMany(() => ModuleRoleMappingEntity, node => node.role, {
+    cascade: true,
+  })
   moduleRoleMappings: ModuleRoleMappingEntity[];
 
   @BeforeInsert()

@@ -102,7 +102,9 @@ export class OrganizationEntity {
   @OneToMany(() => DeviceEntity, node => node.organization)
   devices: DeviceEntity[];
 
-  @OneToMany(() => OrganizationUserMappingEntity, node => node.organization)
+  @OneToMany(() => OrganizationUserMappingEntity, node => node.organization, {
+    cascade: true,
+  })
   organizationUserMappings: OrganizationUserMappingEntity[];
 
   @BeforeInsert()

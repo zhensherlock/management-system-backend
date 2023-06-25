@@ -35,11 +35,15 @@ export class ModuleRoleMappingEntity {
   })
   createdDate: Date;
 
-  @ManyToOne(() => ModuleEntity, node => node.moduleRoleMappings)
+  @ManyToOne(() => ModuleEntity, node => node.moduleRoleMappings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'module_id' })
   module: ModuleEntity;
 
-  @ManyToOne(() => RoleEntity, node => node.userRoleMappings)
+  @ManyToOne(() => RoleEntity, node => node.userRoleMappings, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;
 }
