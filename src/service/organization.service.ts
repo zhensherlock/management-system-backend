@@ -3,7 +3,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
 import { Like, Repository } from 'typeorm';
 import { BaseService } from './base.service';
-import { isEmpty } from 'lodash';
+import { isEmpty, isString, isArray } from 'lodash';
 
 @Provide()
 export class OrganizationService extends BaseService<OrganizationEntity> {
@@ -28,9 +28,19 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       .getMany();
   }
 
-  async getTreeList(tenantId, type, keyword) {
+  async getTreeList(tenantId, type, keyword, userIds) {
+    let organizationUserMappings = [];
+    if (isString(userIds)) {
+      organizationUserMappings = [{ userId: userIds }];
+    }
+    if (isArray(userIds)) {
+      organizationUserMappings = (<string[]>userIds).map(id => ({
+        userId: id,
+      }));
+    }
     const list = await this.getList({
       where: {
+        organizationUserMappings,
         type,
         tenantId,
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),

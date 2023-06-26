@@ -20,11 +20,12 @@ import { OrganizationEntity } from '../../../entity/organization.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty, omit } from 'lodash';
+import { isEmpty, omit, isString, isArray, differenceWith } from 'lodash';
 import { TenantService } from '../../../service/tenant.service';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
+import { OrganizationUserMappingService } from '../../../service/organization_user_mapping.service';
 
 @ApiTags(['organization'])
 @Controller('/api/admin/organization')
@@ -37,6 +38,9 @@ export class OrganizationController extends BaseAdminController {
 
   @Inject()
   tenantService: TenantService;
+
+  @Inject()
+  organizationUserMappingService: OrganizationUserMappingService;
 
   @Inject()
   i18nService: MidwayI18nService;
@@ -56,12 +60,22 @@ export class OrganizationController extends BaseAdminController {
   @Get('/list', { summary: '管理员-查询组织列表' })
   @ApiQuery({})
   async getOrganizationList(@Query() query: GetOrganizationListDTO) {
+    let organizationUserMappings = [];
+    if (isString(query.userIds)) {
+      organizationUserMappings = [{ userId: query.userIds }];
+    }
+    if (isArray(query.userIds)) {
+      organizationUserMappings = (<string[]>query.userIds).map(id => ({
+        userId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.organizationService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
+            organizationUserMappings,
             type: query.type,
             tenantId: query.tenantId,
             ...(isEmpty(query.keyword)
@@ -85,7 +99,8 @@ export class OrganizationController extends BaseAdminController {
     const list = await this.organizationService.getTreeList(
       query.tenantId,
       query.type,
-      query.keyword
+      query.keyword,
+      query.userIds
     );
     return { list };
   }
@@ -121,9 +136,15 @@ export class OrganizationController extends BaseAdminController {
       });
     }
     const mdl = await this.organizationService.createObject(
-      <OrganizationEntity>dto
+      <OrganizationEntity>Object.assign({}, <any>dto, {
+        organizationUserMappings: (dto.userIds || []).map(id =>
+          this.organizationUserMappingService.entityModel.create({
+            userId: id,
+          })
+        ),
+      })
     );
-    return omit(mdl, ['deletedDate']);
+    return omit(mdl, ['deletedDate', 'userIds', 'organizationUserMappings']);
   }
 
   @Role(['admin'])
@@ -165,8 +186,23 @@ export class OrganizationController extends BaseAdminController {
       });
     }
     Object.assign(organization, dto);
+    // organization user mapping
+    const removeOrganizationUserMappings = differenceWith(
+      organization.organizationUserMappings,
+      dto.userIds,
+      (a, b) => a.userId === b
+    );
+    await this.organizationUserMappingService.entityModel.remove(
+      removeOrganizationUserMappings
+    );
+    organization.organizationUserMappings = (dto.userIds || []).map(id =>
+      this.organizationUserMappingService.entityModel.create({
+        userId: id,
+        organizationId: organization.id,
+      })
+    );
     const mdl = await this.organizationService.updateObject(organization);
-    return omit(mdl, ['deletedDate']);
+    return omit(mdl, ['deletedDate', 'userIds', 'organizationUserMappings']);
   }
 
   @Role(['admin'])

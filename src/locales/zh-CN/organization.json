@@ -15,6 +15,7 @@
   "options.base.message": "请输入正确的组织扩展配置信息",
   "tenant_id.base.message": "请选择正确的租户",
   "parent_id.base.message": "请选择正确的父级组织",
+  "user_id.base.message": "请选择正确的用户",
   "delete.success": "组织删除成功！",
   "restore.success": "组织恢复成功！"
 }

@@ -140,9 +140,35 @@ export class OrganizationDTO {
   parentId: string;
 }
 
-export class CreateOrganizationDTO extends OrganizationDTO {}
+export class CreateOrganizationDTO extends OrganizationDTO {
+  @ApiProperty({ example: null, description: '用户编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'user_id.base.message',
+          options: { group: 'organization' },
+        })
+      )
+  )
+  userIds: string[];
+}
 
-export class UpdateOrganizationDTO extends OrganizationDTO {}
+export class UpdateOrganizationDTO extends OrganizationDTO {
+  @ApiProperty({ example: null, description: '用户编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'user_id.base.message',
+          options: { group: 'organization' },
+        })
+      )
+  )
+  userIds: string[];
+}
 
 export class GetOrganizationListDTO extends GetListBaseDTO {
   @ApiProperty({ example: null, description: '租户编号' })
@@ -172,4 +198,20 @@ export class GetOrganizationListDTO extends GetListBaseDTO {
       )
   )
   type: number;
+
+  @ApiProperty({ example: null, description: '用户编号' })
+  @Rule(
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .error(
+        handleParameterError({
+          message: 'user_id.base.message',
+          options: { group: 'organization' },
+        })
+      )
+  )
+  userIds: string[] | string;
 }
