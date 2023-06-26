@@ -239,9 +239,35 @@ export class ModuleDTO {
   sequence: number;
 }
 
-export class CreateModuleDTO extends ModuleDTO {}
+export class CreateModuleDTO extends ModuleDTO {
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'module' },
+        })
+      )
+  )
+  roleIds: string[];
+}
 
-export class UpdateModuleDTO extends ModuleDTO {}
+export class UpdateModuleDTO extends ModuleDTO {
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'module' },
+        })
+      )
+  )
+  roleIds: string[];
+}
 
 export class GetModuleListDTO extends GetListBaseDTO {
   @ApiProperty({ example: null, description: '角色编号' })
