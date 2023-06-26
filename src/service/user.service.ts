@@ -8,6 +8,7 @@ import { OrganizationUserMappingService } from './organization_user_mapping.serv
 import { UserRoleMappingService } from './user_role_mapping.service';
 import { CreateUserDTO, UpdateUserDTO } from '../dto/areas/admin/user.dto';
 import { encrypt } from '../util';
+import { CommonError } from '../error';
 
 @Provide()
 export class UserService extends BaseService<UserEntity> {
@@ -22,6 +23,41 @@ export class UserService extends BaseService<UserEntity> {
 
   constructor() {
     super();
+  }
+
+  async tryLogin(name: string, password: string) {
+    const mdl = await this.getOneObject({
+      select: [
+        'id',
+        'password',
+        'salt',
+        'realName',
+        'description',
+        'options',
+        'email',
+        'tel',
+        'enabled',
+      ],
+      where: {
+        name,
+      },
+    });
+    if (!mdl) {
+      throw new CommonError('user.nonexistence.message', {
+        group: 'passport',
+      });
+    }
+    if (!mdl.enabled) {
+      throw new CommonError('user.disabled.message', {
+        group: 'passport',
+      });
+    }
+    if (mdl.password !== encrypt(password, mdl.salt).hash) {
+      throw new CommonError('user.error.password.message', {
+        group: 'passport',
+      });
+    }
+    return mdl;
   }
 
   async createUser(dto: CreateUserDTO) {

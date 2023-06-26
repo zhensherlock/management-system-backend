@@ -81,18 +81,4 @@ export class CreateRoleDTO extends RoleDTO {}
 
 export class UpdateRoleDTO extends RoleDTO {}
 
-export class GetRoleListDTO extends GetListBaseDTO {
-  @ApiProperty({ description: '所属模块编号', example: null })
-  @Rule(
-    RuleType.string()
-      .uuid({ separator: false })
-      .empty('')
-      .error(
-        handleParameterError({
-          message: 'module_id.base.message',
-          options: { group: 'role' },
-        })
-      )
-  )
-  module: string;
-}
+export class GetRoleListDTO extends GetListBaseDTO {}
