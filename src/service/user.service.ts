@@ -60,7 +60,7 @@ export class UserService extends BaseService<UserEntity> {
     await this.organizationUserMappingService.entityModel.remove(
       removeOrganizationUserMappings
     );
-    user.organizationUserMappings = dto.organizationIds.map(id =>
+    user.organizationUserMappings = (dto.organizationIds || []).map(id =>
       this.organizationUserMappingService.entityModel.create({
         organizationId: id,
         userId: user.id,
@@ -75,7 +75,7 @@ export class UserService extends BaseService<UserEntity> {
     await this.userRoleMappingService.entityModel.remove(
       removeUserRoleMappings
     );
-    user.userRoleMappings = dto.roleIds.map(id =>
+    user.userRoleMappings = (dto.roleIds || []).map(id =>
       this.userRoleMappingService.entityModel.create({
         roleId: id,
         userId: user.id,
