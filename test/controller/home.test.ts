@@ -8,7 +8,7 @@ describe('test/controller/home.test.ts', () => {
     const app = await createApp<Framework>();
 
     // make request
-    const result = await createHttpRequest(app).get('/');
+    const result = await createHttpRequest(app).get('/v1');
 
     // use expect by jest
     expect(result.status).toBe(200);
