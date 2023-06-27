@@ -1,4 +1,7 @@
 import { MidwayConfig } from '@midwayjs/core';
+import { DefaultUploadFileMimeType, uploadWhiteList } from '@midwayjs/upload';
+import { tmpdir } from 'os';
+import { join } from 'path';
 
 const redisGlobalConfigPrefix = 'ss';
 const koaGlobalPrefix = '/v1';
@@ -13,6 +16,8 @@ export default {
         `${koaGlobalPrefix}`,
         `${koaGlobalPrefix}/api/admin/passport/login`,
         `${koaGlobalPrefix}/api/admin/passport/refreshToken`,
+        `${koaGlobalPrefix}/api/user/passport/login`,
+        `${koaGlobalPrefix}/api/user/passport/refreshToken`,
       ],
     },
   },
@@ -32,7 +37,7 @@ export default {
         database: 'smart_security',
         charset: 'utf8mb4',
         synchronize: true, // 如果第一次使用，不存在表，有同步的需求可以写 true，注意会丢数据
-        logging: false,
+        logging: true,
         entities: ['**/entity/*.entity{.ts,.js}'],
       },
     },
@@ -49,19 +54,42 @@ export default {
       prefix: redisGlobalConfigPrefix,
     },
   },
+  upload: {
+    // mode: UploadMode, 默认为file，即上传到服务器临时目录，可以配置为 stream
+    mode: 'file',
+    // fileSize: string, 最大上传文件大小，默认为 10mb
+    fileSize: '30mb',
+    // whitelist: string[]，文件扩展名白名单
+    whitelist: [...uploadWhiteList, '.xlsx', '.xls'],
+    // 仅允许下面这些文件类型可以上传
+    mimeTypeWhiteList: {
+      ...DefaultUploadFileMimeType,
+      '.xlsx':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      '.xls': 'application/vnd.ms-excel',
+    },
+    // tmpdir: string，上传的文件临时存储路径
+    tmpdir: join(tmpdir(), 'smart-security-upload-files'),
+    // cleanTimeout: number，上传的文件在临时目录中多久之后自动删除，默认为 5 分钟
+    cleanTimeout: 5 * 60 * 1000,
+    // base64: boolean，设置原始body是否是base64格式，默认为false，一般用于腾讯云的兼容
+    base64: false,
+    // 仅在匹配路径到 /import 的时候去解析 body 中的文件信息
+    match: /\/import/,
+  },
   jwt: {
     secret: '123456789', // fs.readFileSync('xxxxx.key')
     refreshToken: {
       secret: '987654321',
       expiresIn: '5d',
     },
-    expiresIn: '1m', // https://github.com/vercel/ms
+    expiresIn: '1h', // https://github.com/vercel/ms
     cacheKeyPrefix: `${redisGlobalConfigPrefix}:passport`,
   },
   midwayLogger: {
     default: {
-      maxSize: '200m',
-      maxFiles: '31d',
+      maxSize: '10m',
+      maxFiles: '3d',
       dir: './logs/',
     },
     clients: {

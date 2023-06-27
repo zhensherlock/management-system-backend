@@ -33,3 +33,12 @@ export class GetListBaseDTO {
   )
   pageSize: number;
 }
+
+export class ImportBaseDTO {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: '数据文件',
+  })
+  file: any;
+}

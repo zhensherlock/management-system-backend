@@ -8,6 +8,7 @@ import {
   Param,
   Body,
   Query,
+  File,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { UserService } from '../../../service/user.service';
@@ -15,6 +16,7 @@ import { encrypt, generatePassword } from '../../../util';
 import {
   CreateUserDTO,
   GetUserListDTO,
+  // ImportUserDTO,
   UpdateUserDTO,
 } from '../../../dto/areas/admin/user.dto';
 import { Like } from 'typeorm';
@@ -24,6 +26,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiTags,
+  BodyContentType,
 } from '@midwayjs/swagger';
 import { isEmpty, omit, isString, isArray } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
@@ -101,6 +104,17 @@ export class UserController extends BaseAdminController {
       currentPage,
       pageSize,
     };
+  }
+
+  @Role(['admin'])
+  @Post('/import', { summary: '管理员-导入用户列表' })
+  @ApiBody({
+    description: '用户数据文件',
+    contentType: BodyContentType.Multipart,
+  })
+  async importUsers(@File() file) {
+    await this.userService.importUserList(file.data);
+    return this.i18nService.translate('import.success', { group: 'global' });
   }
 
   @Role(['admin'])

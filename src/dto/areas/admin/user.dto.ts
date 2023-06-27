@@ -1,6 +1,6 @@
 import { Rule, RuleType } from '@midwayjs/validate';
 import { ApiProperty } from '@midwayjs/swagger';
-import { GetListBaseDTO } from '../../base.dto';
+import { GetListBaseDTO, ImportBaseDTO } from '../../base.dto';
 import { handleParameterError, handleParameterErrors } from '../../../error';
 import { UserType } from '../../../constant';
 
@@ -385,3 +385,5 @@ export class GetUserListDTO extends GetListBaseDTO {
   )
   roleIds: string[] | string;
 }
+
+export class ImportUserDTO extends ImportBaseDTO {}

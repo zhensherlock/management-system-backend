@@ -9,6 +9,7 @@ import { UserRoleMappingService } from './user_role_mapping.service';
 import { CreateUserDTO, UpdateUserDTO } from '../dto/areas/admin/user.dto';
 import { encrypt } from '../util';
 import { CommonError } from '../error';
+import ExcelJS from 'exceljs';
 
 @Provide()
 export class UserService extends BaseService<UserEntity> {
@@ -118,5 +119,56 @@ export class UserService extends BaseService<UserEntity> {
       })
     );
     return await this.updateObject(user);
+  }
+
+  async importUserList(url) {
+    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
+    for await (const worksheetReader of workbookReader) {
+      for await (const row of worksheetReader) {
+        if (row.number === 1) {
+          continue;
+        }
+        const dto: CreateUserDTO = {
+          description: '',
+          email: '',
+          enabled: false,
+          name: '',
+          options: undefined,
+          organizationIds: [],
+          password: '',
+          realName: '',
+          roleIds: [],
+          tel: '',
+          tenantId: '',
+          type: '',
+        };
+        row.eachCell((cell, cellNumber) => {
+          switch (cellNumber) {
+            case 1:
+              dto.name = cell.text;
+              break;
+            case 2:
+              dto.password = cell.text;
+              break;
+            case 3:
+              dto.tenantId = cell.text;
+              break;
+            case 4:
+              dto.type = cell.text;
+              break;
+            case 5:
+              dto.organizationIds = cell.text.split(',');
+              break;
+            case 6:
+              dto.roleIds = cell.text.split(',');
+              break;
+          }
+        });
+        if (await this.checkNameExisted(dto.name)) {
+          continue;
+        }
+        await this.createUser(dto);
+      }
+    }
   }
 }
