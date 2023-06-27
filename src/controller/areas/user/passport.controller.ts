@@ -34,7 +34,6 @@ export class PassportController {
       PassportType.User
     );
     return {
-      user,
       accessToken,
       refreshToken,
     };
