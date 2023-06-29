@@ -29,6 +29,9 @@ export class RoleEntity {
   @Column({ length: 191, nullable: true, comment: '角色简介' })
   description: string;
 
+  @Column({ length: 191, nullable: true, comment: '角色编码' })
+  code: string;
+
   @Column({ default: true, comment: '角色是否可用' })
   enabled: boolean;
 

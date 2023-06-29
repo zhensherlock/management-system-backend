@@ -34,7 +34,7 @@ export class ModuleEntity {
   @Column({ nullable: true, comment: '模块级别' })
   level: number;
 
-  @Column({ length: 191, nullable: true, comment: '模块编号' })
+  @Column({ length: 191, nullable: true, comment: '模块编码' })
   code: string;
 
   @Column({ length: 191, nullable: true, comment: '模块图标' })
