@@ -9,6 +9,7 @@ import {
   JoinColumn,
   BeforeInsert,
   PrimaryColumn,
+  Index,
 } from 'typeorm';
 import {
   createDateTransformer,
@@ -22,10 +23,13 @@ import { TenantEntity } from './tenant.entity';
 @Entity({
   name: 'user',
 })
+@Index(['tenantId', 'deletedDate'])
+@Index(['tenantId', 'deletedDate', 'name'])
 export class UserEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '用户编号' })
   id: string;
 
+  @Index()
   @Column({ length: 191, comment: '用户名' })
   name: string;
 
@@ -61,6 +65,7 @@ export class UserEntity {
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
 
+  @Index()
   @Column({ name: 'tenant_id', length: 36, type: 'uuid', comment: '租户编号' })
   tenantId: string;
 
@@ -81,6 +86,7 @@ export class UserEntity {
   })
   updatedDate: Date;
 
+  @Index()
   @DeleteDateColumn({
     name: 'deleted_date',
     type: 'timestamp',

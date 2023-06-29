@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { OrganizationEntity } from './organization.entity';
 import { UserEntity } from './user.entity';
@@ -11,6 +12,7 @@ import { UserEntity } from './user.entity';
 @Entity({
   name: 'organization_user_mapping',
 })
+@Index(['userId', 'organizationId'])
 export class OrganizationUserMappingEntity {
   @PrimaryColumn('uuid', {
     name: 'organization_id',
