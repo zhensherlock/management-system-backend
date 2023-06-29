@@ -23,12 +23,13 @@
   "tenant_id.base.message": "请选择正确的租户",
   "organization_id.base.message": "请选择正确的组织",
   "role_id.base.message": "请选择正确的角色",
-  "old_password.required.message": "请输入用户登录旧密码",
-  "old_password.base.message": "请输入正确的用户登录旧密码",
+  "old_password.required.message": "请输入用户登录密码",
+  "old_password.base.message": "请输入正确的用户登录密码",
   "new_password.required.message": "请输入用户登录新密码",
   "new_password.base.message": "请输入有效的用户登录新密码（必须包含大小写字母和数字的组合，支持特殊字符，长度在8-10之间）",
   "repeat_new_password.required.message": "请输入用户登录新密码",
   "repeat_new_password.base.message": "请输入正确的用户登录新密码",
   "delete.confirm.content": "确定要删除 {name} 用户？",
-  "delete.success": "用户删除成功！"
+  "delete.success": "用户删除成功！",
+  "update.password.success": "密码修改成功！"
 }
