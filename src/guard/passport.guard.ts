@@ -3,6 +3,8 @@ import { Context } from '@midwayjs/koa';
 import { ROLE_META_KEY } from '../decorator/role.decorator';
 import { Config } from '@midwayjs/decorator';
 import { CommonError } from '../error';
+import { intersection } from 'lodash';
+import type { PassportOptions } from '../interface';
 
 @Guard()
 export class PassportGuard implements IGuard<Context> {
@@ -28,7 +30,10 @@ export class PassportGuard implements IGuard<Context> {
       getPropertyMetadata<string[]>(ROLE_META_KEY, supplierClz, methodName) ||
       [];
     if (
-      roleNameList.includes(context.currentPassport?.passportType || void 0)
+      intersection(
+        roleNameList,
+        (<PassportOptions>context.currentPassport)?.roles || []
+      ).length > 0
     ) {
       return true;
     }

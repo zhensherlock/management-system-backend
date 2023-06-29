@@ -27,11 +27,11 @@ export class PassportController {
     const admin = await this.adminService.tryLogin(dto.username, dto.password);
     const accessToken = await this.passportService.generateAccessToken(
       admin.id,
-      PassportType.Admin
+      [PassportType.Admin]
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       admin.id,
-      PassportType.Admin
+      [PassportType.Admin]
     );
     return {
       accessToken,
@@ -42,15 +42,16 @@ export class PassportController {
   @Get('/refreshToken', { summary: '管理员-更新AccessToken' })
   @ApiQuery({ description: 'RefreshToken凭证' })
   async refreshToken(@Query() query: RefreshTokenDTO) {
-    const { passportId, passportType } =
-      await this.passportService.verifyRefreshToken(query.refreshToken);
+    const { id, roles } = await this.passportService.verifyRefreshToken(
+      query.refreshToken
+    );
     const accessToken = await this.passportService.generateAccessToken(
-      passportId,
-      passportType
+      id,
+      roles
     );
     const refreshToken = await this.passportService.generateRefreshToken(
-      passportId,
-      passportType
+      id,
+      roles
     );
     return {
       accessToken,

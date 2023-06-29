@@ -1,4 +1,4 @@
 export interface PassportOptions {
-  passportId: string;
-  passportType: string;
+  id: string;
+  roles: string[];
 }

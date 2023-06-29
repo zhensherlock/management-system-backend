@@ -7,7 +7,6 @@ import { Context } from '@midwayjs/koa';
 import { UserService } from '../../../service/user.service';
 import { ApiBody, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { PassportService } from '../../../service/passport.service';
-import { PassportType } from '../../../constant/passport.constant';
 
 @ApiTags(['passport'])
 @Controller('/api/user/passport')
@@ -25,15 +24,18 @@ export class PassportController {
   @ApiBody({ description: '用户登录凭证' })
   async login(@Body() dto: LoginDTO) {
     const user = await this.userService.tryLogin(dto.username, dto.password);
+    const roleCodes = user.userRoleMappings.map(item => item.role.code);
     const accessToken = await this.passportService.generateAccessToken(
       user.id,
-      PassportType.User
+      roleCodes
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       user.id,
-      PassportType.User
+      roleCodes
     );
     return {
+      id: user.id,
+      tenantId: user.tenantId,
       accessToken,
       refreshToken,
     };
@@ -42,15 +44,16 @@ export class PassportController {
   @Get('/refreshToken', { summary: '用户-更新AccessToken' })
   @ApiQuery({ description: 'RefreshToken凭证' })
   async refreshToken(@Query() query: RefreshTokenDTO) {
-    const { passportId, passportType } =
-      await this.passportService.verifyRefreshToken(query.refreshToken);
+    const { id, roles } = await this.passportService.verifyRefreshToken(
+      query.refreshToken
+    );
     const accessToken = await this.passportService.generateAccessToken(
-      passportId,
-      passportType
+      id,
+      roles
     );
     const refreshToken = await this.passportService.generateRefreshToken(
-      passportId,
-      passportType
+      id,
+      roles
     );
     return {
       accessToken,

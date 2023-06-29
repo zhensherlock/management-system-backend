@@ -28,17 +28,8 @@ export class UserService extends BaseService<UserEntity> {
 
   async tryLogin(name: string, password: string) {
     const mdl = await this.getOneObject({
-      select: [
-        'id',
-        'password',
-        'salt',
-        'realName',
-        'description',
-        'options',
-        'email',
-        'tel',
-        'enabled',
-      ],
+      select: ['id', 'password', 'salt', 'enabled', 'tenantId'],
+      relations: ['userRoleMappings', 'userRoleMappings.role'],
       where: {
         name,
       },
