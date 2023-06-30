@@ -95,6 +95,7 @@ export class EmployeeController extends BaseUserController {
   @Post('/create', { summary: '用户-新建员工' })
   @ApiBody({ description: '员工信息' })
   async createEmployee(@Body() dto: CreateEmployeeDTO) {
+    const tenantId = this.ctx.currentUser.tenantId;
     if (await this.employeeService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'employee' });
     }
@@ -102,6 +103,7 @@ export class EmployeeController extends BaseUserController {
       !(await this.organizationService.exist({
         where: {
           id: dto.organizationId,
+          tenantId,
         },
       }))
     ) {
@@ -109,7 +111,7 @@ export class EmployeeController extends BaseUserController {
         group: 'employee',
       });
     }
-    (<EmployeeEntity>dto).tenantId = this.ctx.currentUser.tenantId;
+    (<EmployeeEntity>dto).tenantId = tenantId;
     const mdl = await this.employeeService.createObject(<EmployeeEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
@@ -136,6 +138,7 @@ export class EmployeeController extends BaseUserController {
       !(await this.organizationService.exist({
         where: {
           id: dto.organizationId,
+          tenantId,
         },
       }))
     ) {
