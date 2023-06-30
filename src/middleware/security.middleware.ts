@@ -53,7 +53,12 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
           }
         } else {
           const user = await userService.getFullObjectById(passport.id, {
-            relations: ['userRoleMappings', 'userRoleMappings.role'],
+            relations: [
+              'userRoleMappings',
+              'userRoleMappings.role',
+              'organizationUserMappings',
+              'organizationUserMappings.organization',
+            ],
           });
           if (user) {
             ctx.currentUser = user;
