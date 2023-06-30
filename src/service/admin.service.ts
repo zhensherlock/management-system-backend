@@ -14,6 +14,19 @@ export class AdminService extends BaseService<AdminEntity> {
   @InjectEntityModel(AdminEntity)
   entityModel: Repository<AdminEntity>;
 
+  fullSelects = [
+    'id',
+    'name',
+    'email',
+    'tel',
+    'password',
+    'salt',
+    'realName',
+    'description',
+    'enabled',
+    'options',
+  ];
+
   constructor() {
     super();
   }

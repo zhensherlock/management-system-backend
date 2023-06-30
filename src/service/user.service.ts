@@ -16,6 +16,20 @@ export class UserService extends BaseService<UserEntity> {
   @InjectEntityModel(UserEntity)
   entityModel: Repository<UserEntity>;
 
+  fullSelects = [
+    'id',
+    'name',
+    'email',
+    'tel',
+    'password',
+    'salt',
+    'realName',
+    'description',
+    'enabled',
+    'options',
+    'tenantId',
+  ];
+
   @Inject()
   organizationUserMappingService: OrganizationUserMappingService;
 

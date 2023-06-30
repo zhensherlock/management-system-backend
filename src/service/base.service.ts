@@ -8,6 +8,8 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 export class BaseService<T> {
   entityModel: Repository<T | any>;
 
+  fullSelects: string[];
+
   async getOneObject(options: FindOneOptions<T> = { where: {} }): Promise<T> {
     return await this.entityModel.findOne(options);
   }
@@ -17,6 +19,19 @@ export class BaseService<T> {
       where: {
         id,
       },
+    });
+  }
+
+  async getFullObjectById(
+    id: string,
+    options: FindManyOptions<T> = {}
+  ): Promise<T> {
+    return await this.entityModel.findOne({
+      select: this.fullSelects,
+      where: {
+        id,
+      },
+      ...options,
     });
   }
 
