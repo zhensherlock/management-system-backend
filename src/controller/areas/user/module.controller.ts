@@ -24,9 +24,8 @@ export class ModuleController extends BaseUserController {
   @ApiQuery({})
   async getModuleList() {
     const user = this.ctx.currentUser;
-    const roleIds = user.userRoleMappings.map(item => item.roleId);
-    const moduleRoleMappings = (<string[]>roleIds).map(id => ({
-      roleId: id,
+    const moduleRoleMappings = user.userRoleMappings.map(item => ({
+      roleId: item.roleId,
     }));
     const modules = await this.moduleService.getList({
       where: {
