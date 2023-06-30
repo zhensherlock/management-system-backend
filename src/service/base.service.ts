@@ -107,6 +107,10 @@ export class BaseService<T> {
     return await this.entityModel.save(entity);
   }
 
+  async existObject(options?: FindManyOptions<T>): Promise<boolean> {
+    return await this.entityModel.exist(options);
+  }
+
   async existObjectById(id: string): Promise<boolean> {
     return await this.entityModel.exist({
       where: {
