@@ -11,12 +11,12 @@ import { Role } from '../../../decorator/role.decorator';
 import {
   UpdatePasswordDTO,
   UpdateUserDTO,
-} from '../../../dto/areas/user/user.dto';
+} from '../../../dto/areas/user/info.dto';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
-@Controller('/api/user/user')
-export class UserController extends BaseUserController {
+@Controller('/api/user/info')
+export class InfoController extends BaseUserController {
   @Inject()
   ctx: Context;
 
@@ -27,14 +27,15 @@ export class UserController extends BaseUserController {
   i18nService: MidwayI18nService;
 
   @Role(['school', 'security'])
-  @Put('/:id', { summary: '用户-修改信息' })
+  @Put('/update', { summary: '用户-修改信息' })
   @ApiBody({ description: '用户信息' })
   async updateUser(@Body() dto: UpdateUserDTO) {
     const user = this.ctx.currentUser;
     if (await this.userService.checkNameExisted(dto.name, user.id)) {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
-    const mdl = await this.userService.updateUser(user, dto as any);
+    Object.assign(user, dto);
+    const mdl = await this.userService.updateObject(user);
     return omit(mdl, [
       'password',
       'salt',
@@ -47,7 +48,7 @@ export class UserController extends BaseUserController {
   }
 
   @Role(['school', 'security'])
-  @Put('/password/', { summary: '用户-修改密码' })
+  @Put('/password', { summary: '用户-修改密码' })
   async updatePassword(@Body() dto: UpdatePasswordDTO) {
     const user = this.ctx.currentUser;
     if (encrypt(dto.old_password, user.salt).hash !== user.password) {

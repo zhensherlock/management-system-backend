@@ -118,74 +118,7 @@ export class UserDTO {
   description: string;
 }
 
-export class CreateUserDTO extends UserDTO {
-  @ApiProperty({ example: {}, description: '用户密码' })
-  @Rule(
-    RuleType.string()
-      .required()
-      .trim(true)
-      .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
-      .error(
-        handleParameterErrors({
-          'string.empty': {
-            message: 'password.required.message',
-            options: { group: 'user' },
-          },
-          'any.required': {
-            message: 'password.required.message',
-            options: { group: 'user' },
-          },
-          '*': {
-            message: 'password.base.message',
-            options: { group: 'user' },
-          },
-        })
-      )
-  )
-  password: string;
-}
-
-export class UpdateUserDTO extends UserDTO {
-  @ApiProperty({ example: {}, description: '用户新密码' })
-  @Rule(
-    RuleType.string()
-      .trim(true)
-      .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
-      .error(
-        handleParameterError({
-          message: 'new_password.base.message',
-          options: { group: 'user' },
-        })
-      )
-  )
-  new_password: string;
-
-  @ApiProperty({ example: null, description: '组织编号' })
-  @Rule(
-    RuleType.array()
-      .items(RuleType.string().uuid({ separator: false }))
-      .error(
-        handleParameterError({
-          message: 'organization_id.base.message',
-          options: { group: 'user' },
-        })
-      )
-  )
-  organizationIds: string[];
-
-  @ApiProperty({ example: null, description: '角色编号' })
-  @Rule(
-    RuleType.array()
-      .items(RuleType.string().uuid({ separator: false }))
-      .error(
-        handleParameterError({
-          message: 'role_id.base.message',
-          options: { group: 'user' },
-        })
-      )
-  )
-  roleIds: string[];
-}
+export class UpdateUserDTO extends UserDTO {}
 
 export class UpdatePasswordDTO {
   @ApiProperty({ example: {}, description: '用户旧密码' })
@@ -218,7 +151,7 @@ export class UpdatePasswordDTO {
       .required()
       .trim(true)
       .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
-      .not(RuleType.ref('old_password'))
+      // .not(RuleType.ref('old_password'))
       .error(
         handleParameterErrors({
           'string.empty': {
