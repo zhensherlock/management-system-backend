@@ -28,6 +28,7 @@ export class ModuleController extends BaseUserController {
       roleId: item.roleId,
     }));
     const modules = await this.moduleService.getList({
+      relations: ['operations'],
       where: {
         moduleRoleMappings,
       },

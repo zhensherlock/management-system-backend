@@ -93,7 +93,7 @@ export class UserController extends BaseAdminController {
             ...(isEmpty(query.keyword)
               ? {}
               : {
-                  name: Like(`%${query.keyword}%`),
+                  name: Like(`${query.keyword}%`),
                 }),
           },
         }
