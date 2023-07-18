@@ -3,6 +3,8 @@
   "name.base.message": "请输入正确的用户名",
   "password.required.message": "请输入密码",
   "password.base.message": "请输入正确的密码",
+  "captcha.required.message": "请输入验证码",
+  "captcha.base.message": "请输入正确的验证码",
   "user.nonexistence.message": "该用户不存在，请重新输入",
   "user.disabled.message": "该用户已被禁用，请联系管理员",
   "user.error.password.message": "密码有误，请重新输入",

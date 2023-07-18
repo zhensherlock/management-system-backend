@@ -4,6 +4,7 @@ import {
   RefreshTokenDTO,
 } from '../../../dto/areas/admin/passport.dto';
 import { Context } from '@midwayjs/koa';
+import { CaptchaService } from '@midwayjs/captcha';
 import { AdminService } from '../../../service/admin.service';
 import { ApiBody, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { PassportService } from '../../../service/passport.service';
@@ -14,6 +15,9 @@ import { PassportType } from '../../../constant/passport.constant';
 export class PassportController {
   @Inject()
   ctx: Context;
+
+  @Inject()
+  captchaService: CaptchaService;
 
   @Inject()
   adminService: AdminService;
@@ -56,6 +60,15 @@ export class PassportController {
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  @Get('/captcha', { summary: '管理员-登录验证码' })
+  async getImageCaptcha() {
+    const { id, imageBase64 } = await this.captchaService.formula();
+    return {
+      id,
+      imageBase64,
     };
   }
 }

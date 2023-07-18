@@ -27,6 +27,7 @@
     "@opentelemetry/exporter-jaeger": "^1.15.0",
     "@opentelemetry/sdk-node": "^0.41.0",
     "@opentelemetry/semantic-conventions": "^1.15.0",
+    "cache-manager-ioredis": "^2.1.0",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",

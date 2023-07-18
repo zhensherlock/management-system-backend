@@ -2,6 +2,7 @@ import { MidwayConfig } from '@midwayjs/core';
 import { DefaultUploadFileMimeType, uploadWhiteList } from '@midwayjs/upload';
 import { tmpdir } from 'os';
 import { join } from 'path';
+import * as redisStore from 'cache-manager-ioredis';
 
 const redisGlobalConfigPrefix = 'ss';
 const koaGlobalPrefix = '/v1';
@@ -16,8 +17,10 @@ export default {
         `${koaGlobalPrefix}`,
         `${koaGlobalPrefix}/api/admin/passport/login`,
         `${koaGlobalPrefix}/api/admin/passport/refreshToken`,
+        `${koaGlobalPrefix}/api/admin/passport/captcha`,
         `${koaGlobalPrefix}/api/user/passport/login`,
         `${koaGlobalPrefix}/api/user/passport/refreshToken`,
+        `${koaGlobalPrefix}/api/user/passport/captcha`,
       ],
     },
   },
@@ -43,10 +46,36 @@ export default {
     },
     defaultDataSourceName: 'default',
   },
+  captcha: {
+    default: {
+      size: 4,
+      noise: 15,
+      width: 120,
+      height: 40,
+    },
+    image: {
+      type: 'mixed',
+    },
+    formula: {},
+    text: {},
+    expirationTime: 600, // 单位为秒
+    idPrefix: 'captcha',
+  },
+  cache: {
+    store: redisStore,
+    options: {
+      host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
+      password: process.env.REDIS_PASSWORD,
+      db: 0,
+      keyPrefix: `${redisGlobalConfigPrefix}:`,
+      ttl: 10,
+    },
+  },
   redis: {
     client: {
-      port: process.env.REDIS_PORT,
       host: process.env.REDIS_HOST,
+      port: process.env.REDIS_PORT,
       password: process.env.REDIS_PASSWORD,
       db: 0,
     },

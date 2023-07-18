@@ -52,6 +52,22 @@ export class LoginDTO {
       )
   )
   password: string;
+
+  @ApiProperty({ example: '', description: '验证码' })
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          '*': {
+            message: 'password.base.message',
+            options: { group: 'passport' },
+          },
+        })
+      )
+  )
+  captcha: string;
 }
 
 export class RefreshTokenDTO {
