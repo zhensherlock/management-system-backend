@@ -1,14 +1,14 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@midwayjs/core';
+import { Context } from '@midwayjs/koa';
+import { CaptchaService } from '@midwayjs/captcha';
+import { ApiBody, ApiQuery, ApiTags } from '@midwayjs/swagger';
+import { AdminService } from '../../../service/admin.service';
+import { PassportService } from '../../../service/passport.service';
+import { PassportType } from '../../../constant/passport.constant';
 import {
   LoginDTO,
   RefreshTokenDTO,
 } from '../../../dto/areas/admin/passport.dto';
-import { Context } from '@midwayjs/koa';
-import { CaptchaService } from '@midwayjs/captcha';
-import { AdminService } from '../../../service/admin.service';
-import { ApiBody, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { PassportService } from '../../../service/passport.service';
-import { PassportType } from '../../../constant/passport.constant';
 
 @ApiTags(['passport'])
 @Controller('/api/admin/passport')

@@ -1,18 +1,22 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@midwayjs/core';
+import { Context } from '@midwayjs/koa';
+import { CaptchaService } from '@midwayjs/captcha';
+import { ApiBody, ApiQuery, ApiTags } from '@midwayjs/swagger';
+import { UserService } from '../../../service/user.service';
+import { PassportService } from '../../../service/passport.service';
 import {
   LoginDTO,
   RefreshTokenDTO,
 } from '../../../dto/areas/user/passport.dto';
-import { Context } from '@midwayjs/koa';
-import { UserService } from '../../../service/user.service';
-import { ApiBody, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { PassportService } from '../../../service/passport.service';
 
 @ApiTags(['passport'])
 @Controller('/api/user/passport')
 export class PassportController {
   @Inject()
   ctx: Context;
+
+  @Inject()
+  captchaService: CaptchaService;
 
   @Inject()
   userService: UserService;
@@ -58,6 +62,15 @@ export class PassportController {
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  @Get('/captcha', { summary: '管理员-登录验证码' })
+  async getImageCaptcha() {
+    const { id, imageBase64 } = await this.captchaService.formula();
+    return {
+      id,
+      imageBase64,
     };
   }
 }
