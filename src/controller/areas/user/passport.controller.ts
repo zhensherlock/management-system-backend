@@ -27,15 +27,22 @@ export class PassportController {
   @Post('/login', { summary: '用户-登录' })
   @ApiBody({ description: '用户登录凭证' })
   async login(@Body() dto: LoginDTO) {
-    const user = await this.userService.tryLogin(dto.username, dto.password);
+    const user = await this.userService.tryLogin(
+      dto.account,
+      dto.password,
+      dto.captchaId,
+      dto.captcha
+    );
     const roleCodes = user.userRoleMappings.map(item => item.role.code);
     const accessToken = await this.passportService.generateAccessToken(
       user.id,
-      roleCodes
+      roleCodes,
+      dto.checked
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       user.id,
-      roleCodes
+      roleCodes,
+      dto.checked
     );
     return {
       id: user.id,
@@ -48,16 +55,17 @@ export class PassportController {
   @Get('/refreshToken', { summary: '用户-更新AccessToken' })
   @ApiQuery({ description: 'RefreshToken凭证' })
   async refreshToken(@Query() query: RefreshTokenDTO) {
-    const { id, roles } = await this.passportService.verifyRefreshToken(
-      query.refreshToken
-    );
+    const { id, roles, checked } =
+      await this.passportService.verifyRefreshToken(query.refreshToken);
     const accessToken = await this.passportService.generateAccessToken(
       id,
-      roles
+      roles,
+      checked
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       id,
-      roles
+      roles,
+      checked
     );
     return {
       accessToken,

@@ -17,21 +17,27 @@ export class PassportService {
   @Config('jwt')
   jwtConfig;
 
-  async generateAccessToken(id, roles) {
+  async generateAccessToken(id: string, roles: string[], checked: boolean) {
     const accessToken = await this.jwtService.sign({
       id,
       roles,
+      checked,
     });
     this.redisService.set(
       `${this.jwtConfig.cacheKeyPrefix}:accessToken:${id}`,
       accessToken,
       'PX',
-      formatToMS(this.jwtConfig.expiresIn)
+      formatToMS(
+        checked ? this.jwtConfig.rememberExpiresIn : this.jwtConfig.expiresIn
+      )
     );
     return accessToken;
   }
 
-  async generateRefreshToken(id, roles) {
+  async generateRefreshToken(id: string, roles: string[], checked: boolean) {
+    const expiresIn = checked
+      ? this.jwtConfig.refreshToken.rememberExpiresIn
+      : this.jwtConfig.refreshToken.expiresIn;
     const refreshToken = await this.jwtService.sign(
       {
         id,
@@ -40,14 +46,14 @@ export class PassportService {
       },
       this.jwtConfig.refreshToken.secret,
       {
-        expiresIn: this.jwtConfig.refreshToken.expiresIn,
+        expiresIn,
       }
     );
     this.redisService.set(
       `${this.jwtConfig.cacheKeyPrefix}:refreshToken:${id}`,
       refreshToken,
       'PX',
-      formatToMS(this.jwtConfig.refreshToken.expiresIn)
+      formatToMS(expiresIn)
     );
     return refreshToken;
   }

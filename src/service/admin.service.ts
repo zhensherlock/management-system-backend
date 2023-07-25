@@ -5,11 +5,19 @@ import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { encrypt } from '../util';
 import { CommonError } from '../error';
+import { Context } from '@midwayjs/koa';
+import { CaptchaService } from '@midwayjs/captcha';
 
 @Provide()
 export class AdminService extends BaseService<AdminEntity> {
   @Inject()
   logger: ILogger;
+
+  @Inject()
+  ctx: Context;
+
+  @Inject()
+  captchaService: CaptchaService;
 
   @InjectEntityModel(AdminEntity)
   entityModel: Repository<AdminEntity>;
@@ -31,7 +39,21 @@ export class AdminService extends BaseService<AdminEntity> {
     super();
   }
 
-  async tryLogin(name: string, password: string) {
+  async tryLogin(
+    account: string,
+    password: string,
+    captchaId: string,
+    captcha: string
+  ) {
+    if (
+      this.checkPasswordErrorNumber()
+        ? !(await this.captchaService.check(captchaId, captcha))
+        : false
+    ) {
+      throw new CommonError('captcha.base.message', {
+        group: 'passport',
+      });
+    }
     const mdl = await this.getOneObject({
       select: [
         'id',
@@ -45,7 +67,7 @@ export class AdminService extends BaseService<AdminEntity> {
         'enabled',
       ],
       where: {
-        name,
+        name: account,
       },
     });
     if (!mdl) {
@@ -59,10 +81,20 @@ export class AdminService extends BaseService<AdminEntity> {
       });
     }
     if (mdl.password !== encrypt(password, mdl.salt).hash) {
+      this.addPasswordErrorNumber();
       throw new CommonError('user.error.password.message', {
         group: 'passport',
       });
     }
     return mdl;
+  }
+
+  addPasswordErrorNumber(count = 1) {
+    const passwordErrorNumber = this.ctx.session.passwordErrorNumber || 0;
+    this.ctx.session.passwordErrorNumber = passwordErrorNumber + count;
+  }
+
+  checkPasswordErrorNumber() {
+    return this.ctx.session.passwordErrorNumber >= 5;
   }
 }

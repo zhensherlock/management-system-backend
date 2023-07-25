@@ -57,17 +57,39 @@ export class LoginDTO {
   @Rule(
     RuleType.string()
       .max(100)
+      .empty('')
       .trim(true)
       .error(
         handleParameterErrors({
           '*': {
-            message: 'password.base.message',
+            message: 'captcha.base.message',
             options: { group: 'passport' },
           },
         })
       )
   )
   captcha: string;
+
+  @ApiProperty({ example: '', description: '验证码编号' })
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .empty('')
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          '*': {
+            message: 'captcha.base.message',
+            options: { group: 'passport' },
+          },
+        })
+      )
+  )
+  captchaId: string;
+
+  @ApiProperty({ example: false, description: '记住账号' })
+  @Rule(RuleType.boolean())
+  checked: boolean;
 }
 
 export class RefreshTokenDTO {

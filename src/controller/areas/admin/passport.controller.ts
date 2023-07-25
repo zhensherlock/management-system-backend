@@ -28,14 +28,21 @@ export class PassportController {
   @Post('/login', { summary: '管理员-登录' })
   @ApiBody({ description: '管理员登录凭证' })
   async login(@Body() dto: LoginDTO) {
-    const admin = await this.adminService.tryLogin(dto.username, dto.password);
+    const admin = await this.adminService.tryLogin(
+      dto.username,
+      dto.password,
+      dto.captchaId,
+      dto.captcha
+    );
     const accessToken = await this.passportService.generateAccessToken(
       admin.id,
-      [PassportType.Admin]
+      [PassportType.Admin],
+      dto.checked
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       admin.id,
-      [PassportType.Admin]
+      [PassportType.Admin],
+      dto.checked
     );
     return {
       accessToken,
@@ -46,16 +53,17 @@ export class PassportController {
   @Get('/refreshToken', { summary: '管理员-更新AccessToken' })
   @ApiQuery({ description: 'RefreshToken凭证' })
   async refreshToken(@Query() query: RefreshTokenDTO) {
-    const { id, roles } = await this.passportService.verifyRefreshToken(
-      query.refreshToken
-    );
+    const { id, roles, checked } =
+      await this.passportService.verifyRefreshToken(query.refreshToken);
     const accessToken = await this.passportService.generateAccessToken(
       id,
-      roles
+      roles,
+      checked
     );
     const refreshToken = await this.passportService.generateRefreshToken(
       id,
-      roles
+      roles,
+      checked
     );
     return {
       accessToken,

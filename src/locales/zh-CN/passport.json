@@ -1,6 +1,6 @@
 {
-  "name.required.message": "请输入用户名",
-  "name.base.message": "请输入正确的用户名",
+  "account.required.message": "请输入账号",
+  "account.base.message": "请输入正确的账号",
   "password.required.message": "请输入密码",
   "password.base.message": "请输入正确的密码",
   "captcha.required.message": "请输入验证码",

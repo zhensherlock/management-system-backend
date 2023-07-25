@@ -10,11 +10,19 @@ import { CreateUserDTO, UpdateUserDTO } from '../dto/areas/admin/user.dto';
 import { encrypt } from '../util';
 import { CommonError } from '../error';
 import ExcelJS from 'exceljs';
+import { Context } from '@midwayjs/koa';
+import { CaptchaService } from '@midwayjs/captcha';
 
 @Provide()
 export class UserService extends BaseService<UserEntity> {
   @InjectEntityModel(UserEntity)
   entityModel: Repository<UserEntity>;
+
+  @Inject()
+  ctx: Context;
+
+  @Inject()
+  captchaService: CaptchaService;
 
   fullSelects = [
     'id',
@@ -40,12 +48,26 @@ export class UserService extends BaseService<UserEntity> {
     super();
   }
 
-  async tryLogin(name: string, password: string) {
+  async tryLogin(
+    account: string,
+    password: string,
+    captchaId: string,
+    captcha: string
+  ) {
+    if (
+      this.checkPasswordErrorNumber()
+        ? !(await this.captchaService.check(captchaId, captcha))
+        : false
+    ) {
+      throw new CommonError('captcha.base.message', {
+        group: 'passport',
+      });
+    }
     const mdl = await this.getOneObject({
       select: ['id', 'password', 'salt', 'enabled', 'tenantId'],
       relations: ['userRoleMappings', 'userRoleMappings.role'],
       where: {
-        name,
+        name: account,
       },
     });
     if (!mdl) {
@@ -59,6 +81,7 @@ export class UserService extends BaseService<UserEntity> {
       });
     }
     if (mdl.password !== encrypt(password, mdl.salt).hash) {
+      this.addPasswordErrorNumber();
       throw new CommonError('user.error.password.message', {
         group: 'passport',
       });
@@ -175,5 +198,14 @@ export class UserService extends BaseService<UserEntity> {
         await this.createUser(dto);
       }
     }
+  }
+
+  addPasswordErrorNumber(count = 1) {
+    const passwordErrorNumber = this.ctx.session.passwordErrorNumber || 0;
+    this.ctx.session.passwordErrorNumber = passwordErrorNumber + count;
+  }
+
+  checkPasswordErrorNumber() {
+    return this.ctx.session.passwordErrorNumber >= 5;
   }
 }
