@@ -1,4 +1,4 @@
-import { Inject, Controller, Put, Body } from '@midwayjs/core';
+import { Inject, Controller, Put, Body, Get } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { UserService } from '../../../service/user.service';
 import { encrypt } from '../../../util';
@@ -25,6 +25,21 @@ export class InfoController extends BaseUserController {
 
   @Inject()
   i18nService: MidwayI18nService;
+
+  @Role(['school', 'security'])
+  @Get('/', { summary: '用户-获取基本信息' })
+  async getUser() {
+    const user = this.ctx.currentUser;
+    return omit(user, [
+      'password',
+      'salt',
+      'deletedDate',
+      // 'organizationUserMappings',
+      // 'organizationIds',
+      // 'userRoleMappings',
+      // 'roleIds',
+    ]);
+  }
 
   @Role(['school', 'security'])
   @Put('/update', { summary: '用户-修改信息' })
