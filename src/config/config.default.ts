@@ -111,8 +111,10 @@ export default {
     refreshToken: {
       secret: '987654321',
       expiresIn: '5d',
+      rememberExpiresIn: '30d',
     },
     expiresIn: '1h', // https://github.com/vercel/ms
+    rememberExpiresIn: '30d',
     cacheKeyPrefix: `${redisGlobalConfigPrefix}:passport`,
   },
   midwayLogger: {
