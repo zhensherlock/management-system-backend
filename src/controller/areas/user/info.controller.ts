@@ -30,6 +30,7 @@ export class InfoController extends BaseUserController {
   @Get('/', { summary: '用户-获取基本信息' })
   async getUser() {
     const user = this.ctx.currentUser;
+    user.isMaxLoginErrorExceeded = this.userService.checkPasswordErrorNumber();
     return omit(user, [
       'password',
       'salt',
