@@ -27,6 +27,7 @@ import { FormatMiddleware } from './middleware/format.middleware';
 // import { JwtPassportMiddleware } from './middleware/jwt.middleware';
 import { SecurityMiddleware } from './middleware/security.middleware';
 import { PassportGuard } from './guard/passport.guard';
+import { CaptchaErrorFilter } from './filter/captcha.error.filter';
 
 dotenv.config();
 
@@ -71,6 +72,7 @@ export class ContainerLifeCycle {
     this.app.useGuard([PassportGuard]);
     // add filter
     this.app.useFilter([
+      CaptchaErrorFilter,
       NotFoundFilter,
       CommonErrorFilter,
       CommonWarningFilter,

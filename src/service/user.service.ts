@@ -8,7 +8,7 @@ import { OrganizationUserMappingService } from './organization_user_mapping.serv
 import { UserRoleMappingService } from './user_role_mapping.service';
 import { CreateUserDTO, UpdateUserDTO } from '../dto/areas/admin/user.dto';
 import { encrypt } from '../util';
-import { CommonError } from '../error';
+import { CommonError, CaptchaError } from '../error';
 import ExcelJS from 'exceljs';
 import { Context } from '@midwayjs/koa';
 import { CaptchaService } from '@midwayjs/captcha';
@@ -59,7 +59,7 @@ export class UserService extends BaseService<UserEntity> {
         ? !(await this.captchaService.check(captchaId, captcha))
         : false
     ) {
-      throw new CommonError('captcha.base.message', {
+      throw new CaptchaError('captcha.base.message', {
         group: 'passport',
       });
     }
@@ -71,6 +71,7 @@ export class UserService extends BaseService<UserEntity> {
       },
     });
     if (!mdl) {
+      this.addPasswordErrorNumber();
       throw new CommonError('user.nonexistence.message', {
         group: 'passport',
       });
