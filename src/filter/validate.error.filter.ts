@@ -11,12 +11,12 @@ export class ValidateErrorFilter {
     let message = err.message;
     const code = err.code;
     const i18nService = await ctx.requestContext.getAsync(MidwayI18nService);
-    const obj = tryParseJSON(err.message);
+    const obj: any = tryParseJSON(err.message);
     if (isObject(obj)) {
-      message = obj.text;
+      message = (obj as any).text;
       if (message.startsWith('i18n:')) {
         const i18nKey = message.match(/^i18n:(.*)$/)[1];
-        message = i18nService.translate(i18nKey, obj.options);
+        message = i18nService.translate(i18nKey, (obj as any).options);
       }
     }
     return {
