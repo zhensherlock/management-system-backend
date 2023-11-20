@@ -29,6 +29,15 @@ export class OrganizationEntity {
   @Column({ length: 191, comment: '组织名字' })
   name: string;
 
+  @Column({ length: 191, nullable: true, comment: '组织联系人' })
+  person: string;
+
+  @Column({ length: 191, nullable: true, comment: '组织联系方式' })
+  contact: string;
+
+  @Column({ length: 191, nullable: true, comment: '组织地址' })
+  address: string;
+
   @Column({ length: 191, nullable: true, comment: '组织简介' })
   description: string;
 
