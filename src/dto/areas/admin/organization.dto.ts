@@ -55,6 +55,69 @@ export class OrganizationDTO {
   )
   description: string;
 
+  @ApiProperty({ example: 'Michael', description: '组织联系人' })
+  @Rule(
+    RuleType.string()
+      .max(150)
+      .empty('')
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          'string.max': {
+            message: 'person.length.message',
+            options: { group: 'organization' },
+          },
+          '*': {
+            message: 'person.base.message',
+            options: { group: 'organization' },
+          },
+        })
+      )
+  )
+  person: string;
+
+  @ApiProperty({ example: '15906111111', description: '组织联系方式' })
+  @Rule(
+    RuleType.string()
+      .max(150)
+      .empty('')
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          'string.max': {
+            message: 'contact.length.message',
+            options: { group: 'organization' },
+          },
+          '*': {
+            message: 'contact.base.message',
+            options: { group: 'organization' },
+          },
+        })
+      )
+  )
+  contact: string;
+
+  @ApiProperty({ example: 'China', description: '组织地址' })
+  @Rule(
+    RuleType.string()
+      .max(150)
+      .empty('')
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          'string.max': {
+            message: 'address.length.message',
+            options: { group: 'organization' },
+          },
+          '*': {
+            message: 'address.base.message',
+            options: { group: 'organization' },
+          },
+        })
+      )
+  )
+  address: string;
+
   @ApiProperty({ example: 1, description: '组织类型' })
   @Rule(
     RuleType.number()

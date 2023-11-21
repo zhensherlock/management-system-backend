@@ -1,7 +1,7 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
-import { Like, Repository } from 'typeorm';
+import { Like, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isEmpty, isString, isArray } from 'lodash';
 
@@ -12,6 +12,16 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
 
   constructor() {
     super();
+  }
+
+  async checkNameExisted(name: string, tenantId: string, id?: string) {
+    return await this.entityModel.exist({
+      where: {
+        name,
+        tenantId,
+        ...(isEmpty(id) ? {} : { id: Not(id) }),
+      },
+    });
   }
 
   async getTreeListByJoin(tenantId, type, keyword) {
