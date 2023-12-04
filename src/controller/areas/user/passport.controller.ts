@@ -73,7 +73,7 @@ export class PassportController {
     };
   }
 
-  @Get('/captcha', { summary: '管理员-登录验证码' })
+  @Get('/captcha', { summary: '用户-登录验证码' })
   async getImageCaptcha() {
     const { id, imageBase64 } = await this.captchaService.formula();
     return {

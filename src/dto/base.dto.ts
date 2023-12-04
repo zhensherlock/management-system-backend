@@ -2,7 +2,13 @@ import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError } from '../error';
 import { ApiProperty } from '@midwayjs/swagger';
 
-export class GetListBaseDTO {
+export class BaseDTO {
+  @ApiProperty({ description: '时间戳' })
+  @Rule(RuleType.string().empty('').trim(true))
+  _t: string;
+}
+
+export class GetListBaseDTO extends BaseDTO {
   @ApiProperty({ description: '关键字' })
   @Rule(RuleType.string().empty('').trim(true))
   keyword: string;

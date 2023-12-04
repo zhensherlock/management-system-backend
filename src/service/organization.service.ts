@@ -4,6 +4,8 @@ import { OrganizationEntity } from '../entity/organization.entity';
 import { Like, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isEmpty, isString, isArray } from 'lodash';
+import ExcelJS from 'exceljs';
+import { OrganizationType } from '../constant';
 
 @Provide()
 export class OrganizationService extends BaseService<OrganizationEntity> {
@@ -22,6 +24,46 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
         ...(isEmpty(id) ? {} : { id: Not(id) }),
       },
     });
+  }
+
+  async importCompanyList(url, tenantId) {
+    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
+    for await (const worksheetReader of workbookReader) {
+      for await (const row of worksheetReader) {
+        if (row.number === 1) {
+          continue;
+        }
+        const entity = {
+          name: '',
+          person: '',
+          contact: '',
+          address: '',
+          enabled: true,
+          type: OrganizationType.Company,
+          tenantId,
+        };
+        row.eachCell((cell, cellNumber) => {
+          switch (cellNumber) {
+            case 1:
+              entity.name = cell.text;
+              break;
+            case 2:
+              entity.person = cell.text;
+              break;
+            case 3:
+              entity.contact = cell.text;
+              break;
+            case 4:
+              entity.address = cell.text;
+              break;
+          }
+        });
+        if (await this.checkNameExisted(entity.name, tenantId)) {
+          continue;
+        }
+        await this.createObject(<OrganizationEntity>entity);
+      }
+    }
   }
 
   async getTreeListByJoin(tenantId, type, keyword) {

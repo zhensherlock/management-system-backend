@@ -8,6 +8,7 @@ import {
   Put,
   Param,
   Del,
+  File,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import {
@@ -16,6 +17,7 @@ import {
   ApiParam,
   ApiQuery,
   ApiTags,
+  BodyContentType,
 } from '@midwayjs/swagger';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseUserController } from './base/base.user.controller';
@@ -62,6 +64,9 @@ export class CompanyController extends BaseUserController {
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
           },
+          order: {
+            updatedDate: 'DESC',
+          },
         }
       );
     return {
@@ -70,6 +75,18 @@ export class CompanyController extends BaseUserController {
       currentPage,
       pageSize,
     };
+  }
+
+  @Role(['education'])
+  @Post('/import', { summary: '用户-导入保安列表' })
+  @ApiBody({
+    description: '用户数据文件',
+    contentType: BodyContentType.Multipart,
+  })
+  async importUsers(@File() file) {
+    const tenantId = this.ctx.currentUser.tenantId;
+    await this.organizationService.importCompanyList(file.data, tenantId);
+    return this.i18nService.translate('import.success', { group: 'global' });
   }
 
   @Role(['education'])
@@ -121,7 +138,7 @@ export class CompanyController extends BaseUserController {
   }
 
   @Role(['education'])
-  @Del('/soft/:id', { summary: '用户-软删除保安公司' })
+  @Del('/:id', { summary: '用户-软删除保安公司' })
   @ApiParam({ name: 'id', description: '编号' })
   async softDeleteEmployee(@Param('id') id: string) {
     if (

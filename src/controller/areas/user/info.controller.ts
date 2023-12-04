@@ -26,7 +26,7 @@ export class InfoController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security'])
+  @Role(['school', 'security', 'education'])
   @Get('/', { summary: '用户-获取基本信息' })
   async getUser() {
     const user = this.ctx.currentUser;
@@ -41,7 +41,7 @@ export class InfoController extends BaseUserController {
     ]);
   }
 
-  @Role(['school', 'security'])
+  @Role(['school', 'security', 'education'])
   @Put('/update', { summary: '用户-修改信息' })
   @ApiBody({ description: '用户信息' })
   async updateUser(@Body() dto: UpdateUserDTO) {
@@ -62,7 +62,7 @@ export class InfoController extends BaseUserController {
     ]);
   }
 
-  @Role(['school', 'security'])
+  @Role(['school', 'security', 'education'])
   @Put('/password', { summary: '用户-修改密码' })
   async updatePassword(@Body() dto: UpdatePasswordDTO) {
     const user = this.ctx.currentUser;

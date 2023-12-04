@@ -33,28 +33,28 @@ export class CompanyDTO {
   )
   name: string;
 
-  @ApiProperty({ example: '教育局介绍', description: '组织简介' })
-  @Rule(
-    RuleType.string()
-      .max(150)
-      .empty('')
-      .trim(true)
-      .error(
-        handleParameterErrors({
-          'string.max': {
-            message: 'description.length.message',
-            options: { group: 'organization' },
-          },
-          '*': {
-            message: 'description.base.message',
-            options: { group: 'organization' },
-          },
-        })
-      )
-  )
-  description: string;
+  // @ApiProperty({ example: '教育局介绍', description: '组织简介' })
+  // @Rule(
+  //   RuleType.string()
+  //     .max(150)
+  //     .empty('')
+  //     .trim(true)
+  //     .error(
+  //       handleParameterErrors({
+  //         'string.max': {
+  //           message: 'description.length.message',
+  //           options: { group: 'organization' },
+  //         },
+  //         '*': {
+  //           message: 'description.base.message',
+  //           options: { group: 'organization' },
+  //         },
+  //       })
+  //     )
+  // )
+  // description: string;
 
-  @ApiProperty({ example: '教育局介绍', description: '组织联系人' })
+  @ApiProperty({ example: '张某某', description: '组织联系人' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -75,7 +75,7 @@ export class CompanyDTO {
   )
   person: string;
 
-  @ApiProperty({ example: '教育局介绍', description: '组织联系方式' })
+  @ApiProperty({ example: '110', description: '组织联系方式' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -96,7 +96,7 @@ export class CompanyDTO {
   )
   contact: string;
 
-  @ApiProperty({ example: '教育局介绍', description: '组织地址' })
+  @ApiProperty({ example: '中国张家港', description: '组织地址' })
   @Rule(
     RuleType.string()
       .max(150)
