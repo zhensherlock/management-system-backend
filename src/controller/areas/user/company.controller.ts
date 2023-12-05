@@ -22,7 +22,7 @@ import {
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseUserController } from './base/base.user.controller';
 import { Role } from '../../../decorator/role.decorator';
-import { OrganizationService } from '../../../service/organization.service';
+import { CompanyService } from '../../../service/company.service';
 import {
   CreateCompanyDTO,
   GetCompanyListDTO,
@@ -31,8 +31,7 @@ import {
 import { isEmpty, omit } from 'lodash';
 import { Like } from 'typeorm';
 import { CommonError } from '../../../error';
-import { OrganizationEntity } from '../../../entity/organization.entity';
-import { OrganizationType } from '../../../constant';
+import { CompanyEntity } from '../../../entity/company.entity';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -42,7 +41,7 @@ export class CompanyController extends BaseUserController {
   ctx: Context;
 
   @Inject()
-  organizationService: OrganizationService;
+  companyService: CompanyService;
 
   @Inject()
   i18nService: MidwayI18nService;
@@ -51,15 +50,12 @@ export class CompanyController extends BaseUserController {
   @Get('/list', { summary: '用户-查询保安公司列表' })
   @ApiQuery({})
   async getCompanyList(@Query() query: GetCompanyListDTO) {
-    const tenantId = this.ctx.currentUser.tenantId;
     const [list, count, currentPage, pageSize] =
-      await this.organizationService.getPaginatedList(
+      await this.companyService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
-            tenantId,
-            type: OrganizationType.Company,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
@@ -78,14 +74,13 @@ export class CompanyController extends BaseUserController {
   }
 
   @Role(['education'])
-  @Post('/import', { summary: '用户-导入保安列表' })
+  @Post('/import', { summary: '用户-导入保安公司列表' })
   @ApiBody({
     description: '用户数据文件',
     contentType: BodyContentType.Multipart,
   })
   async importUsers(@File() file) {
-    const tenantId = this.ctx.currentUser.tenantId;
-    await this.organizationService.importCompanyList(file.data, tenantId);
+    await this.companyService.importList(file.data);
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
@@ -94,16 +89,12 @@ export class CompanyController extends BaseUserController {
   @ApiBody({ description: '保安公司信息' })
   async createCompany(@Body() dto: CreateCompanyDTO) {
     const tenantId = this.ctx.currentUser.tenantId;
-    if (await this.organizationService.checkNameExisted(dto.name, tenantId)) {
-      throw new CommonError('name.exist.message', { group: 'organization' });
+    if (await this.companyService.checkNameExisted(dto.name, tenantId)) {
+      throw new CommonError('name.exist.message', { group: 'company' });
     }
-    const company = <OrganizationEntity>dto;
-    company.tenantId = tenantId;
-    company.type = OrganizationType.Company;
+    const company = <CompanyEntity>dto;
     company.enabled = true;
-    const mdl = await this.organizationService.createObject(
-      <OrganizationEntity>dto
-    );
+    const mdl = await this.companyService.createObject(<CompanyEntity>dto);
     return omit(mdl, ['deletedDate']);
   }
 
@@ -112,47 +103,37 @@ export class CompanyController extends BaseUserController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '保安公司信息' })
   async updateCompany(@Param('id') id: string, @Body() dto: UpdateCompanyDTO) {
-    const tenantId = this.ctx.currentUser.tenantId;
-    const mdl = await this.organizationService.getOneObject({
+    const mdl = await this.companyService.getOneObject({
       where: {
         id,
-        type: OrganizationType.Company,
-        tenantId,
       },
     });
     if (!mdl) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    if (
-      await this.organizationService.checkNameExisted(dto.name, tenantId, id)
-    ) {
-      throw new CommonError('name.exist.message', { group: 'organization' });
+    if (await this.companyService.checkNameExisted(dto.name, id)) {
+      throw new CommonError('name.exist.message', { group: 'company' });
     }
 
     Object.assign(mdl, dto);
-    mdl.tenantId = tenantId;
 
-    return omit(await this.organizationService.updateObject(mdl), [
-      'deletedDate',
-    ]);
+    return omit(await this.companyService.updateObject(mdl), ['deletedDate']);
   }
 
   @Role(['education'])
-  @Del('/:id', { summary: '用户-软删除保安公司' })
+  @Del('/:id', { summary: '用户-删除保安公司' })
   @ApiParam({ name: 'id', description: '编号' })
-  async softDeleteEmployee(@Param('id') id: string) {
+  async deleteCompany(@Param('id') id: string) {
     if (
-      !(await this.organizationService.existObject({
+      !(await this.companyService.existObject({
         where: {
           id,
-          type: OrganizationType.Company,
-          tenantId: this.ctx.currentUser.tenantId,
         },
       }))
     ) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    const result = await this.organizationService.softDeleteObject(id);
+    const result = await this.companyService.deleteObject(id);
     if (!result.affected) {
       throw new CommonError('delete.failure', { group: 'global' });
     }

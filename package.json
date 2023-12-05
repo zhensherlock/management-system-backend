@@ -11,7 +11,7 @@
     "@midwayjs/decorator": "^3.12.3",
     "@midwayjs/i18n": "^3.12.10",
     "@midwayjs/info": "^3.12.10",
-    "@midwayjs/jwt": "^3.12.10",
+    "@midwayjs/jwt": "3.12.10",
     "@midwayjs/koa": "^3.12.10",
     "@midwayjs/logger": "^3.0.2",
     "@midwayjs/otel": "^3.12.10",

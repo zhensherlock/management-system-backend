@@ -22,6 +22,7 @@
   "options.base.message": "请输入正确的员工扩展配置信息",
   "tenant_id.base.message": "请选择正确的租户",
   "organization_id.base.message": "请选择正确的组织",
+  "company_id.base.message": "请选择正确的保安公司",
   "delete.success": "员工删除成功！",
   "restore.success": "员工恢复成功！"
 }

@@ -9,13 +9,13 @@ import {
   BeforeInsert,
   PrimaryColumn,
 } from 'typeorm';
-import { TenantEntity } from './tenant.entity';
-import { OrganizationEntity } from './organization.entity';
 import {
   createDateTransformer,
   generateUUID,
   updatedDateTransformer,
 } from '../util';
+import { CompanyEntity } from './company.entity';
+import { OrganizationEntity } from './organization.entity';
 
 @Entity({
   name: 'employee',
@@ -24,7 +24,12 @@ export class EmployeeEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '员工编号' })
   id: string;
 
-  @Column({ name: 'job_number', length: 191, comment: '员工工号' })
+  @Column({
+    name: 'job_number',
+    nullable: true,
+    length: 191,
+    comment: '职工号',
+  })
   jobNumber: string;
 
   @Column({ length: 191, comment: '员工姓名' })
@@ -33,14 +38,29 @@ export class EmployeeEntity {
   @Column({ length: 1, default: '1', comment: '员工性别' })
   sex: string;
 
+  @Column({ name: 'certificate_number', length: 191, comment: '员工证件编号' })
+  certificateNumber: string;
+
+  @Column({ length: 191, comment: '员工联系方式' })
+  contact: string;
+
   @Column({ length: 255, nullable: true, comment: '员工头像' })
   avatar: string;
 
   @Column({ length: 191, nullable: true, comment: '员工简介' })
   description: string;
 
-  @Column({ type: 'timestamp', nullable: true, comment: '员工生日' })
+  @Column({ type: 'datetime', nullable: true, comment: '员工生日' })
   birthday: Date;
+
+  @Column({ length: 191, nullable: true, comment: '员工民族' })
+  nation: string;
+
+  @Column({ length: 191, nullable: true, comment: '员工籍贯' })
+  nativePlace: string;
+
+  @Column({ length: 191, nullable: true, comment: '员工住址' })
+  address: string;
 
   @Column({
     name: 'id_card',
@@ -56,14 +76,20 @@ export class EmployeeEntity {
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
 
-  @Column({ name: 'tenant_id', length: 36, type: 'uuid', comment: '租户编号' })
-  tenantId: string;
+  @Column({
+    name: 'company_id',
+    length: 36,
+    type: 'uuid',
+    comment: '保安公司编号',
+  })
+  companyId: string;
 
   @Column({
     name: 'organization_id',
     length: 36,
     type: 'uuid',
-    comment: '组织编号',
+    comment: '学校编号',
+    nullable: true,
   })
   organizationId: string;
 
@@ -93,11 +119,11 @@ export class EmployeeEntity {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => TenantEntity, node => node.devices)
-  @JoinColumn({ name: 'tenant_id' })
-  tenant: TenantEntity;
+  @ManyToOne(() => CompanyEntity, node => node.employees)
+  @JoinColumn({ name: 'company_id' })
+  company: CompanyEntity;
 
-  @ManyToOne(() => OrganizationEntity, node => node.devices)
+  @ManyToOne(() => OrganizationEntity, node => node.employees)
   @JoinColumn({ name: 'organization_id' })
   organization: OrganizationEntity;
 

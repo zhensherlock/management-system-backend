@@ -19,6 +19,7 @@ import {
 import { UserRoleMappingEntity } from './user_role_mapping.entity';
 import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
 import { TenantEntity } from './tenant.entity';
+import { CompanyUserMappingEntity } from './company_user_mapping.entity';
 
 @Entity({
   name: 'user',
@@ -109,6 +110,11 @@ export class UserEntity {
     cascade: true,
   })
   organizationUserMappings: OrganizationUserMappingEntity[];
+
+  @OneToMany(() => CompanyUserMappingEntity, node => node.user, {
+    cascade: true,
+  })
+  companyUserMappings: CompanyUserMappingEntity[];
 
   @BeforeInsert()
   generateId() {

@@ -215,20 +215,6 @@ export class CreateEmployeeDTO extends EmployeeDTO {}
 export class UpdateEmployeeDTO extends EmployeeDTO {}
 
 export class GetEmployeeListDTO extends GetListBaseDTO {
-  @ApiProperty({ example: null, description: '租户编号' })
-  @Rule(
-    RuleType.string()
-      .required()
-      .uuid({ separator: false })
-      .error(
-        handleParameterError({
-          message: 'tenant_id.base.message',
-          options: { group: 'employee' },
-        })
-      )
-  )
-  tenantId: string;
-
   @ApiProperty({ example: null, description: '组织编号' })
   @Rule(
     RuleType.string()
