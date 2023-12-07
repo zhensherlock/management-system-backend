@@ -18,7 +18,7 @@ export class CompanyService extends BaseService<CompanyEntity> {
     const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
     for await (const worksheetReader of workbookReader) {
       for await (const row of worksheetReader) {
-        if (row.number === 1) {
+        if (row.number < 4) {
           continue;
         }
         const entity = {

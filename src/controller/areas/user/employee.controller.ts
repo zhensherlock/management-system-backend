@@ -18,7 +18,7 @@ import {
   UpdateEmployeeDTO,
 } from '../../../dto/areas/user/employee.dto';
 import { EmployeeEntity } from '../../../entity/employee.entity';
-import { Like } from 'typeorm';
+import { In, Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import {
   ApiBody,
@@ -27,7 +27,7 @@ import {
   ApiTags,
   BodyContentType,
 } from '@midwayjs/swagger';
-import { isEmpty, omit } from 'lodash';
+import { isArray, isEmpty, isString, omit } from 'lodash';
 import { TenantService } from '../../../service/tenant.service';
 import { OrganizationService } from '../../../service/organization.service';
 import { BaseUserController } from './base/base.user.controller';
@@ -75,16 +75,23 @@ export class EmployeeController extends BaseUserController {
   @Get('/list', { summary: '用户-查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
+    let companyWhere = {};
+    if (isString(query.companyIds)) {
+      companyWhere = { companyId: query.companyIds };
+    }
+    if (isArray(query.companyIds)) {
+      companyWhere = { companyId: In(query.companyIds) };
+    }
     const [list, count, currentPage, pageSize] =
       await this.employeeService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
-            ...(isEmpty(query.companyId) ? {} : { companyId: query.companyId }),
-            ...(isEmpty(query.organizationId)
+            ...companyWhere,
+            ...(isEmpty(query.organizationIds)
               ? {}
-              : { organizationId: query.organizationId }),
+              : { organizationId: In(query.organizationIds) }),
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),

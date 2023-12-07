@@ -3,8 +3,8 @@ import { handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
-export class CompanyDTO {
-  @ApiProperty({ example: '张家港保安公司', description: '公司名称' })
+export class SchoolDTO {
+  @ApiProperty({ example: '教育局', description: '学校名称' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -33,28 +33,7 @@ export class CompanyDTO {
   )
   name: string;
 
-  // @ApiProperty({ example: '张家港保安公司介绍', description: '公司简介' })
-  // @Rule(
-  //   RuleType.string()
-  //     .max(150)
-  //     .empty('')
-  //     .trim(true)
-  //     .error(
-  //       handleParameterErrors({
-  //         'string.max': {
-  //           message: 'description.length.message',
-  //           options: { group: 'organization' },
-  //         },
-  //         '*': {
-  //           message: 'description.base.message',
-  //           options: { group: 'organization' },
-  //         },
-  //       })
-  //     )
-  // )
-  // description: string;
-
-  @ApiProperty({ example: '张某某', description: '公司联系人' })
+  @ApiProperty({ example: '张某某', description: '学校联系人' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -75,7 +54,7 @@ export class CompanyDTO {
   )
   person: string;
 
-  @ApiProperty({ example: '110', description: '公司联系方式' })
+  @ApiProperty({ example: '110', description: '学校联系方式' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -96,7 +75,7 @@ export class CompanyDTO {
   )
   contact: string;
 
-  @ApiProperty({ example: '中国张家港', description: '公司地址' })
+  @ApiProperty({ example: '中国张家港', description: '学校地址' })
   @Rule(
     RuleType.string()
       .max(150)
@@ -118,8 +97,8 @@ export class CompanyDTO {
   address: string;
 }
 
-export class CreateCompanyDTO extends CompanyDTO {}
+export class CreateSchoolDTO extends SchoolDTO {}
 
-export class UpdateCompanyDTO extends CompanyDTO {}
+export class UpdateSchoolDTO extends SchoolDTO {}
 
-export class GetCompanyListDTO extends GetListBaseDTO {}
+export class GetSchoolListDTO extends GetListBaseDTO {}

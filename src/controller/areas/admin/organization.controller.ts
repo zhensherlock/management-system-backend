@@ -109,9 +109,7 @@ export class OrganizationController extends BaseAdminController {
   @Post('/create', { summary: '管理员-新建组织' })
   @ApiBody({ description: '组织信息' })
   async createOrganization(@Body() dto: CreateOrganizationDTO) {
-    if (
-      await this.organizationService.checkNameExisted(dto.name, dto.tenantId)
-    ) {
+    if (await this.organizationService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'organization' });
     }
     if (

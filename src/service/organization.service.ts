@@ -16,11 +16,10 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     super();
   }
 
-  async checkNameExisted(name: string, tenantId: string, id?: string) {
+  async checkNameExisted(name: string, id?: string) {
     return await this.entityModel.exist({
       where: {
         name,
-        tenantId,
         ...(isEmpty(id) ? {} : { id: Not(id) }),
       },
     });

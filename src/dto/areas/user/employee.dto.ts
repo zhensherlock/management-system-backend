@@ -216,9 +216,12 @@ export class UpdateEmployeeDTO extends EmployeeDTO {}
 export class GetEmployeeListDTO extends GetListBaseDTO {
   @ApiProperty({ example: null, description: '保安公司编号' })
   @Rule(
-    RuleType.string()
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
       .empty('')
-      .uuid({ separator: false })
       .error(
         handleParameterError({
           message: 'company_id.base.message',
@@ -226,13 +229,13 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
         })
       )
   )
-  companyId: string;
+  companyIds: string[] | string;
 
   @ApiProperty({ example: null, description: '组织编号' })
   @Rule(
-    RuleType.string()
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
       .empty('')
-      .uuid({ separator: false })
       .error(
         handleParameterError({
           message: 'organization_id.base.message',
@@ -240,5 +243,5 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
         })
       )
   )
-  organizationId: string;
+  organizationIds: string[];
 }
