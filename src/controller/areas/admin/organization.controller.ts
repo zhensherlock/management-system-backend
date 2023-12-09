@@ -92,18 +92,18 @@ export class OrganizationController extends BaseAdminController {
     };
   }
 
-  @Role(['admin'])
-  @Get('/tree', { summary: '管理员-查询组织树形列表' })
-  @ApiQuery({})
-  async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
-    const list = await this.organizationService.getTreeList(
-      query.tenantId,
-      query.type,
-      query.keyword,
-      query.userIds
-    );
-    return { list };
-  }
+  // @Role(['admin'])
+  // @Get('/tree', { summary: '管理员-查询组织树形列表' })
+  // @ApiQuery({})
+  // async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
+  //   const list = await this.organizationService.getTreeList(
+  //     query.tenantId,
+  //     query.type,
+  //     query.keyword,
+  //     query.userIds
+  //   );
+  //   return { list };
+  // }
 
   @Role(['admin'])
   @Post('/create', { summary: '管理员-新建组织' })

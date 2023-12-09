@@ -82,6 +82,13 @@ export class EmployeeController extends BaseUserController {
     if (isArray(query.companyIds)) {
       companyWhere = { companyId: In(query.companyIds) };
     }
+    let organizationWhere = {};
+    if (isString(query.organizationIds)) {
+      organizationWhere = { organizationId: query.organizationIds };
+    }
+    if (isArray(query.organizationIds)) {
+      organizationWhere = { organizationId: In(query.organizationIds) };
+    }
     const [list, count, currentPage, pageSize] =
       await this.employeeService.getPaginatedList(
         query.currentPage,
@@ -89,9 +96,7 @@ export class EmployeeController extends BaseUserController {
         {
           where: {
             ...companyWhere,
-            ...(isEmpty(query.organizationIds)
-              ? {}
-              : { organizationId: In(query.organizationIds) }),
+            ...organizationWhere,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),

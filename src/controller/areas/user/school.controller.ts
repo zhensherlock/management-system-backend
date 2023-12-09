@@ -76,6 +76,17 @@ export class SchoolController extends BaseUserController {
   }
 
   @Role(['education'])
+  @Get('/tree', { summary: '用户-查询学校树形列表' })
+  @ApiQuery({})
+  async getOrganizationTreeList(@Query() query: GetSchoolListDTO) {
+    const list = await this.organizationService.getTreeList(
+      OrganizationType.School,
+      query.keyword
+    );
+    return { list };
+  }
+
+  @Role(['education'])
   @Post('/import', { summary: '用户-导入学校列表' })
   @ApiBody({
     description: '用户数据文件',

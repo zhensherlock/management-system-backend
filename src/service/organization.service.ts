@@ -79,7 +79,7 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       .getMany();
   }
 
-  async getTreeList(tenantId, type, keyword, userIds) {
+  async getTreeList(type, keyword, userIds = []) {
     let organizationUserMappings = [];
     if (isString(userIds)) {
       organizationUserMappings = [{ userId: userIds }];
@@ -93,7 +93,6 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       where: {
         organizationUserMappings,
         type,
-        tenantId,
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
       },
     });

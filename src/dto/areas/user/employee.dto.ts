@@ -233,8 +233,11 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
 
   @ApiProperty({ example: null, description: '组织编号' })
   @Rule(
-    RuleType.array()
-      .items(RuleType.string().uuid({ separator: false }))
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
       .empty('')
       .error(
         handleParameterError({
@@ -243,5 +246,5 @@ export class GetEmployeeListDTO extends GetListBaseDTO {
         })
       )
   )
-  organizationIds: string[];
+  organizationIds: string[] | string;
 }
