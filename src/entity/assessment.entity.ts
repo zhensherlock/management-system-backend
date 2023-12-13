@@ -74,7 +74,7 @@ export class AssessmentEntity {
   deletedDate: Date;
 
   @ManyToOne(() => AssessmentCategoryEntity, node => node.assessments)
-  @JoinColumn({ name: 'module_id' })
+  @JoinColumn({ name: 'assessment_category_id' })
   category: AssessmentCategoryEntity;
 
   @BeforeInsert()
