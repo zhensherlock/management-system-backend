@@ -1,5 +1,5 @@
 import { Rule, RuleType } from '@midwayjs/validate';
-import { handleParameterErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
@@ -95,6 +95,19 @@ export class SchoolDTO {
       )
   )
   address: string;
+
+  @ApiProperty({ example: null, description: '父级组织编号' })
+  @Rule(
+    RuleType.string()
+      .uuid({ separator: false })
+      .error(
+        handleParameterError({
+          message: 'parent_id.base.message',
+          options: { group: 'organization' },
+        })
+      )
+  )
+  parentId: string;
 }
 
 export class CreateSchoolDTO extends SchoolDTO {}

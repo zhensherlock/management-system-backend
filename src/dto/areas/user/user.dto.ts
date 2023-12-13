@@ -140,4 +140,20 @@ export class CreateUserDTO extends UserDTO {}
 
 export class UpdateUserDTO extends UserDTO {}
 
-export class GetUserListDTO extends GetListBaseDTO {}
+export class GetUserListDTO extends GetListBaseDTO {
+  @ApiProperty({ example: null, description: '组织编号' })
+  @Rule(
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .error(
+        handleParameterError({
+          message: 'organization_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  organizationIds: string[] | string;
+}

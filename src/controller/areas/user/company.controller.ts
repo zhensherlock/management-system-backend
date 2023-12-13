@@ -88,8 +88,7 @@ export class CompanyController extends BaseUserController {
   @Post('/create', { summary: '用户-新建保安公司' })
   @ApiBody({ description: '保安公司信息' })
   async createCompany(@Body() dto: CreateCompanyDTO) {
-    const tenantId = this.ctx.currentUser.tenantId;
-    if (await this.companyService.checkNameExisted(dto.name, tenantId)) {
+    if (await this.companyService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'company' });
     }
     const company = <CompanyEntity>dto;

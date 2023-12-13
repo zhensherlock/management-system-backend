@@ -28,7 +28,7 @@ import {
   GetUserListDTO,
   UpdateUserDTO,
 } from '../../../dto/areas/user/user.dto';
-import { isEmpty, omit } from 'lodash';
+import { isArray, isEmpty, isString, omit } from 'lodash';
 import { Like } from 'typeorm';
 import { CommonError } from '../../../error';
 import { UserEntity } from '../../../entity/user.entity';
@@ -50,12 +50,22 @@ export class UserController extends BaseUserController {
   @Get('/list', { summary: '用户-查询用户列表' })
   @ApiQuery({})
   async getUserList(@Query() query: GetUserListDTO) {
+    let organizationUserMappings = [];
+    if (isString(query.organizationIds)) {
+      organizationUserMappings = [{ organizationId: query.organizationIds }];
+    }
+    if (isArray(query.organizationIds)) {
+      organizationUserMappings = (<string[]>query.organizationIds).map(id => ({
+        organizationId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.userService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
+            organizationUserMappings,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
