@@ -95,6 +95,9 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
         type,
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
       },
+      order: {
+        updatedDate: 'DESC',
+      },
     });
     const rootOrganizations = list.filter(item => !item.parentId);
     const hierarchicalOrganizations = [];

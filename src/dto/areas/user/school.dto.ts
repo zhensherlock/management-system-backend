@@ -38,6 +38,7 @@ export class SchoolDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .empty(null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -59,6 +60,7 @@ export class SchoolDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .empty(null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -80,6 +82,7 @@ export class SchoolDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .empty(null)
       .trim(true)
       .error(
         handleParameterErrors({

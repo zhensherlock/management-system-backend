@@ -102,10 +102,13 @@ export class SchoolController extends BaseUserController {
   @ApiBody({ description: '学校信息' })
   async create(@Body() dto: CreateSchoolDTO) {
     if (await this.organizationService.checkNameExisted(dto.name)) {
-      throw new CommonError('name.exist.message', { group: 'school' });
+      throw new CommonError('school.name.exist.message', {
+        group: 'organization',
+      });
     }
     const school = <OrganizationEntity>dto;
     school.enabled = true;
+    school.type = OrganizationType.School;
     const mdl = await this.organizationService.createObject(
       <OrganizationEntity>dto
     );
@@ -126,7 +129,9 @@ export class SchoolController extends BaseUserController {
       throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.organizationService.checkNameExisted(dto.name, id)) {
-      throw new CommonError('name.exist.message', { group: 'school' });
+      throw new CommonError('school.name.exist.message', {
+        group: 'organization',
+      });
     }
 
     Object.assign(mdl, dto);
