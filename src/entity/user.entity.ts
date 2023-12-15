@@ -24,8 +24,10 @@ import { CompanyUserMappingEntity } from './company_user_mapping.entity';
 @Entity({
   name: 'user',
 })
-@Index(['tenantId', 'deletedDate'])
-@Index(['tenantId', 'deletedDate', 'name'])
+@Index(['deletedDate'])
+@Index(['deletedDate', 'updatedDate'])
+@Index(['deletedDate', 'updatedDate', 'name'])
+@Index(['deletedDate', 'name'])
 export class UserEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '用户编号' })
   id: string;

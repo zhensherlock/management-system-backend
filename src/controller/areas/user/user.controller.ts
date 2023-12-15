@@ -59,6 +59,15 @@ export class UserController extends BaseUserController {
         organizationId: id,
       }));
     }
+    let companyUserMappings = [];
+    if (isString(query.organizationIds)) {
+      companyUserMappings = [{ companyId: query.companyIds }];
+    }
+    if (isArray(query.organizationIds)) {
+      companyUserMappings = (<string[]>query.companyIds).map(id => ({
+        companyId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.userService.getPaginatedList(
         query.currentPage,
@@ -66,6 +75,7 @@ export class UserController extends BaseUserController {
         {
           where: {
             organizationUserMappings,
+            companyUserMappings,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),

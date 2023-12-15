@@ -156,4 +156,20 @@ export class GetUserListDTO extends GetListBaseDTO {
       )
   )
   organizationIds: string[] | string;
+
+  @ApiProperty({ example: null, description: '公司编号' })
+  @Rule(
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .error(
+        handleParameterError({
+          message: 'company_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  companyIds: string[] | string;
 }
