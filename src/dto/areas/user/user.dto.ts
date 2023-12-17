@@ -148,6 +148,7 @@ export class GetUserListDTO extends GetListBaseDTO {
         RuleType.array().items(RuleType.string().uuid({ separator: false })),
         RuleType.string().uuid()
       )
+      .empty('')
       .error(
         handleParameterError({
           message: 'organization_id.base.message',
@@ -164,6 +165,7 @@ export class GetUserListDTO extends GetListBaseDTO {
         RuleType.array().items(RuleType.string().uuid({ separator: false })),
         RuleType.string().uuid()
       )
+      .empty('')
       .error(
         handleParameterError({
           message: 'company_id.base.message',

@@ -60,10 +60,10 @@ export class UserController extends BaseUserController {
       }));
     }
     let companyUserMappings = [];
-    if (isString(query.organizationIds)) {
+    if (isString(query.companyIds)) {
       companyUserMappings = [{ companyId: query.companyIds }];
     }
-    if (isArray(query.organizationIds)) {
+    if (isArray(query.companyIds)) {
       companyUserMappings = (<string[]>query.companyIds).map(id => ({
         companyId: id,
       }));
