@@ -28,7 +28,6 @@ import {
   BodyContentType,
 } from '@midwayjs/swagger';
 import { isArray, isEmpty, isString, omit } from 'lodash';
-import { TenantService } from '../../../service/tenant.service';
 import { OrganizationService } from '../../../service/organization.service';
 import { BaseUserController } from './base/base.user.controller';
 import { CommonError } from '../../../error';
@@ -43,9 +42,6 @@ export class EmployeeController extends BaseUserController {
 
   @Inject()
   employeeService: EmployeeService;
-
-  @Inject()
-  tenantService: TenantService;
 
   @Inject()
   organizationService: OrganizationService;

@@ -7,6 +7,7 @@
   "name.length.message": "组织名称请控制在100字符以内",
   "name.base.message": "请输入正确的组织名称",
   "school.name.exist.message": "学校名称已存在",
+  "company.name.exist.message": "公司名称已存在",
   "description.length.message": "组织介绍长度在150个字符以内",
   "description.base.message": "请输入正确的组织介绍",
   "person.length.message": "联系人长度在150个字符以内",
