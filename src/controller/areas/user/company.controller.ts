@@ -22,16 +22,17 @@ import {
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseUserController } from './base/base.user.controller';
 import { Role } from '../../../decorator/role.decorator';
-import { CompanyService } from '../../../service/company.service';
 import {
   CreateCompanyDTO,
   GetCompanyListDTO,
   UpdateCompanyDTO,
 } from '../../../dto/areas/user/company.dto';
 import { isEmpty, omit } from 'lodash';
-import { Like } from 'typeorm';
+import { Like, IsNull, Not } from 'typeorm';
 import { CommonError } from '../../../error';
-import { CompanyEntity } from '../../../entity/company.entity';
+import { OrganizationEntity } from '../../../entity/organization.entity';
+import { OrganizationService } from '../../../service/organization.service';
+import { OrganizationType } from '../../../constant';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -41,7 +42,7 @@ export class CompanyController extends BaseUserController {
   ctx: Context;
 
   @Inject()
-  companyService: CompanyService;
+  organizationService: OrganizationService;
 
   @Inject()
   i18nService: MidwayI18nService;
@@ -51,11 +52,13 @@ export class CompanyController extends BaseUserController {
   @ApiQuery({})
   async getCompanyList(@Query() query: GetCompanyListDTO) {
     const [list, count, currentPage, pageSize] =
-      await this.companyService.getPaginatedList(
+      await this.organizationService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
           where: {
+            type: OrganizationType.Company,
+            parentId: Not(IsNull()),
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
@@ -80,7 +83,7 @@ export class CompanyController extends BaseUserController {
     contentType: BodyContentType.Multipart,
   })
   async import(@File() file) {
-    await this.companyService.importList(file.data);
+    await this.organizationService.importCompanyList(file.data);
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
@@ -88,12 +91,22 @@ export class CompanyController extends BaseUserController {
   @Post('/create', { summary: '用户-新建保安公司' })
   @ApiBody({ description: '保安公司信息' })
   async createCompany(@Body() dto: CreateCompanyDTO) {
-    if (await this.companyService.checkNameExisted(dto.name)) {
-      throw new CommonError('name.exist.message', { group: 'company' });
+    if (await this.organizationService.checkCompanyNameExisted(dto.name)) {
+      throw new CommonError('company.name.exist.message', {
+        group: 'organization',
+      });
     }
-    const company = <CompanyEntity>dto;
-    company.enabled = true;
-    const mdl = await this.companyService.createObject(<CompanyEntity>dto);
+    const parentCompany = await this.organizationService.getOneObject({
+      where: {
+        type: OrganizationType.Company,
+        parentId: IsNull(),
+      },
+    });
+    const organization = <OrganizationEntity>dto;
+    organization.type = OrganizationType.Company;
+    organization.enabled = true;
+    organization.parentId = parentCompany.id;
+    const mdl = await this.organizationService.createObject(organization);
     return omit(mdl, ['deletedDate']);
   }
 
@@ -102,21 +115,27 @@ export class CompanyController extends BaseUserController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '保安公司信息' })
   async updateCompany(@Param('id') id: string, @Body() dto: UpdateCompanyDTO) {
-    const mdl = await this.companyService.getOneObject({
+    const mdl = await this.organizationService.getOneObject({
       where: {
         id,
+        type: OrganizationType.Company,
+        parentId: Not(IsNull()),
       },
     });
     if (!mdl) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    if (await this.companyService.checkNameExisted(dto.name, id)) {
-      throw new CommonError('name.exist.message', { group: 'company' });
+    if (await this.organizationService.checkCompanyNameExisted(dto.name, id)) {
+      throw new CommonError('company.name.exist.message', {
+        group: 'organization',
+      });
     }
 
     Object.assign(mdl, dto);
 
-    return omit(await this.companyService.updateObject(mdl), ['deletedDate']);
+    return omit(await this.organizationService.updateObject(mdl), [
+      'deletedDate',
+    ]);
   }
 
   @Role(['education'])
@@ -124,15 +143,17 @@ export class CompanyController extends BaseUserController {
   @ApiParam({ name: 'id', description: '编号' })
   async deleteCompany(@Param('id') id: string) {
     if (
-      !(await this.companyService.existObject({
+      !(await this.organizationService.existObject({
         where: {
           id,
+          type: OrganizationType.Company,
+          parentId: Not(IsNull()),
         },
       }))
     ) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    const result = await this.companyService.deleteObject(id);
+    const result = await this.organizationService.deleteObject(id);
     if (!result.affected) {
       throw new CommonError('delete.failure', { group: 'global' });
     }
