@@ -1,7 +1,7 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
-import { Like, Not, Repository } from 'typeorm';
+import { IsNull, Like, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isEmpty, isString, isArray } from 'lodash';
 import ExcelJS from 'exceljs';
@@ -25,46 +25,6 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     });
   }
 
-  async importCompanyList(url, tenantId) {
-    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
-    for await (const worksheetReader of workbookReader) {
-      for await (const row of worksheetReader) {
-        if (row.number === 1) {
-          continue;
-        }
-        const entity = {
-          name: '',
-          person: '',
-          contact: '',
-          address: '',
-          enabled: true,
-          type: OrganizationType.Company,
-          tenantId,
-        };
-        row.eachCell((cell, cellNumber) => {
-          switch (cellNumber) {
-            case 1:
-              entity.name = cell.text;
-              break;
-            case 2:
-              entity.person = cell.text;
-              break;
-            case 3:
-              entity.contact = cell.text;
-              break;
-            case 4:
-              entity.address = cell.text;
-              break;
-          }
-        });
-        if (await this.checkNameExisted(entity.name, tenantId)) {
-          continue;
-        }
-        await this.createObject(<OrganizationEntity>entity);
-      }
-    }
-  }
-
   async getTreeListByJoin(tenantId, type, keyword) {
     const query = this.entityModel
       .createQueryBuilder('organization')
@@ -79,7 +39,7 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       .getMany();
   }
 
-  async getTreeList(type, keyword, userIds = []) {
+  async getTreeList(type = null, keyword: string, userIds = []) {
     let organizationUserMappings = [];
     if (isString(userIds)) {
       organizationUserMappings = [{ userId: userIds }];
@@ -92,7 +52,7 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     const list = await this.getList({
       where: {
         organizationUserMappings,
-        type,
+        ...(isEmpty(type) ? {} : { type }),
         ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
       },
       order: {
@@ -120,5 +80,61 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       );
     }
     return mdl;
+  }
+
+  async checkCompanyNameExisted(name: string, id?: string) {
+    return await this.entityModel.exist({
+      where: {
+        name,
+        type: OrganizationType.Company,
+        parentId: Not(IsNull()),
+        ...(isEmpty(id) ? {} : { id: Not(id) }),
+      },
+    });
+  }
+
+  async importCompanyList(url: string) {
+    const parentCompany = await this.getOneObject({
+      where: {
+        type: OrganizationType.Company,
+        parentId: IsNull(),
+      },
+    });
+    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
+    for await (const worksheetReader of workbookReader) {
+      for await (const row of worksheetReader) {
+        if (row.number < 4) {
+          continue;
+        }
+        const entity = {
+          name: '',
+          person: '',
+          contact: '',
+          address: '',
+          enabled: true,
+          parentId: parentCompany.id,
+        };
+        row.eachCell((cell, cellNumber) => {
+          switch (cellNumber) {
+            case 1:
+              entity.name = cell.text;
+              break;
+            case 2:
+              entity.person = cell.text;
+              break;
+            case 3:
+              entity.contact = cell.text;
+              break;
+            case 4:
+              entity.address = cell.text;
+              break;
+          }
+        });
+        if (await this.checkNameExisted(entity.name)) {
+          continue;
+        }
+        await this.createObject(<OrganizationEntity>entity);
+      }
+    }
   }
 }
