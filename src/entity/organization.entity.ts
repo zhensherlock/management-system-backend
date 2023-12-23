@@ -117,8 +117,11 @@ export class OrganizationEntity {
   })
   organizationUserMappings: OrganizationUserMappingEntity[];
 
-  @OneToMany(() => EmployeeEntity, node => node.organization)
+  @OneToMany(() => EmployeeEntity, node => node.companyOrganization)
   employees: EmployeeEntity[];
+
+  @OneToMany(() => EmployeeEntity, node => node.schoolOrganization)
+  securityStaff: EmployeeEntity[];
 
   @BeforeInsert()
   generateId() {

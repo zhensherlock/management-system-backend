@@ -14,7 +14,6 @@ import {
   updatedDateTransformer,
 } from '../util';
 import { CompanyUserMappingEntity } from './company_user_mapping.entity';
-import { EmployeeEntity } from './employee.entity';
 
 @Entity({
   name: 'company',
@@ -74,9 +73,6 @@ export class CompanyEntity {
     cascade: true,
   })
   companyUserMappings: CompanyUserMappingEntity[];
-
-  @OneToMany(() => EmployeeEntity, node => node.company)
-  employees: EmployeeEntity[];
 
   @BeforeInsert()
   generateId() {
