@@ -1,7 +1,7 @@
 export enum EmployeeSex {
   Male = '1',
   Female = '2',
-  Other = '3',
+  Unknown = '3',
 }
 
 export enum EmployeeStatus {

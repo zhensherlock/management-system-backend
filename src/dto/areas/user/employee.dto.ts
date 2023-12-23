@@ -100,11 +100,69 @@ export class EmployeeDTO {
   )
   avatar: string;
 
+  @ApiProperty({ example: 'B001', description: '员工证件编号' })
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .required()
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          'string.empty': {
+            message: 'certificate_number.required.message',
+            options: { group: 'employee' },
+          },
+          'any.required': {
+            message: 'certificate_number.required.message',
+            options: { group: 'employee' },
+          },
+          'string.max': {
+            message: 'certificate_number.length.message',
+            options: { group: 'employee' },
+          },
+          '*': {
+            message: 'certificate_number.base.message',
+            options: { group: 'employee' },
+          },
+        })
+      )
+  )
+  certificateNumber: string;
+
+  @ApiProperty({ example: '13900000001', description: '员工联系方式' })
+  @Rule(
+    RuleType.string()
+      .max(100)
+      .required()
+      .trim(true)
+      .error(
+        handleParameterErrors({
+          'string.empty': {
+            message: 'contact.required.message',
+            options: { group: 'employee' },
+          },
+          'any.required': {
+            message: 'contact.required.message',
+            options: { group: 'employee' },
+          },
+          'string.max': {
+            message: 'contact.length.message',
+            options: { group: 'employee' },
+          },
+          '*': {
+            message: 'contact.base.message',
+            options: { group: 'employee' },
+          },
+        })
+      )
+  )
+  contact: string;
+
   @ApiProperty({ example: '赵保安介绍', description: '员工简介' })
   @Rule(
     RuleType.string()
       .max(150)
-      .empty('')
+      .allow('', null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -188,25 +246,25 @@ export class EmployeeDTO {
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'company_id.base.message',
+          message: 'company_organization_id.base.message',
           options: { group: 'employee' },
         })
       )
   )
-  companyId: string;
+  companyOrganizationId: string;
 
-  @ApiProperty({ example: null, description: '组织编号' })
+  @ApiProperty({ example: null, description: '学校编号' })
   @Rule(
     RuleType.string()
       .uuid({ separator: false })
       .error(
         handleParameterError({
-          message: 'organization_id.base.message',
+          message: 'school_organization_id.base.message',
           options: { group: 'employee' },
         })
       )
   )
-  organizationId: string;
+  schoolOrganizationId: string;
 }
 
 export class CreateEmployeeDTO extends EmployeeDTO {}
@@ -214,23 +272,6 @@ export class CreateEmployeeDTO extends EmployeeDTO {}
 export class UpdateEmployeeDTO extends EmployeeDTO {}
 
 export class GetEmployeeListDTO extends GetListBaseDTO {
-  @ApiProperty({ example: null, description: '保安公司编号' })
-  @Rule(
-    RuleType.alternatives()
-      .try(
-        RuleType.array().items(RuleType.string().uuid({ separator: false })),
-        RuleType.string().uuid()
-      )
-      .empty('')
-      .error(
-        handleParameterError({
-          message: 'company_id.base.message',
-          options: { group: 'employee' },
-        })
-      )
-  )
-  companyIds: string[] | string;
-
   @ApiProperty({ example: null, description: '组织编号' })
   @Rule(
     RuleType.alternatives()

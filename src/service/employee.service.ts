@@ -4,7 +4,6 @@ import { EmployeeEntity } from '../entity/employee.entity';
 import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import ExcelJS from 'exceljs';
-import { CompanyService } from './company.service';
 import { EmployeeSex, EmployeeStatus } from '../constant';
 import { OrganizationService } from './organization.service';
 import dayjs from 'dayjs';
@@ -13,9 +12,6 @@ import dayjs from 'dayjs';
 export class EmployeeService extends BaseService<EmployeeEntity> {
   @InjectEntityModel(EmployeeEntity)
   entityModel: Repository<EmployeeEntity>;
-
-  @Inject()
-  companyService: CompanyService;
 
   @Inject()
   organizationService: OrganizationService;
@@ -43,11 +39,11 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
           certificateNumber: null,
           contact: null,
           status: EmployeeStatus.Normal,
-          companyId: null,
-          organizationId: null,
+          companyOrganizationId: null,
+          schoolOrganizationId: null,
         };
         let companyName: string;
-        let organizationName: string;
+        let schoolName: string;
         row.eachCell((cell, cellNumber) => {
           switch (cellNumber) {
             case 1:
@@ -70,7 +66,7 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
               companyName = cell.text;
               break;
             case 7:
-              organizationName = cell.text;
+              schoolName = cell.text;
               break;
             case 8:
               entity.jobNumber = cell.text;
@@ -89,21 +85,21 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
               break;
           }
         });
-        const company = await this.companyService.getOneObject({
+        const company = await this.organizationService.getOneObject({
           where: {
             name: companyName,
           },
         });
-        entity.companyId = company.id;
-        if (organizationName) {
+        entity.companyOrganizationId = company.id;
+        if (schoolName) {
           const organization = await this.organizationService.getOneObject({
             where: {
-              name: organizationName,
+              name: schoolName,
             },
           });
-          entity.organizationId = organization.id;
+          entity.schoolOrganizationId = organization.id;
         }
-        await this.createObject(entity as unknown as EmployeeEntity);
+        await this.createObject(entity as EmployeeEntity);
       }
     }
   }

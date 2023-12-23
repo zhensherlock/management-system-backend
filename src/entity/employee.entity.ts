@@ -14,7 +14,6 @@ import {
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { CompanyEntity } from './company.entity';
 import { OrganizationEntity } from './organization.entity';
 
 @Entity({
@@ -38,7 +37,7 @@ export class EmployeeEntity {
   @Column({ length: 1, default: '1', comment: '员工性别' })
   sex: string;
 
-  @Column({ name: 'certificate_number', length: 191, comment: '员工证件编号' })
+  @Column({ name: 'certificate_number', length: 191, comment: '保安证编号' })
   certificateNumber: string;
 
   @Column({ length: 191, comment: '员工联系方式' })
@@ -77,21 +76,21 @@ export class EmployeeEntity {
   options: object;
 
   @Column({
-    name: 'company_id',
+    name: 'company_organization_id',
     length: 36,
     type: 'uuid',
     comment: '保安公司编号',
   })
-  companyId: string;
+  companyOrganizationId: string;
 
   @Column({
-    name: 'organization_id',
+    name: 'school_organization_id',
     length: 36,
     type: 'uuid',
     comment: '学校编号',
     nullable: true,
   })
-  organizationId: string;
+  schoolOrganizationId: string;
 
   @CreateDateColumn({
     name: 'created_date',
@@ -119,13 +118,13 @@ export class EmployeeEntity {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => CompanyEntity, node => node.employees)
-  @JoinColumn({ name: 'company_id' })
-  company: CompanyEntity;
-
   @ManyToOne(() => OrganizationEntity, node => node.employees)
-  @JoinColumn({ name: 'organization_id' })
-  organization: OrganizationEntity;
+  @JoinColumn({ name: 'company_organization_id' })
+  companyOrganization: OrganizationEntity;
+
+  @ManyToOne(() => OrganizationEntity, node => node.securityStaff)
+  @JoinColumn({ name: 'school_organization_id' })
+  schoolOrganization: OrganizationEntity;
 
   @BeforeInsert()
   generateId() {

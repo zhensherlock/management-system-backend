@@ -18,7 +18,7 @@ import {
   UpdateEmployeeDTO,
 } from '../../../dto/areas/user/employee.dto';
 import { EmployeeEntity } from '../../../entity/employee.entity';
-import { In, Like } from 'typeorm';
+import { In, IsNull, Like, Not } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import {
   ApiBody,
@@ -33,6 +33,7 @@ import { BaseUserController } from './base/base.user.controller';
 import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
 import { CompanyService } from '../../../service/company.service';
+import { OrganizationType } from '../../../constant';
 
 @ApiTags(['employee'])
 @Controller('/api/user/employee')
@@ -71,32 +72,35 @@ export class EmployeeController extends BaseUserController {
   @Get('/list', { summary: '用户-查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
-    let companyWhere = {};
-    if (isString(query.companyIds)) {
-      companyWhere = { companyId: query.companyIds };
-    }
-    if (isArray(query.companyIds)) {
-      companyWhere = { companyId: In(query.companyIds) };
-    }
-    let organizationWhere = {};
+    const companyOrganizationWhere: any = {
+      ...(isEmpty(query.keyword) ? {} : { name: Like(`%${query.keyword}%`) }),
+    };
+    const schoolOrganizationWhere: any = {
+      ...(isEmpty(query.keyword) ? {} : { name: Like(`%${query.keyword}%`) }),
+    };
     if (isString(query.organizationIds)) {
-      organizationWhere = { organizationId: query.organizationIds };
+      companyOrganizationWhere.companyOrganizationId = query.organizationIds;
+      schoolOrganizationWhere.schoolOrganizationId = query.organizationIds;
     }
     if (isArray(query.organizationIds)) {
-      organizationWhere = { organizationId: In(query.organizationIds) };
+      companyOrganizationWhere.companyOrganizationId = In(
+        query.organizationIds
+      );
+      schoolOrganizationWhere.schoolOrganizationId = In(query.organizationIds);
     }
     const [list, count, currentPage, pageSize] =
       await this.employeeService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
-          where: {
-            ...companyWhere,
-            ...organizationWhere,
-            ...(isEmpty(query.keyword)
-              ? {}
-              : { name: Like(`%${query.keyword}%`) }),
-          },
+          where: [
+            ...(isEmpty(companyOrganizationWhere)
+              ? []
+              : [companyOrganizationWhere]),
+            ...(isEmpty(schoolOrganizationWhere)
+              ? []
+              : [schoolOrganizationWhere]),
+          ],
           order: {
             updatedDate: 'DESC',
           },
@@ -121,7 +125,7 @@ export class EmployeeController extends BaseUserController {
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
-  @Role(['school', 'security', 'education'])
+  @Role(['education'])
   @Post('/create', { summary: '用户-新建员工' })
   @ApiBody({ description: '员工信息' })
   async createEmployee(@Body() dto: CreateEmployeeDTO) {
@@ -129,33 +133,39 @@ export class EmployeeController extends BaseUserController {
       throw new CommonError('name.exist.message', { group: 'employee' });
     }
     if (
-      !(await this.companyService.exist({
+      !(await this.organizationService.exist({
         where: {
-          id: dto.companyId,
+          id: dto.companyOrganizationId,
+          type: OrganizationType.Company,
+          parentId: Not(IsNull()),
         },
       }))
     ) {
-      throw new CommonError('company_id.base.message', {
+      throw new CommonError('company_organization_id.base.message', {
         group: 'employee',
       });
     }
     if (
-      !isEmpty(dto.organizationId) &&
+      !isEmpty(dto.schoolOrganizationId) &&
       !(await this.organizationService.exist({
         where: {
-          id: dto.organizationId,
+          id: dto.schoolOrganizationId,
+          type: OrganizationType.School,
+          parentId: Not(IsNull()),
         },
       }))
     ) {
-      throw new CommonError('organization_id.base.message', {
+      throw new CommonError('school_organization_id.base.message', {
         group: 'employee',
       });
     }
-    const mdl = await this.employeeService.createObject(<EmployeeEntity>dto);
+    const mdl = await this.employeeService.createObject(
+      <EmployeeEntity>(<unknown>dto)
+    );
     return omit(mdl, ['deletedDate']);
   }
 
-  @Role(['school', 'security', 'education'])
+  @Role(['education'])
   @Put('/:id', { summary: '用户-修改员工' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '员工信息' })
@@ -172,25 +182,29 @@ export class EmployeeController extends BaseUserController {
       throw new CommonError('not.exist', { group: 'global' });
     }
     if (
-      !(await this.companyService.exist({
+      !(await this.organizationService.exist({
         where: {
-          id: dto.companyId,
+          id: dto.companyOrganizationId,
+          type: OrganizationType.Company,
+          parentId: Not(IsNull()),
         },
       }))
     ) {
-      throw new CommonError('company_id.base.message', {
+      throw new CommonError('company_organization_id.base.message', {
         group: 'employee',
       });
     }
     if (
-      !isEmpty(dto.organizationId) &&
+      !isEmpty(dto.schoolOrganizationId) &&
       !(await this.organizationService.exist({
         where: {
-          id: dto.organizationId,
+          id: dto.schoolOrganizationId,
+          type: OrganizationType.School,
+          parentId: Not(IsNull()),
         },
       }))
     ) {
-      throw new CommonError('organization_id.base.message', {
+      throw new CommonError('school_organization_id.base.message', {
         group: 'employee',
       });
     }
@@ -198,7 +212,7 @@ export class EmployeeController extends BaseUserController {
     return omit(await this.employeeService.updateObject(mdl), ['deletedDate']);
   }
 
-  @Role(['school', 'security', 'education'])
+  @Role(['education'])
   @Del('/:id', { summary: '用户-删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteEmployee(@Param('id') id: string) {
