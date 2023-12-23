@@ -3,7 +3,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
 import { IsNull, Like, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
-import { isEmpty, isString, isArray } from 'lodash';
+import { isEmpty, isString, isArray, isNull, minBy } from 'lodash';
 import ExcelJS from 'exceljs';
 import { OrganizationType } from '../constant';
 
@@ -49,24 +49,26 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
         userId: id,
       }));
     }
+    const where = {
+      organizationUserMappings,
+      ...(isNull(type) ? {} : { type }),
+      ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
+    };
     const list = await this.getList({
-      where: {
-        organizationUserMappings,
-        ...(isEmpty(type) ? {} : { type }),
-        ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
-      },
+      where,
       order: {
         updatedDate: 'DESC',
       },
     });
-    const rootOrganizations = list.filter(item => !item.parentId);
+    const topLevel = minBy(list, 'level').level;
+    const rootOrganizations = list.filter(item => item.level === topLevel);
     const hierarchicalOrganizations = [];
     for (const rootOrganization of rootOrganizations) {
       hierarchicalOrganizations.push(
         this.getOrganizationTree(rootOrganization, list)
       );
     }
-    return hierarchicalOrganizations;
+    return { list: hierarchicalOrganizations, count: list.length };
   }
 
   private getOrganizationTree(

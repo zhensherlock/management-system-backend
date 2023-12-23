@@ -106,6 +106,7 @@ export class CompanyController extends BaseUserController {
     organization.type = OrganizationType.Company;
     organization.enabled = true;
     organization.parentId = parentCompany.id;
+    organization.level = parentCompany.level + 1;
     const mdl = await this.organizationService.createObject(organization);
     return omit(mdl, ['deletedDate']);
   }

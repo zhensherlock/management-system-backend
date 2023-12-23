@@ -24,10 +24,10 @@ export class OrganizationController extends BaseUserController {
   @Get('/tree', { summary: '用户-查询组织树形列表' })
   @ApiQuery({})
   async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
-    const list = await this.organizationService.getTreeList(
+    const { list, count } = await this.organizationService.getTreeList(
       null,
       query.keyword
     );
-    return { list };
+    return { list, count };
   }
 }

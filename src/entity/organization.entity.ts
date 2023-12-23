@@ -72,6 +72,9 @@ export class OrganizationEntity {
   })
   parentId: string;
 
+  @Column({ comment: '组织层级' })
+  level: number;
+
   @CreateDateColumn({
     name: 'created_date',
     type: 'timestamp',

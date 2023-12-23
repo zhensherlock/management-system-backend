@@ -36,9 +36,10 @@ export class SchoolDTO {
   @ApiProperty({ example: '张某某', description: '学校联系人' })
   @Rule(
     RuleType.string()
+      .required()
       .max(150)
       .empty('')
-      .empty(null)
+      .allow('', null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -60,7 +61,7 @@ export class SchoolDTO {
     RuleType.string()
       .max(150)
       .empty('')
-      .empty(null)
+      .allow('', null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -82,7 +83,7 @@ export class SchoolDTO {
     RuleType.string()
       .max(150)
       .empty('')
-      .empty(null)
+      .allow('', null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -103,6 +104,7 @@ export class SchoolDTO {
   @Rule(
     RuleType.string()
       .uuid({ separator: false })
+      .empty(null)
       .error(
         handleParameterError({
           message: 'parent_id.base.message',

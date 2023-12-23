@@ -79,11 +79,11 @@ export class SchoolController extends BaseUserController {
   @Get('/tree', { summary: '用户-查询学校树形列表' })
   @ApiQuery({})
   async getOrganizationTreeList(@Query() query: GetSchoolListDTO) {
-    const list = await this.organizationService.getTreeList(
+    const { list, count } = await this.organizationService.getTreeList(
       OrganizationType.School,
       query.keyword
     );
-    return { list };
+    return { list, count };
   }
 
   @Role(['education'])
@@ -106,9 +106,21 @@ export class SchoolController extends BaseUserController {
         group: 'organization',
       });
     }
+    const parentSchool = await this.organizationService.getOneObject({
+      where: {
+        id: dto.parentId,
+        type: OrganizationType.School,
+      },
+    });
+    if (!parentSchool) {
+      throw new CommonError('parent_id.base.message', {
+        group: 'organization',
+      });
+    }
     const school = <OrganizationEntity>dto;
     school.enabled = true;
     school.type = OrganizationType.School;
+    school.level = parentSchool.level + 1;
     const mdl = await this.organizationService.createObject(
       <OrganizationEntity>dto
     );
@@ -133,6 +145,19 @@ export class SchoolController extends BaseUserController {
         group: 'organization',
       });
     }
+
+    const parentSchool = await this.organizationService.getOneObject({
+      where: {
+        id: dto.parentId,
+        type: OrganizationType.School,
+      },
+    });
+    if (!parentSchool) {
+      throw new CommonError('parent_id.base.message', {
+        group: 'organization',
+      });
+    }
+    mdl.level = parentSchool.level + 1;
 
     Object.assign(mdl, dto);
 
