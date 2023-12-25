@@ -7,6 +7,10 @@ import { differenceWith, isEmpty } from 'lodash';
 import { OrganizationUserMappingService } from './organization_user_mapping.service';
 import { UserRoleMappingService } from './user_role_mapping.service';
 import { CreateUserDTO, UpdateUserDTO } from '../dto/areas/admin/user.dto';
+import {
+  CreateUserDTO as CreateUserDTOByUser,
+  UpdateUserDTO as UpdateUserDTOByUser,
+} from '../dto/areas/user/user.dto';
 import { encrypt } from '../util';
 import { CommonError, CaptchaError } from '../error';
 import ExcelJS from 'exceljs';
@@ -90,7 +94,7 @@ export class UserService extends BaseService<UserEntity> {
     return mdl;
   }
 
-  async createUser(dto: CreateUserDTO) {
+  async createUser(dto: CreateUserDTO | CreateUserDTOByUser) {
     const { hash, salt } = encrypt(dto.password);
     return await this.createObject(
       <UserEntity>Object.assign({}, <any>dto, {
@@ -106,11 +110,15 @@ export class UserService extends BaseService<UserEntity> {
         ),
         password: hash,
         salt,
+        enabled: true,
       })
     );
   }
 
-  async updateUser(user: UserEntity, dto: UpdateUserDTO): Promise<UserEntity> {
+  async updateUser(
+    user: UserEntity,
+    dto: UpdateUserDTO | UpdateUserDTOByUser
+  ): Promise<UserEntity> {
     Object.assign(user, dto);
     if (!isEmpty(dto.new_password)) {
       const { hash, salt } = encrypt(dto.new_password);

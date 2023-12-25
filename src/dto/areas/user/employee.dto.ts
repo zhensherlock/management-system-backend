@@ -257,6 +257,7 @@ export class EmployeeDTO {
   @Rule(
     RuleType.string()
       .uuid({ separator: false })
+      .allow(null)
       .error(
         handleParameterError({
           message: 'school_organization_id.base.message',

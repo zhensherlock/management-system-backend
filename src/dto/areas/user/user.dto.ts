@@ -2,7 +2,7 @@ import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
-import { UserType } from '../../../constant';
+// import { UserType } from '../../../constant';
 
 export class UserDTO {
   @ApiProperty({ example: 'user1', description: '用户登录名' })
@@ -77,21 +77,21 @@ export class UserDTO {
   )
   tel: string;
 
-  @ApiProperty({ example: '1', description: '用户类型' })
-  @Rule(
-    RuleType.string()
-      .required()
-      .max(1)
-      .trim(true)
-      .valid(...Object.values(UserType))
-      .error(
-        handleParameterError({
-          message: 'type.base.message',
-          options: { group: 'user' },
-        })
-      )
-  )
-  type: string;
+  // @ApiProperty({ example: '1', description: '用户类型' })
+  // @Rule(
+  //   RuleType.string()
+  //     .required()
+  //     .max(1)
+  //     .trim(true)
+  //     .valid(...Object.values(UserType))
+  //     .error(
+  //       handleParameterError({
+  //         message: 'type.base.message',
+  //         options: { group: 'user' },
+  //       })
+  //     )
+  // )
+  // type: string;
 
   @ApiProperty({ example: 'Michael', description: '用户真实姓名' })
   @Rule(
@@ -134,11 +134,76 @@ export class UserDTO {
       )
   )
   description: string;
+
+  @ApiProperty({ example: null, description: '组织编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'organization_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  organizationIds: string[];
+
+  @ApiProperty({ example: null, description: '角色编号' })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.string().uuid({ separator: false }))
+      .error(
+        handleParameterError({
+          message: 'role_id.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  roleIds: string[];
 }
 
-export class CreateUserDTO extends UserDTO {}
+export class CreateUserDTO extends UserDTO {
+  @ApiProperty({ example: '12345678', description: '用户密码' })
+  @Rule(
+    RuleType.string()
+      .required()
+      .trim(true)
+      .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
+      .error(
+        handleParameterErrors({
+          'string.empty': {
+            message: 'password.required.message',
+            options: { group: 'user' },
+          },
+          'any.required': {
+            message: 'password.required.message',
+            options: { group: 'user' },
+          },
+          '*': {
+            message: 'password.base.message',
+            options: { group: 'user' },
+          },
+        })
+      )
+  )
+  password: string;
+}
 
-export class UpdateUserDTO extends UserDTO {}
+export class UpdateUserDTO extends UserDTO {
+  @ApiProperty({ example: {}, description: '用户新密码' })
+  @Rule(
+    RuleType.string()
+      .trim(true)
+      .pattern(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/)
+      .error(
+        handleParameterError({
+          message: 'new_password.base.message',
+          options: { group: 'user' },
+        })
+      )
+  )
+  new_password: string;
+}
 
 export class GetUserListDTO extends GetListBaseDTO {
   @ApiProperty({ example: null, description: '组织编号' })

@@ -42,7 +42,7 @@ export class UserEntity {
   @Column({ length: 191, nullable: true, comment: '用户电话' })
   tel: string;
 
-  @Column({ length: 1, comment: '用户类型' })
+  @Column({ length: 1, nullable: true, comment: '用户类型' })
   type: string;
 
   @Column({ length: 191, comment: '用户密码', select: false })
@@ -69,7 +69,13 @@ export class UserEntity {
   options: object;
 
   @Index()
-  @Column({ name: 'tenant_id', length: 36, type: 'uuid', comment: '租户编号' })
+  @Column({
+    name: 'tenant_id',
+    nullable: true,
+    length: 36,
+    type: 'uuid',
+    comment: '租户编号',
+  })
   tenantId: string;
 
   @CreateDateColumn({

@@ -31,7 +31,6 @@ import {
 import { isArray, isEmpty, isString, omit } from 'lodash';
 import { Like } from 'typeorm';
 import { CommonError } from '../../../error';
-import { UserEntity } from '../../../entity/user.entity';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -59,15 +58,6 @@ export class UserController extends BaseUserController {
         organizationId: id,
       }));
     }
-    let companyUserMappings = [];
-    if (isString(query.companyIds)) {
-      companyUserMappings = [{ companyId: query.companyIds }];
-    }
-    if (isArray(query.companyIds)) {
-      companyUserMappings = (<string[]>query.companyIds).map(id => ({
-        companyId: id,
-      }));
-    }
     const [list, count, currentPage, pageSize] =
       await this.userService.getPaginatedList(
         query.currentPage,
@@ -75,7 +65,6 @@ export class UserController extends BaseUserController {
         {
           where: {
             organizationUserMappings,
-            companyUserMappings,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
@@ -83,6 +72,12 @@ export class UserController extends BaseUserController {
           order: {
             updatedDate: 'DESC',
           },
+          relations: [
+            'userRoleMappings',
+            'userRoleMappings.role',
+            'organizationUserMappings',
+            'organizationUserMappings.organization',
+          ],
         }
       );
     return {
@@ -108,13 +103,10 @@ export class UserController extends BaseUserController {
   @Post('/create', { summary: '用户-新建用户' })
   @ApiBody({ description: '用户信息' })
   async createUser(@Body() dto: CreateUserDTO) {
-    const tenantId = this.ctx.currentUser.tenantId;
-    if (await this.userService.checkNameExisted(dto.name, tenantId)) {
+    if (await this.userService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
-    const user = <UserEntity>dto;
-    user.enabled = true;
-    const mdl = await this.userService.createObject(<UserEntity>dto);
+    const mdl = await this.userService.createUser(dto);
     return omit(mdl, ['deletedDate']);
   }
 
@@ -123,21 +115,28 @@ export class UserController extends BaseUserController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '用户信息' })
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDTO) {
-    const mdl = await this.userService.getOneObject({
+    const user = await this.userService.getOneObject({
       where: {
         id,
       },
     });
-    if (!mdl) {
+    if (!user) {
       throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.userService.checkNameExisted(dto.name, id)) {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
 
-    Object.assign(mdl, dto);
-
-    return omit(await this.userService.updateObject(mdl), ['deletedDate']);
+    const mdl = await this.userService.updateUser(user, dto);
+    return omit(mdl, [
+      'password',
+      'salt',
+      'deletedDate',
+      'organizationUserMappings',
+      'organizationIds',
+      'userRoleMappings',
+      'roleIds',
+    ]);
   }
 
   @Role(['education'])
