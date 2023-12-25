@@ -58,6 +58,15 @@ export class UserController extends BaseUserController {
         organizationId: id,
       }));
     }
+    let userRoleMappings = [];
+    if (isString(query.roleIds)) {
+      userRoleMappings = [{ roleId: query.roleIds }];
+    }
+    if (isArray(query.roleIds)) {
+      userRoleMappings = (<string[]>query.roleIds).map(id => ({
+        roleId: id,
+      }));
+    }
     const [list, count, currentPage, pageSize] =
       await this.userService.getPaginatedList(
         query.currentPage,
@@ -65,6 +74,7 @@ export class UserController extends BaseUserController {
         {
           where: {
             organizationUserMappings,
+            userRoleMappings,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
@@ -107,7 +117,7 @@ export class UserController extends BaseUserController {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
     const mdl = await this.userService.createUser(dto);
-    return omit(mdl, ['deletedDate']);
+    return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
   @Role(['education'])
@@ -116,9 +126,8 @@ export class UserController extends BaseUserController {
   @ApiBody({ description: '用户信息' })
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDTO) {
     const user = await this.userService.getOneObject({
-      where: {
-        id,
-      },
+      where: { id },
+      relations: ['organizationUserMappings', 'userRoleMappings'],
     });
     if (!user) {
       throw new CommonError('not.exist', { group: 'global' });
@@ -128,15 +137,7 @@ export class UserController extends BaseUserController {
     }
 
     const mdl = await this.userService.updateUser(user, dto);
-    return omit(mdl, [
-      'password',
-      'salt',
-      'deletedDate',
-      'organizationUserMappings',
-      'organizationIds',
-      'userRoleMappings',
-      'roleIds',
-    ]);
+    return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
   @Role(['education'])

@@ -223,20 +223,19 @@ export class GetUserListDTO extends GetListBaseDTO {
   )
   organizationIds: string[] | string;
 
-  @ApiProperty({ example: null, description: '公司编号' })
+  @ApiProperty({ example: null, description: '角色编号' })
   @Rule(
     RuleType.alternatives()
       .try(
         RuleType.array().items(RuleType.string().uuid({ separator: false })),
         RuleType.string().uuid()
       )
-      .empty('')
       .error(
         handleParameterError({
-          message: 'company_id.base.message',
+          message: 'role_id.base.message',
           options: { group: 'user' },
         })
       )
   )
-  companyIds: string[] | string;
+  roleIds: string[] | string;
 }
