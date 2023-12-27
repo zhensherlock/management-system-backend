@@ -15,16 +15,15 @@ import {
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { AssessmentEntity } from './assessment.entity';
 
 @Entity({
   name: 'assessment_category',
 })
 export class AssessmentCategoryEntity {
-  @PrimaryColumn({ length: 36, type: 'uuid', comment: '考核类型编号' })
+  @PrimaryColumn({ length: 36, type: 'uuid', comment: '考核类别编号' })
   id: string;
 
-  @Column({ length: 191, comment: '考核类型名称' })
+  @Column({ length: 191, comment: '考核类别名称' })
   name: string;
 
   @Column({
@@ -32,17 +31,20 @@ export class AssessmentCategoryEntity {
     length: 36,
     type: 'uuid',
     nullable: true,
-    comment: '父级考核类型编号',
+    comment: '父级考核类别编号',
   })
   parentId: string;
 
-  @Column({ default: 0, comment: '考核类型顺序' })
+  @Column({ default: 0, comment: '考核类别顺序' })
   sequence: number;
 
-  @Column({ length: 191, nullable: true, comment: '考核类型简介' })
+  @Column({ comment: '考核类别类型' })
+  type: number;
+
+  @Column({ length: 191, nullable: true, comment: '考核类别简介' })
   description: string;
 
-  @Column({ default: true, comment: '考核类型是否可用' })
+  @Column({ default: true, comment: '考核类别是否可用' })
   enabled: boolean;
 
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
@@ -80,9 +82,6 @@ export class AssessmentCategoryEntity {
 
   @OneToMany(() => AssessmentCategoryEntity, node => node.parent)
   children: AssessmentCategoryEntity[];
-
-  @OneToMany(() => AssessmentEntity, node => node.category)
-  assessments: AssessmentEntity[];
 
   @BeforeInsert()
   generateId() {

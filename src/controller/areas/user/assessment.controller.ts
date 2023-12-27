@@ -75,10 +75,22 @@ export class AssessmentController extends BaseUserController {
   @Post('/create', { summary: '用户-新建考核类型' })
   @ApiBody({ description: '考核类型信息' })
   async createAssessment(@Body() dto: CreateAssessmentDTO) {
-    if (await this.assessmentService.checkNameExisted(dto.title)) {
-      throw new CommonError('name.exist.message', {
+    if (await this.assessmentService.checkTitleExisted(dto.title)) {
+      throw new CommonError('title.exist.message', {
         group: 'assessment',
       });
+    }
+    if (dto.parentId) {
+      const parentAssessment = await this.assessmentService.getOneObject({
+        where: {
+          id: dto.parentId,
+        },
+      });
+      if (!parentAssessment) {
+        throw new CommonError('parent_id.base.message', {
+          group: 'assessment',
+        });
+      }
     }
     const assessment = <AssessmentEntity>dto;
     assessment.enabled = true;
@@ -104,8 +116,8 @@ export class AssessmentController extends BaseUserController {
     if (!mdl) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    if (await this.assessmentService.checkNameExisted(dto.title, id)) {
-      throw new CommonError('name.exist.message', {
+    if (await this.assessmentService.checkTitleExisted(dto.title, id)) {
+      throw new CommonError('title.exist.message', {
         group: 'assessment',
       });
     }

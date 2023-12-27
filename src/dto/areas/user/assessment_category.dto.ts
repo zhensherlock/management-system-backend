@@ -4,7 +4,7 @@ import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
 export class AssessmentCategoryDTO {
-  @ApiProperty({ example: '考核类型1', description: '考核类型名称' })
+  @ApiProperty({ example: '考核类别1', description: '考核类别名称' })
   @Rule(
     RuleType.string()
       .max(100)
@@ -33,7 +33,7 @@ export class AssessmentCategoryDTO {
   )
   name: string;
 
-  @ApiProperty({ example: 0, description: '考核类型顺序' })
+  @ApiProperty({ example: 0, description: '考核类别顺序' })
   @Rule(
     RuleType.number().error(
       handleParameterError({
@@ -44,7 +44,18 @@ export class AssessmentCategoryDTO {
   )
   sequence: number;
 
-  @ApiProperty({ example: null, description: '父级考核类型编号' })
+  @ApiProperty({ example: 0, description: '考核类别类型' })
+  @Rule(
+    RuleType.number().error(
+      handleParameterError({
+        message: 'type.base.message',
+        options: { group: 'assessment_category' },
+      })
+    )
+  )
+  type: number;
+
+  @ApiProperty({ example: null, description: '父级考核类别编号' })
   @Rule(
     RuleType.string()
       .uuid({ separator: false })

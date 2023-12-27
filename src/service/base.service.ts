@@ -44,6 +44,15 @@ export class BaseService<T> {
     });
   }
 
+  async checkTitleExisted(title: string, id?: string) {
+    return await this.entityModel.exist({
+      where: {
+        title,
+        ...(isEmpty(id) ? {} : { id: Not(id) }),
+      },
+    });
+  }
+
   async exist(options?: FindManyOptions<T>) {
     return await this.entityModel.exist(options);
   }

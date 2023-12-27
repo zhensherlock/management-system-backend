@@ -8,13 +8,13 @@ import {
   BeforeInsert,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import {
   createDateTransformer,
   generateUUID,
   updatedDateTransformer,
 } from '../util';
-import { AssessmentCategoryEntity } from './assessment_category.entity';
 
 @Entity({
   name: 'assessment',
@@ -27,16 +27,27 @@ export class AssessmentEntity {
   title: string;
 
   @Column({
-    name: 'assessment_category_id',
+    name: 'parent_id',
     length: 36,
     type: 'uuid',
     nullable: true,
-    comment: '所属考核类型编号',
+    comment: '父级考核编号',
   })
-  assessmentCategoryId: string;
+  parentId: string;
 
   @Column({ default: 0, comment: '考核顺序' })
   sequence: number;
+
+  @Column({
+    name: 'score_type',
+    length: 1,
+    default: '1',
+    comment: '考核分数类型',
+  })
+  scoreType: string;
+
+  @Column({ name: 'maximum_score', comment: '考核分数上限' })
+  maximumScore: number;
 
   @Column({ length: 191, nullable: true, comment: '考核简介' })
   description: string;
@@ -73,9 +84,12 @@ export class AssessmentEntity {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => AssessmentCategoryEntity, node => node.assessments)
-  @JoinColumn({ name: 'assessment_category_id' })
-  category: AssessmentCategoryEntity;
+  @ManyToOne(() => AssessmentEntity, node => node.children)
+  @JoinColumn({ name: 'parent_id' })
+  parent: AssessmentEntity;
+
+  @OneToMany(() => AssessmentEntity, node => node.parent)
+  children: AssessmentEntity[];
 
   @BeforeInsert()
   generateId() {

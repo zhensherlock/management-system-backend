@@ -2,6 +2,7 @@ import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
+import { AssessmentScoreType } from '../../../constant/assessment.constant';
 
 export class AssessmentDTO {
   @ApiProperty({ example: '标题1', description: '考核标题' })
@@ -44,18 +45,45 @@ export class AssessmentDTO {
   )
   sequence: number;
 
-  @ApiProperty({ example: null, description: '考核类型编号' })
+  @ApiProperty({ example: 0, description: '考核分数类型' })
   @Rule(
     RuleType.string()
-      .uuid({ separator: false })
+      .trim(true)
+      .valid(...Object.values(AssessmentScoreType))
       .error(
         handleParameterError({
-          message: 'assessment_category_id.base.message',
+          message: 'score_type.base.message',
           options: { group: 'assessment' },
         })
       )
   )
-  assessmentCategoryId: string;
+  scoreType: string;
+
+  @ApiProperty({ example: 100, description: '考核分数上限' })
+  @Rule(
+    RuleType.number().error(
+      handleParameterError({
+        message: 'maximum_score.base.message',
+        options: { group: 'assessment' },
+      })
+    )
+  )
+  maximumScore: number;
+
+  @ApiProperty({ example: null, description: '父级考核编号' })
+  @Rule(
+    RuleType.string()
+      .trim(true)
+      .uuid({ separator: false })
+      .empty(null)
+      .error(
+        handleParameterError({
+          message: 'parent_id.base.message',
+          options: { group: 'assessment' },
+        })
+      )
+  )
+  parentId: string;
 }
 
 export class CreateAssessmentDTO extends AssessmentDTO {}
