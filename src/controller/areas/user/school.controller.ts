@@ -78,7 +78,7 @@ export class SchoolController extends BaseUserController {
   @Role(['education'])
   @Get('/tree', { summary: '用户-查询学校树形列表' })
   @ApiQuery({})
-  async getOrganizationTreeList(@Query() query: GetSchoolListDTO) {
+  async getSchoolTreeList(@Query() query: GetSchoolListDTO) {
     const { list, count } = await this.organizationService.getTreeList(
       OrganizationType.School,
       query.keyword
@@ -92,7 +92,7 @@ export class SchoolController extends BaseUserController {
     description: '用户数据文件',
     contentType: BodyContentType.Multipart,
   })
-  async importUsers(@File() file) {
+  async importSchools(@File() file) {
     // await this.organizationService.importList(file.data);
     return this.i18nService.translate('import.success', { group: 'global' });
   }
