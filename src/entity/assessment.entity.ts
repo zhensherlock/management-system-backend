@@ -35,6 +35,9 @@ export class AssessmentEntity {
   })
   parentId: string;
 
+  @Column({ comment: '考核层级' })
+  level: number;
+
   @Column({ default: 0, comment: '考核顺序' })
   sequence: number;
 

@@ -71,6 +71,16 @@ export class AssessmentController extends BaseUserController {
     };
   }
 
+  @Role(['school', 'security', 'education'])
+  @Get('/tree', { summary: '用户-查询考核树形列表' })
+  @ApiQuery({})
+  async getAssessmentTreeList(@Query() query: GetAssessmentListDTO) {
+    const { list, count } = await this.assessmentService.getTreeList(
+      query.keyword
+    );
+    return { list, count };
+  }
+
   @Role(['education'])
   @Post('/create', { summary: '用户-新建考核类型' })
   @ApiBody({ description: '考核类型信息' })
@@ -80,6 +90,8 @@ export class AssessmentController extends BaseUserController {
         group: 'assessment',
       });
     }
+    const assessment = <AssessmentEntity>dto;
+    assessment.enabled = true;
     if (dto.parentId) {
       const parentAssessment = await this.assessmentService.getOneObject({
         where: {
@@ -91,9 +103,10 @@ export class AssessmentController extends BaseUserController {
           group: 'assessment',
         });
       }
+      assessment.level = parentAssessment.level + 1;
+    } else {
+      assessment.level = 1;
     }
-    const assessment = <AssessmentEntity>dto;
-    assessment.enabled = true;
     const mdl = await this.assessmentService.createObject(
       <AssessmentEntity>dto
     );
@@ -121,7 +134,21 @@ export class AssessmentController extends BaseUserController {
         group: 'assessment',
       });
     }
-
+    if (dto.parentId) {
+      const parentAssessment = await this.assessmentService.getOneObject({
+        where: {
+          id: dto.parentId,
+        },
+      });
+      if (!parentAssessment) {
+        throw new CommonError('parent_id.base.message', {
+          group: 'assessment',
+        });
+      }
+      mdl.level = parentAssessment.level + 1;
+    } else {
+      mdl.level = 1;
+    }
     Object.assign(mdl, dto);
 
     return omit(await this.assessmentService.updateObject(mdl), [
