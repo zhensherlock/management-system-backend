@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, minBy } from 'lodash';
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { AssessmentEntity } from '../entity/assessment.entity';
@@ -24,7 +24,8 @@ export class AssessmentService extends BaseService<AssessmentEntity> {
         sequence: 'ASC',
       },
     });
-    const rootAssessments = list.filter(item => item.parentId === null);
+    const topLevel = minBy(list, 'level').level;
+    const rootAssessments = list.filter(item => item.level === topLevel);
     const hierarchicalAssessments = [];
     for (const rootAssessment of rootAssessments) {
       hierarchicalAssessments.push(

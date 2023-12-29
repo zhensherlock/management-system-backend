@@ -8,6 +8,7 @@ import {
   JoinColumn,
   BeforeInsert,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
 import {
   createDateTransformer,
@@ -15,6 +16,7 @@ import {
   updatedDateTransformer,
 } from '../util';
 import { OrganizationEntity } from './organization.entity';
+import { ApplyModificationEntity } from './apply_modification.entity';
 
 @Entity({
   name: 'employee',
@@ -125,6 +127,11 @@ export class EmployeeEntity {
   @ManyToOne(() => OrganizationEntity, node => node.securityStaff)
   @JoinColumn({ name: 'school_organization_id' })
   schoolOrganization: OrganizationEntity;
+
+  @OneToMany(() => ApplyModificationEntity, node => node.employee, {
+    cascade: true,
+  })
+  applyModifications: ApplyModificationEntity[];
 
   @BeforeInsert()
   generateId() {

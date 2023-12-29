@@ -20,6 +20,7 @@ import { UserRoleMappingEntity } from './user_role_mapping.entity';
 import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
 import { TenantEntity } from './tenant.entity';
 import { CompanyUserMappingEntity } from './company_user_mapping.entity';
+import { ApplyModificationEntity } from './apply_modification.entity';
 
 @Entity({
   name: 'user',
@@ -123,6 +124,16 @@ export class UserEntity {
     cascade: true,
   })
   companyUserMappings: CompanyUserMappingEntity[];
+
+  @OneToMany(() => ApplyModificationEntity, node => node.applyUser, {
+    cascade: true,
+  })
+  applyModifications: ApplyModificationEntity[];
+
+  @OneToMany(() => ApplyModificationEntity, node => node.auditUser, {
+    cascade: true,
+  })
+  auditModifications: ApplyModificationEntity[];
 
   @BeforeInsert()
   generateId() {
