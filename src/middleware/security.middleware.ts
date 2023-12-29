@@ -72,6 +72,7 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
               description: user.description,
               enabled: user.enabled,
               options: user.options,
+              type: user.type,
               roles: user.userRoleMappings.map((item: any) => {
                 return {
                   name: item.role.name,

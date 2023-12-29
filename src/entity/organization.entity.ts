@@ -45,6 +45,15 @@ export class OrganizationEntity {
   @Column({ comment: '组织类型' })
   type: number;
 
+  @Column({
+    nullable: true,
+    comment:
+      '组织类别：1-幼儿园 2-小学 3-初级中学 4-九年一贯制学校 5-职业初中 6-完全中学 7-高级中学 8-十二年一贯制学校 9-职业高中学校 10-盲人学校 11-聋人学校 12-其他特殊教育学校 100-保安公司',
+  })
+  category: number;
+
+  // stage:
+
   @Column({ length: 191, nullable: true, comment: '组织代码' })
   code: string;
 
@@ -74,6 +83,9 @@ export class OrganizationEntity {
 
   @Column({ comment: '组织层级' })
   level: number;
+
+  @Column({ default: 0, comment: '组织顺序' })
+  sequence: number;
 
   @CreateDateColumn({
     name: 'created_date',

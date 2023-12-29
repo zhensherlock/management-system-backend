@@ -1,9 +1,9 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
-import { IsNull, Like, Not, Repository } from 'typeorm';
+import { IsNull, Like, MoreThan, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
-import { isEmpty, isString, isArray, isNull, minBy } from 'lodash';
+import { isEmpty, isNull, minBy } from 'lodash';
 import ExcelJS from 'exceljs';
 import { OrganizationType } from '../constant';
 
@@ -39,27 +39,23 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       .getMany();
   }
 
-  async getTreeList(type = null, keyword: string, userIds = []) {
-    let organizationUserMappings = [];
-    if (isString(userIds)) {
-      organizationUserMappings = [{ userId: userIds }];
-    }
-    if (isArray(userIds)) {
-      organizationUserMappings = (<string[]>userIds).map(id => ({
-        userId: id,
-      }));
-    }
+  async getTreeList(type = null, keyword: string, isAdmin = false) {
     const where = {
-      organizationUserMappings,
       ...(isNull(type) ? {} : { type }),
       ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
     };
+    if (!isAdmin) {
+      where['level'] = MoreThan(OrganizationType.SuperAdmin);
+    }
     const list = await this.getList({
       where,
       order: {
-        updatedDate: 'DESC',
+        sequence: 'ASC',
       },
     });
+    if (list.length === 0) {
+      return { list: [], count: 0 };
+    }
     const topLevel = minBy(list, 'level').level;
     const rootOrganizations = list.filter(item => item.level === topLevel);
     const hierarchicalOrganizations = [];

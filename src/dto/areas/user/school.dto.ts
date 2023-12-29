@@ -14,19 +14,19 @@ export class SchoolDTO {
         handleParameterErrors({
           'string.empty': {
             message: 'name.required.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
           'any.required': {
             message: 'name.required.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
           'string.max': {
             message: 'name.length.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
           '*': {
             message: 'name.base.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
         })
       )
@@ -36,7 +36,6 @@ export class SchoolDTO {
   @ApiProperty({ example: '张某某', description: '学校联系人' })
   @Rule(
     RuleType.string()
-      .required()
       .max(150)
       .empty('')
       .allow('', null)
@@ -45,11 +44,11 @@ export class SchoolDTO {
         handleParameterErrors({
           'string.max': {
             message: 'person.length.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
           '*': {
             message: 'person.base.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
         })
       )
@@ -67,11 +66,11 @@ export class SchoolDTO {
         handleParameterErrors({
           'string.max': {
             message: 'contact.length.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
           '*': {
             message: 'contact.base.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
         })
       )
@@ -89,18 +88,18 @@ export class SchoolDTO {
         handleParameterErrors({
           'string.max': {
             message: 'address.length.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
           '*': {
             message: 'address.base.message',
-            options: { group: 'organization' },
+            options: { group: 'school' },
           },
         })
       )
   )
   address: string;
 
-  @ApiProperty({ example: null, description: '父级组织编号' })
+  @ApiProperty({ example: null, description: '父级机构编号' })
   @Rule(
     RuleType.string()
       .uuid({ separator: false })
@@ -108,11 +107,22 @@ export class SchoolDTO {
       .error(
         handleParameterError({
           message: 'parent_id.base.message',
-          options: { group: 'organization' },
+          options: { group: 'school' },
         })
       )
   )
   parentId: string;
+
+  @ApiProperty({ example: 0, description: '学校顺序' })
+  @Rule(
+    RuleType.number().error(
+      handleParameterError({
+        message: 'sequence.base.message',
+        options: { group: 'school' },
+      })
+    )
+  )
+  sequence: number;
 }
 
 export class CreateSchoolDTO extends SchoolDTO {}
