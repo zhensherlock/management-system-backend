@@ -63,6 +63,8 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
           if (user) {
             ctx.currentUser = {
               id: user.id,
+              salt: user.salt,
+              password: user.password,
               name: user.name,
               email: user.email,
               tel: user.tel,

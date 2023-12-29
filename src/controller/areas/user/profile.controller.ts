@@ -11,6 +11,7 @@ import {
   UpdatePasswordDTO,
   UpdateUserDTO,
 } from '../../../dto/areas/user/info.dto';
+import { omit } from 'lodash';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -28,7 +29,8 @@ export class ProfileController extends BaseUserController {
   @Role(['superAdmin', 'school', 'security', 'education'])
   @Get('/basic', { summary: '用户-获取基本信息' })
   async getUser() {
-    return this.ctx.currentUser;
+    const user = this.ctx.currentUser;
+    return omit(user, ['password', 'salt']);
   }
 
   @Role(['superAdmin', 'school', 'security', 'education'])
@@ -41,7 +43,7 @@ export class ProfileController extends BaseUserController {
     }
     Object.assign(user, dto);
     await this.userService.updateObject(user);
-    return user;
+    return omit(user, ['password', 'salt']);
   }
 
   @Role(['superAdmin', 'school', 'security', 'education'])
