@@ -61,7 +61,30 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
             ],
           });
           if (user) {
-            ctx.currentUser = user;
+            ctx.currentUser = {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              tel: user.tel,
+              realName: user.realName,
+              description: user.description,
+              enabled: user.enabled,
+              options: user.options,
+              roles: user.userRoleMappings.map((item: any) => {
+                return {
+                  name: item.role.name,
+                  id: item.role.id,
+                };
+              }),
+              organizations: user.organizationUserMappings.map((item: any) => {
+                return {
+                  name: item.organization.name,
+                  id: item.organization.id,
+                  type: item.organization.type,
+                  level: item.organization.level,
+                };
+              }),
+            };
           }
         }
         return next();

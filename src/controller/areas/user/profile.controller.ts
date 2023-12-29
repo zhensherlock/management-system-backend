@@ -3,7 +3,6 @@ import { Context } from '@midwayjs/koa';
 import { UserService } from '../../../service/user.service';
 import { encrypt } from '../../../util';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@midwayjs/swagger';
-import { omit } from 'lodash';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseUserController } from './base/base.user.controller';
 import { CommonError } from '../../../error';
@@ -15,8 +14,8 @@ import {
 
 @ApiBearerAuth()
 @ApiTags(['user'])
-@Controller('/api/user/info')
-export class InfoController extends BaseUserController {
+@Controller('/api/user/profile')
+export class ProfileController extends BaseUserController {
   @Inject()
   ctx: Context;
 
@@ -27,13 +26,13 @@ export class InfoController extends BaseUserController {
   i18nService: MidwayI18nService;
 
   @Role(['superAdmin', 'school', 'security', 'education'])
-  @Get('/', { summary: '用户-获取基本信息' })
+  @Get('/basic', { summary: '用户-获取基本信息' })
   async getUser() {
     return this.ctx.currentUser;
   }
 
   @Role(['superAdmin', 'school', 'security', 'education'])
-  @Put('/update', { summary: '用户-修改信息' })
+  @Put('/basic', { summary: '用户-修改信息' })
   @ApiBody({ description: '用户信息' })
   async updateUser(@Body() dto: UpdateUserDTO) {
     const user = this.ctx.currentUser;
@@ -41,16 +40,8 @@ export class InfoController extends BaseUserController {
       throw new CommonError('name.exist.message', { group: 'user' });
     }
     Object.assign(user, dto);
-    const mdl = await this.userService.updateObject(user);
-    return omit(mdl, [
-      'password',
-      'salt',
-      'deletedDate',
-      'organizationUserMappings',
-      'organizationIds',
-      'userRoleMappings',
-      'roleIds',
-    ]);
+    await this.userService.updateObject(user);
+    return user;
   }
 
   @Role(['superAdmin', 'school', 'security', 'education'])
