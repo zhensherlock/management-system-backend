@@ -28,7 +28,7 @@ import {
   UpdateCompanyDTO,
 } from '../../../dto/areas/user/company.dto';
 import { isEmpty, omit } from 'lodash';
-import { Like, IsNull, Not } from 'typeorm';
+import { Like } from 'typeorm';
 import { CommonError } from '../../../error';
 import { OrganizationEntity } from '../../../entity/organization.entity';
 import { OrganizationService } from '../../../service/organization.service';
@@ -58,7 +58,7 @@ export class CompanyController extends BaseUserController {
         {
           where: {
             type: OrganizationType.Company,
-            parentId: Not(IsNull()),
+            level: 2,
             ...(isEmpty(query.keyword)
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
@@ -99,7 +99,7 @@ export class CompanyController extends BaseUserController {
     const parentCompany = await this.organizationService.getOneObject({
       where: {
         type: OrganizationType.Company,
-        parentId: IsNull(),
+        level: 1,
       },
     });
     const organization = <OrganizationEntity>dto;
@@ -120,7 +120,7 @@ export class CompanyController extends BaseUserController {
       where: {
         id,
         type: OrganizationType.Company,
-        parentId: Not(IsNull()),
+        level: 2,
       },
     });
     if (!mdl) {
@@ -148,7 +148,7 @@ export class CompanyController extends BaseUserController {
         where: {
           id,
           type: OrganizationType.Company,
-          parentId: Not(IsNull()),
+          level: 2,
         },
       }))
     ) {

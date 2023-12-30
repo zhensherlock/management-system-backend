@@ -29,8 +29,9 @@ import {
   UpdateUserDTO,
 } from '../../../dto/areas/user/user.dto';
 import { isArray, isEmpty, isString, omit } from 'lodash';
-import { Like } from 'typeorm';
+import { Like, Not } from 'typeorm';
 import { CommonError } from '../../../error';
+import { UserType } from '../../../constant';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -49,6 +50,7 @@ export class UserController extends BaseUserController {
   @Get('/list', { summary: '用户-查询用户列表' })
   @ApiQuery({})
   async getUserList(@Query() query: GetUserListDTO) {
+    const user = this.ctx.currentUser;
     let organizationUserMappings = [];
     if (isString(query.organizationIds)) {
       organizationUserMappings = [{ organizationId: query.organizationIds }];
@@ -73,6 +75,9 @@ export class UserController extends BaseUserController {
         query.pageSize,
         {
           where: {
+            ...(user.type !== UserType.SuperAdmin && {
+              type: Not(UserType.SuperAdmin),
+            }),
             organizationUserMappings,
             userRoleMappings,
             ...(isEmpty(query.keyword)
