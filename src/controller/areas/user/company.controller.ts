@@ -64,7 +64,7 @@ export class CompanyController extends BaseUserController {
               : { name: Like(`%${query.keyword}%`) }),
           },
           order: {
-            updatedDate: 'DESC',
+            sequence: 'ASC',
           },
         }
       );

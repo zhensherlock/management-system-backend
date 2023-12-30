@@ -1,7 +1,7 @@
 import { Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
-import { IsNull, Like, MoreThan, Not, Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isEmpty, isNull, minBy } from 'lodash';
 import ExcelJS from 'exceljs';
@@ -39,22 +39,34 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       .getMany();
   }
 
-  async getTreeList(type = null, keyword: string, isAdmin = false) {
+  async getTreeList(type = null, keyword: string) {
     const where = {
       ...(isNull(type) ? {} : { type }),
-      ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
+      // ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
     };
-    if (!isAdmin) {
-      where['level'] = MoreThan(OrganizationType.SuperAdmin);
-    }
-    const list = await this.getList({
+    const allOrganizations = await this.getList({
       where,
       order: {
         sequence: 'ASC',
       },
     });
-    if (list.length === 0) {
+    const filteredOrganizations = allOrganizations.filter(item =>
+      isEmpty(keyword) ? true : item.name.includes(keyword)
+    );
+    let list = filteredOrganizations;
+    if (filteredOrganizations.length === 0) {
       return { list: [], count: 0 };
+    }
+    if (!isEmpty(keyword) && filteredOrganizations.length > 0) {
+      const associatedOrganizations = new Set([]);
+      filteredOrganizations.forEach(item => {
+        this.addOrganizationParentsAndChildren(
+          item,
+          allOrganizations,
+          associatedOrganizations
+        );
+      });
+      list = Array.from(associatedOrganizations);
     }
     const topLevel = minBy(list, 'level').level;
     const rootOrganizations = list.filter(item => item.level === topLevel);
@@ -64,7 +76,54 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
         this.getOrganizationTree(rootOrganization, list)
       );
     }
-    return { list: hierarchicalOrganizations, count: list.length };
+    return {
+      list: hierarchicalOrganizations,
+      count: filteredOrganizations.length,
+    };
+  }
+
+  private addOrganizationParentsAndChildren(
+    mdl: OrganizationEntity,
+    allOrganizations: OrganizationEntity[],
+    associatedOrganizations: Set<OrganizationEntity>
+  ) {
+    // 添加所有父级机构
+    this.addOrganizationParents(mdl, allOrganizations, associatedOrganizations);
+
+    // 添加所有子集机构
+    this.addOrganizationChildren(
+      mdl,
+      allOrganizations,
+      associatedOrganizations
+    );
+  }
+
+  private addOrganizationParents(
+    mdl: OrganizationEntity,
+    allOrganizations: OrganizationEntity[],
+    parents: Set<OrganizationEntity>
+  ) {
+    parents.add(mdl);
+    if (!mdl.parentId) {
+      return parents;
+    } else {
+      const parent = allOrganizations.find(item => item.id === mdl.parentId);
+      if (parent) {
+        return this.addOrganizationParents(parent, allOrganizations, parents);
+      }
+    }
+  }
+
+  private addOrganizationChildren(
+    mdl: OrganizationEntity,
+    allOrganizations: OrganizationEntity[],
+    parents: Set<OrganizationEntity>
+  ) {
+    const children = allOrganizations.filter(item => item.parentId === mdl.id);
+    children.forEach(item => {
+      parents.add(item);
+      this.addOrganizationChildren(item, allOrganizations, parents);
+    });
   }
 
   private getOrganizationTree(
