@@ -1,6 +1,6 @@
 import { Rule, RuleType } from '@midwayjs/validate';
 import { ApiProperty } from '@midwayjs/swagger';
-import { handleParameterError, handleParameterErrors } from '../../../error';
+import { handleParameterError, handleParameterErrors } from '../error';
 
 export class ProfileDTO {
   @ApiProperty({ example: 'user1', description: '用户登录名' })
@@ -35,10 +35,10 @@ export class ProfileDTO {
   @ApiProperty({ example: 'user1@hy.com', description: '用户邮箱' })
   @Rule(
     RuleType.string()
-      .email()
-      .max(100)
       .empty('')
       .trim(true)
+      .email()
+      .max(100)
       .error(
         handleParameterErrors({
           'string.max': {
@@ -62,6 +62,7 @@ export class ProfileDTO {
   @Rule(
     RuleType.string()
       .empty('')
+      .allow(null)
       .trim(true)
       .pattern(
         /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/
@@ -78,6 +79,7 @@ export class ProfileDTO {
   @ApiProperty({ example: 'Michael', description: '用户真实姓名' })
   @Rule(
     RuleType.string()
+      .required()
       .max(100)
       .empty('')
       .trim(true)

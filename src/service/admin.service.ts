@@ -4,7 +4,7 @@ import { AdminEntity } from '../entity/admin.entity';
 import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { encrypt } from '../util';
-import { CommonError } from '../error';
+import { CaptchaError, CommonError } from '../error';
 import { Context } from '@midwayjs/koa';
 import { CaptchaService } from '@midwayjs/captcha';
 
@@ -50,7 +50,7 @@ export class AdminService extends BaseService<AdminEntity> {
         ? !(await this.captchaService.check(captchaId, captcha))
         : false
     ) {
-      throw new CommonError('captcha.base.message', {
+      throw new CaptchaError('captcha.base.message', {
         group: 'passport',
       });
     }

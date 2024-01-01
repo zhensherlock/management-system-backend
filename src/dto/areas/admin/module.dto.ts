@@ -38,6 +38,7 @@ export class ModuleDTO {
     RuleType.string()
       .max(150)
       .empty('')
+      .allow(null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -53,17 +54,6 @@ export class ModuleDTO {
       )
   )
   description: string;
-
-  @ApiProperty({ example: 1, description: '模块级别' })
-  @Rule(
-    RuleType.number().error(
-      handleParameterError({
-        message: 'level.base.message',
-        options: { group: 'module' },
-      })
-    )
-  )
-  level: number;
 
   @ApiProperty({ example: 'sys', description: '模块代码' })
   @Rule(
@@ -196,6 +186,7 @@ export class ModuleDTO {
   @Rule(
     RuleType.string()
       .uuid({ separator: false })
+      .empty(null)
       .error(
         handleParameterError({
           message: 'parent_id.base.message',
@@ -240,18 +231,18 @@ export class ModuleDTO {
 }
 
 export class CreateModuleDTO extends ModuleDTO {
-  @ApiProperty({ example: null, description: '角色编号' })
-  @Rule(
-    RuleType.array()
-      .items(RuleType.string().uuid({ separator: false }))
-      .error(
-        handleParameterError({
-          message: 'role_id.base.message',
-          options: { group: 'module' },
-        })
-      )
-  )
-  roleIds: string[];
+  // @ApiProperty({ example: null, description: '角色编号' })
+  // @Rule(
+  //   RuleType.array()
+  //     .items(RuleType.string().uuid({ separator: false }))
+  //     .error(
+  //       handleParameterError({
+  //         message: 'role_id.base.message',
+  //         options: { group: 'module' },
+  //       })
+  //     )
+  // )
+  // roleIds: string[];
 }
 
 export class UpdateModuleDTO extends ModuleDTO {

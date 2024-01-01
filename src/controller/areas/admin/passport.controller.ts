@@ -29,7 +29,7 @@ export class PassportController {
   @ApiBody({ description: '管理员登录凭证' })
   async login(@Body() dto: LoginDTO) {
     const admin = await this.adminService.tryLogin(
-      dto.username,
+      dto.account,
       dto.password,
       dto.captchaId,
       dto.captcha

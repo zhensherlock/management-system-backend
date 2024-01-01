@@ -26,7 +26,7 @@ export class LoginDTO {
         })
       )
   )
-  username: string;
+  account: string;
 
   @ApiProperty({ example: '123456', description: '密码' })
   @Rule(

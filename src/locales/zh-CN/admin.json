@@ -32,5 +32,6 @@
   "delete.confirm.content": "确定要删除 {name} 管理员？",
   "delete.success": "管理员删除成功！",
   "admin.nonexistence.message": "管理员不存在",
-  "admin.disabled.message": "此管理员已被禁用"
+  "admin.disabled.message": "此管理员已被禁用",
+  "update.password.success": "密码修改成功！"
 }

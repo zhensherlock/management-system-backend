@@ -20,7 +20,7 @@ import { ModuleEntity } from '../../../entity/module.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty, omit, isString, isArray, differenceWith } from 'lodash';
+import { isEmpty, omit, isString, isArray } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
@@ -90,11 +90,8 @@ export class ModuleController extends BaseAdminController {
   @Get('/tree', { summary: '管理员-查询模块树形列表' })
   @ApiQuery({})
   async getModuleTreeList(@Query() query: GetModuleListDTO) {
-    const list = await this.moduleService.getTreeList(
-      query.keyword,
-      query.roleIds
-    );
-    return { list };
+    const { list, count } = await this.moduleService.getTreeList(query.keyword);
+    return { list, count };
   }
 
   @Role(['admin'])
@@ -104,26 +101,42 @@ export class ModuleController extends BaseAdminController {
     if (await this.moduleService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'module' });
     }
-    if (
-      !isEmpty(dto.parentId) &&
-      !(await this.moduleService.exist({
+    const module = <ModuleEntity>dto;
+    // if (
+    //   !isEmpty(dto.parentId) &&
+    //   !(await this.moduleService.exist({
+    //     where: {
+    //       id: dto.parentId,
+    //     },
+    //   }))
+    // ) {
+    //   throw new CommonError('parent_id.base.message', { group: 'module' });
+    // }
+    module.level = 1;
+    if (!isEmpty(dto.parentId)) {
+      const parentModule = await this.moduleService.getOneObject({
         where: {
           id: dto.parentId,
         },
-      }))
-    ) {
-      throw new CommonError('parent_id.base.message', { group: 'module' });
+      });
+      if (!parentModule) {
+        throw new CommonError('parent_id.base.message', { group: 'module' });
+      }
+      module.level = parentModule.level + 1;
     }
-    const mdl = await this.moduleService.createObject(
-      <ModuleEntity>Object.assign({}, <any>dto, {
-        moduleRoleMappings: (dto.roleIds || []).map(id =>
-          this.moduleRoleMappingService.entityModel.create({
-            roleId: id,
-          })
-        ),
-      })
-    );
-    return omit(mdl, ['deletedDate', 'roleIds', 'moduleRoleMappings']);
+
+    const mdl = await this.moduleService.createObject(<ModuleEntity>dto);
+    return omit(mdl, ['deletedDate']);
+    // const mdl = await this.moduleService.createObject(
+    //   <ModuleEntity>Object.assign({}, <any>dto, {
+    //     moduleRoleMappings: (dto.roleIds || []).map(id =>
+    //       this.moduleRoleMappingService.entityModel.create({
+    //         roleId: id,
+    //       })
+    //     ),
+    //   })
+    // );
+    // return omit(mdl, ['deletedDate', 'roleIds', 'moduleRoleMappings']);
   }
 
   @Role(['admin'])
@@ -131,41 +144,56 @@ export class ModuleController extends BaseAdminController {
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '模块信息' })
   async updateModule(@Param('id') id: string, @Body() dto: UpdateModuleDTO) {
-    const module = await this.moduleService.getObjectById(id);
-    if (!module) {
+    const currentEntity = await this.moduleService.getObjectById(id);
+    if (!currentEntity) {
       throw new CommonError('not.exist', { group: 'global' });
     }
     if (await this.moduleService.checkNameExisted(dto.name, id)) {
       throw new CommonError('name.exist.message', { group: 'module' });
     }
-    if (
-      !isEmpty(dto.parentId) &&
-      !(await this.moduleService.exist({
+    if (!isEmpty(dto.parentId)) {
+      const parentEntity = await this.moduleService.getOneObject({
         where: {
           id: dto.parentId,
         },
-      }))
-    ) {
-      throw new CommonError('parent_id.base.message', { group: 'module' });
+      });
+      if (!parentEntity) {
+        throw new CommonError('parent_id.base.message', { group: 'module' });
+      }
+      currentEntity.level = parentEntity.level + 1;
     }
-    Object.assign(module, dto);
+    Object.assign(currentEntity, dto);
+
+    // if (
+    //   !isEmpty(dto.parentId) &&
+    //   !(await this.moduleService.exist({
+    //     where: {
+    //       id: dto.parentId,
+    //     },
+    //   }))
+    // ) {
+    //   throw new CommonError('parent_id.base.message', { group: 'module' });
+    // }
     // module role mapping
-    const removeModuleRoleMappings = differenceWith(
-      module.moduleRoleMappings,
-      dto.roleIds,
-      (a, b) => a.roleId === b
-    );
-    await this.moduleRoleMappingService.entityModel.remove(
-      removeModuleRoleMappings
-    );
-    module.moduleRoleMappings = (dto.roleIds || []).map(id =>
-      this.moduleRoleMappingService.entityModel.create({
-        roleId: id,
-        moduleId: module.id,
-      })
-    );
-    const mdl = await this.moduleService.updateObject(module);
-    return omit(mdl, ['deletedDate', 'roleIds', 'moduleRoleMappings']);
+    // const removeModuleRoleMappings = differenceWith(
+    //   module.moduleRoleMappings,
+    //   dto.roleIds,
+    //   (a, b) => a.roleId === b
+    // );
+    // await this.moduleRoleMappingService.entityModel.remove(
+    //   removeModuleRoleMappings
+    // );
+    // module.moduleRoleMappings = (dto.roleIds || []).map(id =>
+    //   this.moduleRoleMappingService.entityModel.create({
+    //     roleId: id,
+    //     moduleId: module.id,
+    //   })
+    // );
+    return omit(await this.moduleService.updateObject(currentEntity), [
+      'deletedDate',
+      'roleIds',
+      'moduleRoleMappings',
+    ]);
   }
 
   @Role(['admin'])

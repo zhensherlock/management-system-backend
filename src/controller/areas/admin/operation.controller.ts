@@ -56,25 +56,16 @@ export class OperationController extends BaseAdminController {
   @Get('/list', { summary: '管理员-查询操作按钮列表' })
   @ApiQuery({})
   async getOperationList(@Query() query: GetOperationListDTO) {
-    const [list, count, currentPage, pageSize] =
-      await this.operationService.getPaginatedList(
-        query.currentPage,
-        query.pageSize,
-        {
-          where: {
-            ...(isEmpty(query.keyword)
-              ? {}
-              : { name: Like(`%${query.keyword}%`) }),
-            ...(isEmpty(query.module) ? {} : { moduleId: query.module }),
-          },
-        }
-      );
-    return {
-      list,
-      count,
-      currentPage,
-      pageSize,
-    };
+    const list = await this.operationService.getList({
+      where: {
+        ...(isEmpty(query.keyword) ? {} : { name: Like(`%${query.keyword}%`) }),
+        ...(isEmpty(query.module) ? {} : { moduleId: query.module }),
+      },
+      order: {
+        createdDate: 'ASC',
+      },
+    });
+    return { list, count: list.length };
   }
 
   @Role(['admin'])
@@ -84,18 +75,11 @@ export class OperationController extends BaseAdminController {
     if (await this.operationService.checkNameExisted(dto.name)) {
       throw new CommonError('name.exist.message', { group: 'operation' });
     }
-    if (
-      !isEmpty(dto.moduleId) &&
-      !(await this.moduleService.exist({
-        where: {
-          id: dto.moduleId,
-        },
-      }))
-    ) {
+    if (!(await this.moduleService.exist({ where: { id: dto.moduleId } }))) {
       throw new CommonError('module_id.base.message', { group: 'operation' });
     }
     const mdl = await this.operationService.createObject(<OperationEntity>dto);
-    return omit(mdl, ['deletedDate']);
+    return omit(mdl, ['createdDate', 'updatedDate', 'deletedDate']);
   }
 
   @Role(['admin'])
@@ -113,19 +97,12 @@ export class OperationController extends BaseAdminController {
     if (await this.operationService.checkNameExisted(dto.name, id)) {
       throw new CommonError('name.exist.message', { group: 'operation' });
     }
-    if (
-      !isEmpty(dto.moduleId) &&
-      !(await this.moduleService.exist({
-        where: {
-          id: dto.moduleId,
-        },
-      }))
-    ) {
+    if (!(await this.moduleService.exist({ where: { id: dto.moduleId } }))) {
       throw new CommonError('module_id.base.message', { group: 'operation' });
     }
     Object.assign(operation, dto);
     const mdl = await this.operationService.updateObject(operation);
-    return omit(mdl, ['deletedDate']);
+    return omit(mdl, ['createdDate', 'updatedDate', 'deletedDate']);
   }
 
   @Role(['admin'])
