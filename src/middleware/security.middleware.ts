@@ -47,9 +47,18 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
         const passport = await passportService.verifyAccessToken(token);
         ctx.currentPassport = passport;
         if (passport.roles.includes(PassportType.Admin)) {
+          ctx.isAdmin = true;
           const admin = await adminService.getFullObjectById(passport.id);
           if (admin) {
-            ctx.currentAdmin = admin;
+            ctx.currentAdmin = {
+              id: admin.id,
+              name: admin.name,
+              password: admin.password,
+              salt: admin.salt,
+              email: admin.email || '',
+              tel: admin.tel || '',
+              realName: admin.realName,
+            };
           }
         } else {
           const user = await userService.getFullObjectById(passport.id, {
@@ -66,8 +75,8 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
               salt: user.salt,
               password: user.password,
               name: user.name,
-              email: user.email,
-              tel: user.tel,
+              email: user.email || '',
+              tel: user.tel || '',
               realName: user.realName,
               description: user.description,
               enabled: user.enabled,
