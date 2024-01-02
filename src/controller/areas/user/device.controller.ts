@@ -19,7 +19,7 @@ export class DeviceController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/list', { summary: '用户-查询可用设备列表' })
   @ApiQuery({})
   async getDeviceList() {

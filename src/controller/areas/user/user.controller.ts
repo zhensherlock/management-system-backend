@@ -29,9 +29,8 @@ import {
   UpdateUserDTO,
 } from '../../../dto/areas/user/user.dto';
 import { isArray, isEmpty, isString, omit } from 'lodash';
-import { Like, Not } from 'typeorm';
+import { Like } from 'typeorm';
 import { CommonError } from '../../../error';
-import { UserType } from '../../../constant';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -46,11 +45,10 @@ export class UserController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/list', { summary: '用户-查询用户列表' })
   @ApiQuery({})
   async getUserList(@Query() query: GetUserListDTO) {
-    const user = this.ctx.currentUser;
     let organizationUserMappings = [];
     if (isString(query.organizationIds)) {
       organizationUserMappings = [{ organizationId: query.organizationIds }];
@@ -75,9 +73,6 @@ export class UserController extends BaseUserController {
         query.pageSize,
         {
           where: {
-            ...(user.type !== UserType.SuperAdmin && {
-              type: Not(UserType.SuperAdmin),
-            }),
             organizationUserMappings,
             userRoleMappings,
             ...(isEmpty(query.keyword)
@@ -103,7 +98,7 @@ export class UserController extends BaseUserController {
     };
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/import', { summary: '用户-导入用户列表' })
   @ApiBody({
     description: '用户数据文件',
@@ -114,7 +109,7 @@ export class UserController extends BaseUserController {
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/create', { summary: '用户-新建用户' })
   @ApiBody({ description: '用户信息' })
   async createUser(@Body() dto: CreateUserDTO) {
@@ -125,7 +120,7 @@ export class UserController extends BaseUserController {
     return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Put('/:id', { summary: '用户-修改用户' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '用户信息' })
@@ -145,7 +140,7 @@ export class UserController extends BaseUserController {
     return omit(mdl, ['password', 'salt', 'deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Del('/:id', { summary: '用户-删除用户' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteUser(@Param('id') id: string) {

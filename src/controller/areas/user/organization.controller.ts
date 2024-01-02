@@ -6,7 +6,6 @@ import { BaseUserController } from './base/base.user.controller';
 import { Role } from '../../../decorator/role.decorator';
 import { OrganizationService } from '../../../service/organization.service';
 import { GetOrganizationListDTO } from '../../../dto/areas/user/organization.dto';
-import { UserType } from '../../../constant';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -21,15 +20,12 @@ export class OrganizationController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/tree', { summary: '用户-查询组织树形列表' })
   @ApiQuery({})
   async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
-    const user = this.ctx.currentUser;
     const { list, count } = await this.organizationService.getTreeList(
-      user.type !== UserType.SuperAdmin
-        ? [UserType.Teacher, UserType.Security, UserType.Education]
-        : null,
+      null,
       query.keyword
     );
     return { list, count };

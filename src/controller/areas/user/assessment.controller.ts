@@ -71,7 +71,7 @@ export class AssessmentController extends BaseUserController {
     };
   }
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/tree', { summary: '用户-查询考核树形列表' })
   @ApiQuery({})
   async getAssessmentTreeList(@Query() query: GetAssessmentListDTO) {
@@ -81,7 +81,7 @@ export class AssessmentController extends BaseUserController {
     return { list, count };
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/create', { summary: '用户-新建考核类型' })
   @ApiBody({ description: '考核类型信息' })
   async createAssessment(@Body() dto: CreateAssessmentDTO) {
@@ -113,7 +113,7 @@ export class AssessmentController extends BaseUserController {
     return omit(mdl, ['deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Put('/:id', { summary: '用户-修改考核类型' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '考核类型信息' })
@@ -156,7 +156,7 @@ export class AssessmentController extends BaseUserController {
     ]);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Del('/:id', { summary: '用户-删除考核类型' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteAssessment(@Param('id') id: string) {

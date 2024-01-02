@@ -47,7 +47,7 @@ export class SchoolController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/list', { summary: '用户-查询学校列表' })
   @ApiQuery({})
   async getSchoolList(@Query() query: GetSchoolListDTO) {
@@ -75,7 +75,7 @@ export class SchoolController extends BaseUserController {
     };
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Get('/tree', { summary: '用户-查询学校树形列表' })
   @ApiQuery({})
   async getSchoolTreeList(@Query() query: GetSchoolListDTO) {
@@ -86,7 +86,7 @@ export class SchoolController extends BaseUserController {
     return { list, count };
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/import', { summary: '用户-导入学校列表' })
   @ApiBody({
     description: '用户数据文件',
@@ -97,7 +97,7 @@ export class SchoolController extends BaseUserController {
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/create', { summary: '用户-新建学校' })
   @ApiBody({ description: '学校信息' })
   async create(@Body() dto: CreateSchoolDTO) {
@@ -127,7 +127,7 @@ export class SchoolController extends BaseUserController {
     return omit(mdl, ['deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Put('/:id', { summary: '用户-修改学校' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '学校信息' })
@@ -166,7 +166,7 @@ export class SchoolController extends BaseUserController {
     ]);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Del('/:id', { summary: '用户-删除学校公司' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteSchool(@Param('id') id: string) {

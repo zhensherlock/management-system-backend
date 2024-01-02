@@ -6,10 +6,7 @@ import { ApiBearerAuth, ApiBody, ApiTags } from '@midwayjs/swagger';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { CommonError } from '../error';
 import { Role } from '../decorator/role.decorator';
-import {
-  UpdatePasswordDTO,
-  UpdateUserDTO,
-} from '../dto/areas/user/info.dto';
+import { UpdatePasswordDTO, UpdateProfileDTO } from '../dto/profile.dto';
 import { omit } from 'lodash';
 import { BaseController } from './base/base.controller';
 import { AdminService } from '../service/admin.service';
@@ -45,7 +42,7 @@ export class ProfileController extends BaseController {
   @Role(['admin', 'school', 'security', 'education'])
   @Put('/basic', { summary: '用户-修改信息' })
   @ApiBody({ description: '用户信息' })
-  async updateUser(@Body() dto: UpdateUserDTO) {
+  async updateUser(@Body() dto: UpdateProfileDTO) {
     if (this.ctx.isAdmin) {
       // 管理员
       const admin = this.ctx.currentAdmin;

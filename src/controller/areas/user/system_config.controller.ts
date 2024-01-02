@@ -16,7 +16,7 @@ export class SystemConfigController extends BaseUserController {
   @Inject()
   systemConfigService: SystemConfigService;
 
-  @Role(['school', 'security'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/get', { summary: '用户-查询系统信息' })
   async getSystemConfig() {
     const mdl = await this.systemConfigService.getSystemConfig();

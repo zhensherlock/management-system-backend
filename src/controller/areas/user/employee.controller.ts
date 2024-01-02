@@ -53,7 +53,7 @@ export class EmployeeController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/:id', { summary: '用户-查询单个员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async getEmployee(@Param('id') id: string) {
@@ -68,7 +68,7 @@ export class EmployeeController extends BaseUserController {
     return mdl;
   }
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/list', { summary: '用户-查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
@@ -114,7 +114,7 @@ export class EmployeeController extends BaseUserController {
     };
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/import', { summary: '用户-导入员工' })
   @ApiBody({
     description: '用户数据文件',
@@ -125,7 +125,7 @@ export class EmployeeController extends BaseUserController {
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/create', { summary: '用户-新建员工' })
   @ApiBody({ description: '员工信息' })
   async createEmployee(@Body() dto: CreateEmployeeDTO) {
@@ -165,7 +165,7 @@ export class EmployeeController extends BaseUserController {
     return omit(mdl, ['deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Put('/:id', { summary: '用户-修改员工' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '员工信息' })
@@ -212,7 +212,7 @@ export class EmployeeController extends BaseUserController {
     return omit(await this.employeeService.updateObject(mdl), ['deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Del('/:id', { summary: '用户-删除员工' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteEmployee(@Param('id') id: string) {

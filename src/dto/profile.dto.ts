@@ -99,7 +99,7 @@ export class ProfileDTO {
   realName: string;
 }
 
-export class UpdateUserDTO extends ProfileDTO {}
+export class UpdateProfileDTO extends ProfileDTO {}
 
 export class UpdatePasswordDTO {
   @ApiProperty({ example: {}, description: '用户旧密码' })

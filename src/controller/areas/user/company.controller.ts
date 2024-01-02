@@ -47,7 +47,7 @@ export class CompanyController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'school', 'security', 'education'])
   @Get('/list', { summary: '用户-查询保安公司列表' })
   @ApiQuery({})
   async getCompanyList(@Query() query: GetCompanyListDTO) {
@@ -76,7 +76,7 @@ export class CompanyController extends BaseUserController {
     };
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/import', { summary: '用户-导入保安公司列表' })
   @ApiBody({
     description: '用户数据文件',
@@ -87,7 +87,7 @@ export class CompanyController extends BaseUserController {
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Post('/create', { summary: '用户-新建保安公司' })
   @ApiBody({ description: '保安公司信息' })
   async createCompany(@Body() dto: CreateCompanyDTO) {
@@ -111,7 +111,7 @@ export class CompanyController extends BaseUserController {
     return omit(mdl, ['deletedDate']);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Put('/:id', { summary: '用户-修改保安公司' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '保安公司信息' })
@@ -139,7 +139,7 @@ export class CompanyController extends BaseUserController {
     ]);
   }
 
-  @Role(['education'])
+  @Role(['admin', 'education'])
   @Del('/:id', { summary: '用户-删除保安公司' })
   @ApiParam({ name: 'id', description: '编号' })
   async deleteCompany(@Param('id') id: string) {
