@@ -10,6 +10,7 @@
   "description.base.message": "请输入正确的角色介绍",
   "enabled.base.message": "请输入正确的角色状态",
   "options.base.message": "请输入正确的角色扩展配置信息",
+  "module_id.base.message": "请选择正确的模块",
   "delete.success": "角色删除成功！",
   "restore.success": "角色恢复成功！"
 }

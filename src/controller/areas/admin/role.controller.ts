@@ -14,16 +14,18 @@ import { RoleService } from '../../../service/role.service';
 import {
   CreateRoleDTO,
   GetRoleListDTO,
+  UpdatePermissionDTO,
   UpdateRoleDTO,
 } from '../../../dto/areas/admin/role.dto';
 import { RoleEntity } from '../../../entity/role.entity';
 import { Like } from 'typeorm';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { ApiBody, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
-import { isEmpty, omit } from 'lodash';
+import { differenceWith, isEmpty, omit } from 'lodash';
 import { BaseAdminController } from './base/base.admin.controller';
 import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
+import { ModuleRoleMappingService } from '../../../service/module_role_mapping.service';
 
 @ApiTags(['role'])
 @Controller('/api/admin/role')
@@ -33,6 +35,9 @@ export class RoleController extends BaseAdminController {
 
   @Inject()
   roleService: RoleService;
+
+  @Inject()
+  moduleRoleMappingService: ModuleRoleMappingService;
 
   @Inject()
   i18nService: MidwayI18nService;
@@ -62,6 +67,7 @@ export class RoleController extends BaseAdminController {
               ? {}
               : { name: Like(`%${query.keyword}%`) }),
           },
+          relations: ['moduleRoleMappings'],
         }
       );
     return {
@@ -96,6 +102,42 @@ export class RoleController extends BaseAdminController {
       throw new CommonError('name.exist.message', { group: 'role' });
     }
     Object.assign(role, dto);
+    const mdl = await this.roleService.updateObject(role);
+    return omit(mdl, ['deletedDate']);
+  }
+
+  @Role(['admin'])
+  @Post('/permission/:id', { summary: '管理员-修改权限' })
+  @ApiParam({ name: 'id', description: '角色编号' })
+  @ApiBody({ description: '角色信息' })
+  async updatePermission(
+    @Param('id') id: string,
+    @Body() dto: UpdatePermissionDTO
+  ) {
+    const role = await this.roleService.getOneObject({
+      where: {
+        id,
+      },
+      relations: ['moduleRoleMappings'],
+    });
+    if (!role) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    const removeModuleRoleMappings = differenceWith(
+      role.moduleRoleMappings,
+      dto.permissions,
+      (a, b) => a.moduleId === b.moduleId
+    );
+    await this.moduleRoleMappingService.entityModel.remove(
+      removeModuleRoleMappings
+    );
+    role.moduleRoleMappings = (dto.permissions || []).map(item =>
+      this.moduleRoleMappingService.entityModel.create({
+        roleId: role.id,
+        moduleId: item.moduleId,
+        operationOptions: item.operationOptions,
+      })
+    );
     const mdl = await this.roleService.updateObject(role);
     return omit(mdl, ['deletedDate']);
   }

@@ -2,6 +2,7 @@ import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
+import { PermissionType } from '../../../types';
 
 export class RoleDTO {
   @ApiProperty({ example: '管理员', description: '角色名称' })
@@ -110,5 +111,11 @@ export class RoleDTO {
 export class CreateRoleDTO extends RoleDTO {}
 
 export class UpdateRoleDTO extends RoleDTO {}
+
+export class UpdatePermissionDTO {
+  @ApiProperty({ example: [], description: '权限列表' })
+  @Rule(RuleType.array().items(RuleType.object<PermissionType>()))
+  permissions: PermissionType[];
+}
 
 export class GetRoleListDTO extends GetListBaseDTO {}

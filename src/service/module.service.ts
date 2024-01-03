@@ -30,6 +30,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
       order: {
         sequence: 'ASC',
       },
+      relations: ['operations'],
     });
 
     const filteredModules = allModules.filter(item =>
