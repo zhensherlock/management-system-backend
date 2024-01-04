@@ -91,7 +91,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
     }
     const topLevel = minBy(list, 'level').level;
     const rootModules = list.filter(item => item.level === topLevel);
-    const hierarchicalModules = [];
+    const hierarchicalModules: ModuleEntity[] = [];
     for (const rootModule of rootModules) {
       hierarchicalModules.push(this.getModuleTree(rootModule, list));
     }

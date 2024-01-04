@@ -10,6 +10,8 @@ import { UpdatePasswordDTO, UpdateProfileDTO } from '../dto/profile.dto';
 import { omit } from 'lodash';
 import { BaseController } from './base/base.controller';
 import { AdminService } from '../service/admin.service';
+import { ModuleService } from '../service/module.service';
+import { recursiveMap } from '../util/array';
 
 @ApiBearerAuth()
 @ApiTags(['basic'])
@@ -25,6 +27,9 @@ export class ProfileController extends BaseController {
   adminService: AdminService;
 
   @Inject()
+  moduleService: ModuleService;
+
+  @Inject()
   i18nService: MidwayI18nService;
 
   @Role(['admin', 'school', 'security', 'education'])
@@ -37,6 +42,35 @@ export class ProfileController extends BaseController {
       // 普通用户信息
       return omit(this.ctx.currentUser, ['password', 'salt']);
     }
+  }
+
+  @Role(['admin', 'school', 'security', 'education'])
+  @Get('/getMenuList', { summary: '用户-获取基本信息' })
+  async getEnabledModuleList() {
+    const currentUser = this.ctx.currentUser;
+    const { list } = await this.moduleService.getModuleTreeList(
+      null,
+      currentUser.roles.map((role: any) => role.id)
+    );
+    return recursiveMap(list, module => ({
+      name: module.code,
+      path: module.url,
+      component: module.component,
+      meta: {
+        title: {
+          zh_CN: module.name,
+        },
+        icon: module.icon,
+      },
+      ...(module?.children?.length > 0 && {
+        redirect: module.children[0].url,
+      }),
+      operations: module.operations.map(operation => ({
+        id: operation.id,
+        code: operation.code,
+        name: operation.name,
+      })),
+    }));
   }
 
   @Role(['admin', 'school', 'security', 'education'])
