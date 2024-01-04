@@ -1,4 +1,4 @@
-import { Provide } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
 import { In, IsNull, Not, Repository } from 'typeorm';
@@ -6,11 +6,15 @@ import { BaseService } from './base.service';
 import { isArray, isEmpty, isNumber, minBy } from 'lodash';
 import ExcelJS from 'exceljs';
 import { OrganizationType } from '../constant';
+import { OrganizationUserMappingService } from './organization_user_mapping.service';
 
 @Provide()
 export class OrganizationService extends BaseService<OrganizationEntity> {
   @InjectEntityModel(OrganizationEntity)
   entityModel: Repository<OrganizationEntity>;
+
+  @Inject()
+  organizationUserMappingService: OrganizationUserMappingService;
 
   constructor() {
     super();
@@ -194,5 +198,28 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
         await this.createObject(<OrganizationEntity>entity);
       }
     }
+  }
+
+  async getOrganizationListByUserId(userId: string) {
+    const organizations: Partial<OrganizationEntity>[] = [];
+    const relations = await this.organizationUserMappingService.getList({
+      where: {
+        userId,
+      },
+      relations: ['organization'],
+    });
+    relations.forEach(item => {
+      if (!item.organization.enabled) {
+        return;
+      }
+      organizations.push({
+        id: item.organization.id,
+        code: item.organization.code,
+        name: item.organization.name,
+        type: item.organization.type,
+        level: item.organization.level,
+      });
+    });
+    return organizations;
   }
 }

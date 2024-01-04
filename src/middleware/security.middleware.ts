@@ -6,6 +6,9 @@ import { AdminService } from '../service/admin.service';
 import { PassportType } from '../constant/passport.constant';
 import { UserService } from '../service/user.service';
 import { MidwayI18nService } from '@midwayjs/i18n';
+import { RoleService } from '../service/role.service';
+import { OrganizationService } from '../service/organization.service';
+import { ModuleService } from '../service/module.service';
 
 @Middleware()
 export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
@@ -44,11 +47,17 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
       try {
         const adminService = await ctx.requestContext.getAsync(AdminService);
         const userService = await ctx.requestContext.getAsync(UserService);
+        const roleService = await ctx.requestContext.getAsync(RoleService);
+        const moduleService = await ctx.requestContext.getAsync(ModuleService);
+        const organizationService = await ctx.requestContext.getAsync(
+          OrganizationService
+        );
         const passport = await passportService.verifyAccessToken(token);
         ctx.currentPassport = passport;
+        const userId = passport.id;
         if (passport.roles.includes(PassportType.Admin)) {
           ctx.isAdmin = true;
-          const admin = await adminService.getFullObjectById(passport.id);
+          const admin = await adminService.getFullObjectById(userId);
           if (admin) {
             ctx.currentAdmin = {
               id: admin.id,
@@ -61,14 +70,14 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
             };
           }
         } else {
-          const user = await userService.getFullObjectById(passport.id, {
-            relations: [
-              'userRoleMappings',
-              'userRoleMappings.role',
-              'organizationUserMappings',
-              'organizationUserMappings.organization',
-            ],
-          });
+          const user = await userService.getFullObjectById(userId);
+          const roles = await roleService.getRoleListByUserId(userId);
+          const modules = await moduleService.getModuleTreeList(
+            null,
+            roles.map(role => role.id)
+          );
+          const organizations =
+            await organizationService.getOrganizationListByUserId(userId);
           if (user) {
             ctx.currentUser = {
               id: user.id,
@@ -82,20 +91,9 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
               enabled: user.enabled,
               options: user.options,
               type: user.type,
-              roles: user.userRoleMappings.map((item: any) => {
-                return {
-                  name: item.role.name,
-                  id: item.role.id,
-                };
-              }),
-              organizations: user.organizationUserMappings.map((item: any) => {
-                return {
-                  name: item.organization.name,
-                  id: item.organization.id,
-                  type: item.organization.type,
-                  level: item.organization.level,
-                };
-              }),
+              roles,
+              organizations,
+              modules,
             };
           }
         }

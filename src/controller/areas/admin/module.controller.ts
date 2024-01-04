@@ -86,7 +86,9 @@ export class ModuleController extends BaseAdminController {
   @Get('/tree', { summary: '管理员-查询模块树形列表' })
   @ApiQuery({})
   async getModuleTreeList(@Query() query: GetModuleListDTO) {
-    const { list, count } = await this.moduleService.getTreeList(query.keyword);
+    const { list, count } = await this.moduleService.getModuleTreeList(
+      query.keyword
+    );
     return { list, count };
   }
 

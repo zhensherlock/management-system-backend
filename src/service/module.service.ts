@@ -1,14 +1,19 @@
-import { Provide } from '@midwayjs/core';
+import { Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { ModuleEntity } from '../entity/module.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
-import { isEmpty, isString, isArray, minBy } from 'lodash';
+import { isEmpty, minBy, intersectionWith } from 'lodash';
+import { ModuleRoleMappingService } from './module_role_mapping.service';
+import { ModuleRoleMappingEntity } from '../entity/module_role_mapping.entity';
 
 @Provide()
 export class ModuleService extends BaseService<ModuleEntity> {
   @InjectEntityModel(ModuleEntity)
   entityModel: Repository<ModuleEntity>;
+
+  @Inject()
+  moduleRoleMappingService: ModuleRoleMappingService;
 
   constructor() {
     super();
@@ -25,22 +30,59 @@ export class ModuleService extends BaseService<ModuleEntity> {
     return await query.leftJoinAndSelect('module.children', 'child').getMany();
   }
 
-  async getTreeList(keyword: string) {
-    const allModules = await this.getList({
+  async getAllEnabledList() {
+    return await this.getList({
+      where: {
+        enabled: true,
+      },
       order: {
         sequence: 'ASC',
       },
       relations: ['operations'],
     });
+  }
 
-    const filteredModules = allModules.filter(item =>
-      isEmpty(keyword) ? true : item.name.includes(keyword)
-    );
+  async getAllModuleRoleMappingList() {
+    return await this.moduleRoleMappingService.getList();
+  }
+
+  async getModuleTreeList(keyword: string, roleIds: string[] = []) {
+    const allModules = await this.getAllEnabledList();
+    let allModuleRoleMappingList: ModuleRoleMappingEntity[] = [];
+    if (roleIds.length > 0) {
+      allModuleRoleMappingList = await this.getAllModuleRoleMappingList();
+    }
+
+    const filteredModules = allModules.filter(module => {
+      let hasPermission = true;
+      if (roleIds.length > 0) {
+        const currentModuleAllRoleMappings = allModuleRoleMappingList.filter(
+          item => item.moduleId === module.id
+        );
+        const currentMappings = intersectionWith(
+          currentModuleAllRoleMappings,
+          roleIds,
+          (a, b) => a.roleId === b
+        );
+        hasPermission = currentMappings.length > 0;
+        if (hasPermission) {
+          module.operations = module.operations.filter(item =>
+            (<any[]>currentMappings[0].operationOptions)
+              .map(item => item.id)
+              .includes(item.id)
+          );
+        }
+      }
+      return (
+        hasPermission &&
+        (isEmpty(keyword) ? true : module.name.includes(keyword))
+      );
+    });
     let list = filteredModules;
     if (filteredModules.length === 0) {
       return { list: [], count: 0 };
     }
-    if (!isEmpty(keyword) && filteredModules.length > 0) {
+    if (filteredModules.length !== allModules.length) {
       const associatedModules = new Set([]);
       filteredModules.forEach(item => {
         this.addModuleParentsAndChildren(item, allModules, associatedModules);
@@ -97,33 +139,6 @@ export class ModuleService extends BaseService<ModuleEntity> {
       parents.add(item);
       this.addModuleChildren(item, allModules, parents);
     });
-  }
-
-  async getTreeList1(keyword: string, roleIds: string[] | string) {
-    let moduleRoleMappings = [];
-    if (isString(roleIds)) {
-      moduleRoleMappings = [{ roleId: roleIds }];
-    }
-    if (isArray(roleIds)) {
-      moduleRoleMappings = (<string[]>roleIds).map(id => ({
-        roleId: id,
-      }));
-    }
-    const list = await this.getList({
-      where: {
-        moduleRoleMappings,
-        ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
-      },
-      order: {
-        sequence: 'DESC',
-      },
-    });
-    const rootModules = list.filter(item => !item.parentId);
-    const hierarchicalModules = [];
-    for (const rootModule of rootModules) {
-      hierarchicalModules.push(this.getModuleTree(rootModule, list));
-    }
-    return hierarchicalModules;
   }
 
   private getModuleTree(mdl: ModuleEntity, allModules: ModuleEntity[]) {
