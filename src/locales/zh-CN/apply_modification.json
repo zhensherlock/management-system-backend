@@ -1,0 +1,11 @@
+{
+  "apply_modification": "申请修改工单",
+  "employeeId.base.message": "请选择正确的员工编号",
+  "content.base.message": "请输入正确的需要修改的内容",
+  "applyReason.base.message": "请输入正确的申请原因",
+  "applyReason.length.message": "申请原因长度在150个字符以内",
+  "has.been.reviewed": "该工单已被审核",
+  "cannot.be.cancelled": "该工单已被审核，不能被取消",
+  "delete.success": "工单删除成功！",
+  "restore.success": "工单恢复成功！"
+}
