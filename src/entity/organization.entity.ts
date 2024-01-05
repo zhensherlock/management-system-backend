@@ -19,6 +19,7 @@ import { TenantEntity } from './tenant.entity';
 import { DeviceEntity } from './device.entity';
 import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
 import { EmployeeEntity } from './employee.entity';
+import { AssessmentTaskDetailEntity } from './assessment_task_detail.entity';
 
 @Entity({
   name: 'organization',
@@ -137,6 +138,12 @@ export class OrganizationEntity {
 
   @OneToMany(() => EmployeeEntity, node => node.schoolOrganization)
   securityStaff: EmployeeEntity[];
+
+  @OneToMany(
+    () => AssessmentTaskDetailEntity,
+    node => node.receiveSchoolOrganization
+  )
+  receiveAssessmentDetails: AssessmentTaskDetailEntity[];
 
   @BeforeInsert()
   generateId() {

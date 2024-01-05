@@ -21,6 +21,7 @@ import { OrganizationUserMappingEntity } from './organization_user_mapping.entit
 import { TenantEntity } from './tenant.entity';
 import { CompanyUserMappingEntity } from './company_user_mapping.entity';
 import { WorkOrderEntity } from './work_order.entity';
+import { AssessmentTaskEntity } from './assessment_task.entity';
 
 @Entity({
   name: 'user',
@@ -134,6 +135,11 @@ export class UserEntity {
     cascade: true,
   })
   auditWorkOrders: WorkOrderEntity[];
+
+  @OneToMany(() => AssessmentTaskEntity, node => node.creatorUser, {
+    cascade: true,
+  })
+  createAssessmentTasks: AssessmentTaskEntity[];
 
   @BeforeInsert()
   generateId() {
