@@ -13,7 +13,7 @@
     "@midwayjs/info": "^3.13.9",
     "@midwayjs/jwt": "3.12.10",
     "@midwayjs/koa": "^3.13.9",
-    "@midwayjs/logger": "^3.1.4",
+    "@midwayjs/logger": "^3.2.0",
     "@midwayjs/otel": "^3.13.9",
     "@midwayjs/passport": "^3.13.9",
     "@midwayjs/redis": "^3.13.9",
@@ -38,7 +38,7 @@
     "mysql2": "^3.6.5",
     "nanoid": "^3.3.7",
     "passport-jwt": "^4.0.1",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.19"
   },
   "devDependencies": {
     "@midwayjs/cli": "^2.1.1",
