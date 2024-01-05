@@ -1,5 +1,5 @@
 {
-  "apply_modification": "申请修改工单",
+  "work_order": "申请修改工单",
   "employeeId.base.message": "请选择正确的员工编号",
   "content.base.message": "请输入正确的需要修改的内容",
   "applyReason.base.message": "请输入正确的申请原因",

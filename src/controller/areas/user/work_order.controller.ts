@@ -19,25 +19,31 @@ import {
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseUserController } from './base/base.user.controller';
 import { Role } from '../../../decorator/role.decorator';
-import { ApplyModificationService } from '../../../service/apply_modification.service';
+import { WorkOrderService } from '../../../service/work_order.service';
 import {
-  AuditApplyModificationDTO,
-  CreateApplyModificationDTO,
-  GetApplyModificationListDTO,
-} from '../../../dto/areas/user/apply_modification.dto';
+  AuditWorkOrderDTO,
+  CreateWorkOrderDTO,
+  GetWorkOrderListDTO,
+} from '../../../dto/areas/user/work_order.dto';
 import { omit } from 'lodash';
 import { CommonError } from '../../../error';
-import { ApplyModificationEntity } from '../../../entity/apply_modification.entity';
+import { WorkOrderEntity } from '../../../entity/work_order.entity';
+import { WorkOrderStatus } from '../../../constant/work_order.constant';
+import { EmployeeService } from '../../../service/employee.service';
+import { WorkOrderContentType } from '../../../types';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
-@Controller('/api/user/apply_modification')
-export class ApplyModificationController extends BaseUserController {
+@Controller('/api/user/work_order')
+export class WorkOrderController extends BaseUserController {
   @Inject()
   ctx: Context;
 
   @Inject()
-  applyModificationService: ApplyModificationService;
+  workOrderService: WorkOrderService;
+
+  @Inject()
+  employeeService: EmployeeService;
 
   @Inject()
   i18nService: MidwayI18nService;
@@ -45,9 +51,9 @@ export class ApplyModificationController extends BaseUserController {
   @Role(['school', 'security', 'education'])
   @Get('/list', { summary: '用户-查询考核类型列表' })
   @ApiQuery({})
-  async getApplyModificationList(@Query() query: GetApplyModificationListDTO) {
+  async getWorkOrderList(@Query() query: GetWorkOrderListDTO) {
     const [list, count, currentPage, pageSize] =
-      await this.applyModificationService.getPaginatedList(
+      await this.workOrderService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
@@ -68,14 +74,12 @@ export class ApplyModificationController extends BaseUserController {
   @Role(['security'])
   @Post('/create', { summary: '保安公司用户-新建工单' })
   @ApiBody({ description: '申请信息' })
-  async createApplyModification(@Body() dto: CreateApplyModificationDTO) {
+  async createWorkOrder(@Body() dto: CreateWorkOrderDTO) {
     const user = this.ctx.currentUser;
-    const applyModification = <ApplyModificationEntity>dto;
-    applyModification.applyUserId = user.id;
-    applyModification.status = 'pending';
-    const mdl = await this.applyModificationService.createObject(
-      applyModification
-    );
+    const workOrder = <WorkOrderEntity>dto;
+    workOrder.applyUserId = user.id;
+    workOrder.status = WorkOrderStatus.Pending;
+    const mdl = await this.workOrderService.createObject(workOrder);
     return omit(mdl, ['deletedDate']);
   }
 
@@ -83,11 +87,11 @@ export class ApplyModificationController extends BaseUserController {
   @Post('/audit/:id', { summary: '教育局用户-审核工单' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '审核信息' })
-  async auditApplyModification(
+  async auditWorkOrder(
     @Param('id') id: string,
-    @Body() dto: AuditApplyModificationDTO
+    @Body() dto: AuditWorkOrderDTO
   ) {
-    const mdl = await this.applyModificationService.getOneObject({
+    const mdl = await this.workOrderService.getOneObject({
       where: {
         id,
       },
@@ -97,7 +101,7 @@ export class ApplyModificationController extends BaseUserController {
     }
     if (mdl.status !== 'pending') {
       throw new CommonError('has.been.reviewed', {
-        group: 'apply_modification',
+        group: 'work_order',
       });
     }
 
@@ -105,32 +109,37 @@ export class ApplyModificationController extends BaseUserController {
 
     Object.assign(mdl, dto);
 
-    return omit(await this.applyModificationService.updateObject(mdl), [
-      'deletedDate',
-    ]);
+    if (dto.status === WorkOrderStatus.Completed) {
+      await this.employeeService.updateEmployeeByWorkOrder(
+        dto.employeeId,
+        <WorkOrderContentType>mdl.content
+      );
+    }
+
+    return omit(await this.workOrderService.updateObject(mdl), ['deletedDate']);
   }
 
   @Role(['security'])
   @Del('/:id', { summary: '保安公司用户-取消工单' })
   @ApiParam({ name: 'id', description: '编号' })
-  async cancelApplyModification(@Param('id') id: string) {
+  async cancelWorkOrder(@Param('id') id: string) {
     const user = this.ctx.currentUser;
-    const applyModification = await this.applyModificationService.getOneObject({
+    const workOrder = await this.workOrderService.getOneObject({
       where: {
         id,
         applyUserId: user.id,
       },
     });
-    if (!applyModification) {
+    if (!workOrder) {
       throw new CommonError('not.exist', { group: 'global' });
     }
 
-    if (applyModification.status !== 'pending') {
+    if (workOrder.status !== WorkOrderStatus.Pending) {
       throw new CommonError('cannot.be.cancelled', {
-        group: 'apply_modification',
+        group: 'work_order',
       });
     }
-    const result = await this.applyModificationService.deleteObject(id);
+    const result = await this.workOrderService.deleteObject(id);
     if (!result.affected) {
       throw new CommonError('delete.failure', { group: 'global' });
     }

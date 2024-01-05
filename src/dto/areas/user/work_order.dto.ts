@@ -3,7 +3,7 @@ import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 
-export class ApplyModificationDTO {
+export class WorkOrderDTO {
   @ApiProperty({ example: '', description: '需要修改的员工编号' })
   @Rule(
     RuleType.string()
@@ -50,9 +50,9 @@ export class ApplyModificationDTO {
   applyReason: string;
 }
 
-export class CreateApplyModificationDTO extends ApplyModificationDTO {}
+export class CreateWorkOrderDTO extends WorkOrderDTO {}
 
-export class AuditApplyModificationDTO extends ApplyModificationDTO {
+export class AuditWorkOrderDTO extends WorkOrderDTO {
   @ApiProperty({ example: '', description: '审核状态' })
   @Rule(
     RuleType.string()
@@ -90,4 +90,4 @@ export class AuditApplyModificationDTO extends ApplyModificationDTO {
   auditReason: string;
 }
 
-export class GetApplyModificationListDTO extends GetListBaseDTO {}
+export class GetWorkOrderListDTO extends GetListBaseDTO {}

@@ -7,6 +7,9 @@ import ExcelJS from 'exceljs';
 import { EmployeeSex, EmployeeStatus } from '../constant';
 import { OrganizationService } from './organization.service';
 import dayjs from 'dayjs';
+import { WorkOrderContentType } from '../types';
+import { WorkOrderType } from '../constant/work_order.constant';
+import _ from 'lodash';
 
 @Provide()
 export class EmployeeService extends BaseService<EmployeeEntity> {
@@ -102,5 +105,23 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
         await this.createObject(entity as EmployeeEntity);
       }
     }
+  }
+
+  async updateEmployeeByWorkOrder(
+    id: string,
+    workOrderContent: WorkOrderContentType
+  ) {
+    if (workOrderContent.type !== WorkOrderType.ModifyEmployee) {
+      return false;
+    }
+    const employee = await this.getObjectById(id);
+    if (!employee) {
+      return false;
+    }
+    workOrderContent.employee.details.forEach(item => {
+      _.set(employee, item.path, item.newValue);
+    });
+    await this.updateObject(employee);
+    return true;
   }
 }

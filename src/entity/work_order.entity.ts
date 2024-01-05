@@ -16,18 +16,19 @@ import {
 } from '../util';
 import { UserEntity } from './user.entity';
 import { EmployeeEntity } from './employee.entity';
+import { WorkOrderStatus } from '../constant/work_order.constant';
 
 @Entity({
-  name: 'apply_modification',
+  name: 'work_order',
 })
-export class ApplyModificationEntity {
-  @PrimaryColumn({ length: 36, type: 'uuid', comment: '申请修改编号' })
+export class WorkOrderEntity {
+  @PrimaryColumn({ length: 36, type: 'uuid', comment: '工单编号' })
   id: string;
 
   @Column({
     name: 'apply_user_id',
     length: 36,
-    comment: '申请修改的用户编号',
+    comment: '申请用户编号',
   })
   applyUserId: string;
 
@@ -35,27 +36,31 @@ export class ApplyModificationEntity {
     name: 'audit_user_id',
     length: 36,
     nullable: true,
-    comment: '审核修改的用户编号',
+    comment: '审核用户编号',
   })
   auditUserId: string;
 
   @Column({
     name: 'employee_id',
     length: 36,
-    comment: '需要修改的员工编号',
+    nullable: true,
+    comment: '工单关联的员工编号',
   })
   employeeId: string;
 
-  @Column({ type: 'json', nullable: true, comment: '需要修改的内容' })
+  @Column({ type: 'json', nullable: true, comment: '工单内容' })
   content: object;
 
-  @Column({ default: 'pending', length: 40, comment: '申请状态' })
+  @Column({ type: 'tinyint', comment: '工单类型' })
+  type: number;
+
+  @Column({ default: WorkOrderStatus.Pending, length: 40, comment: '申请状态' })
   status: string;
 
-  @Column({ length: 191, comment: '申请原因' })
+  @Column({ length: 191, nullable: true, comment: '申请原因' })
   applyReason: string;
 
-  @Column({ length: 191, comment: '审核原因' })
+  @Column({ length: 191, nullable: true, comment: '审核原因' })
   auditReason: string;
 
   @CreateDateColumn({
@@ -84,19 +89,19 @@ export class ApplyModificationEntity {
   })
   deletedDate: Date;
 
-  @ManyToOne(() => UserEntity, node => node.applyModifications, {
+  @ManyToOne(() => UserEntity, node => node.applyWorkOrders, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'apply_user_id' })
   applyUser: UserEntity;
 
-  @ManyToOne(() => UserEntity, node => node.auditModifications, {
+  @ManyToOne(() => UserEntity, node => node.auditWorkOrders, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'audit_user_id' })
   auditUser: UserEntity;
 
-  @ManyToOne(() => EmployeeEntity, node => node.applyModifications, {
+  @ManyToOne(() => EmployeeEntity, node => node.workOrders, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'employee_id' })

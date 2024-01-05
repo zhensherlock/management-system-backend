@@ -20,7 +20,7 @@ import { UserRoleMappingEntity } from './user_role_mapping.entity';
 import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
 import { TenantEntity } from './tenant.entity';
 import { CompanyUserMappingEntity } from './company_user_mapping.entity';
-import { ApplyModificationEntity } from './apply_modification.entity';
+import { WorkOrderEntity } from './work_order.entity';
 
 @Entity({
   name: 'user',
@@ -125,15 +125,15 @@ export class UserEntity {
   })
   companyUserMappings: CompanyUserMappingEntity[];
 
-  @OneToMany(() => ApplyModificationEntity, node => node.applyUser, {
+  @OneToMany(() => WorkOrderEntity, node => node.applyUser, {
     cascade: true,
   })
-  applyModifications: ApplyModificationEntity[];
+  applyWorkOrders: WorkOrderEntity[];
 
-  @OneToMany(() => ApplyModificationEntity, node => node.auditUser, {
+  @OneToMany(() => WorkOrderEntity, node => node.auditUser, {
     cascade: true,
   })
-  auditModifications: ApplyModificationEntity[];
+  auditWorkOrders: WorkOrderEntity[];
 
   @BeforeInsert()
   generateId() {
