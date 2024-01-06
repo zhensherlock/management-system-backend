@@ -50,7 +50,7 @@ export class ProfileController extends BaseController {
     const currentUser = this.ctx.currentUser;
     const { list } = await this.moduleService.getModuleTreeList(
       null,
-      currentUser.roles.map((role: any) => role.id)
+      this.ctx.isAdmin ? null : currentUser.roles.map((role: any) => role.id)
     );
     return recursiveMap(list, module => ({
       name: module.code,

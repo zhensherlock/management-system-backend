@@ -6,7 +6,6 @@ import {
   Post,
   Body,
   Param,
-  Del,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import {
@@ -31,6 +30,8 @@ import { WorkOrderEntity } from '../../../entity/work_order.entity';
 import { WorkOrderStatus } from '../../../constant/work_order.constant';
 import { EmployeeService } from '../../../service/employee.service';
 import { WorkOrderContentType } from '../../../types';
+import { hasRole } from '../../../util/permission';
+import type { FindOptionsWhere } from 'typeorm';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -48,16 +49,21 @@ export class WorkOrderController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security', 'education'])
-  @Get('/list', { summary: '用户-查询考核类型列表' })
+  @Role(['security', 'education'])
+  @Get('/list', { summary: '用户-查询工单列表' })
   @ApiQuery({})
   async getWorkOrderList(@Query() query: GetWorkOrderListDTO) {
+    const user = this.ctx.currentUser;
+    const where: FindOptionsWhere<WorkOrderEntity> = {};
+    if (hasRole(user.roles, 'security')) {
+      where.applyUserId = user.id;
+    }
     const [list, count, currentPage, pageSize] =
       await this.workOrderService.getPaginatedList(
         query.currentPage,
         query.pageSize,
         {
-          where: {},
+          where,
           order: {
             updatedDate: 'DESC',
           },
@@ -120,7 +126,7 @@ export class WorkOrderController extends BaseUserController {
   }
 
   @Role(['security'])
-  @Del('/:id', { summary: '保安公司用户-取消工单' })
+  @Post('/cancel/:id', { summary: '保安公司用户-取消工单' })
   @ApiParam({ name: 'id', description: '编号' })
   async cancelWorkOrder(@Param('id') id: string) {
     const user = this.ctx.currentUser;
