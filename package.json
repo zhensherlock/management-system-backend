@@ -23,7 +23,7 @@
     "@midwayjs/upload": "^3.13.9",
     "@midwayjs/validate": "^3.13.9",
     "@opentelemetry/api": "^1.7.0",
-    "@opentelemetry/auto-instrumentations-node": "^0.40.2",
+    "@opentelemetry/auto-instrumentations-node": "^0.40.3",
     "@opentelemetry/exporter-jaeger": "^1.19.0",
     "@opentelemetry/sdk-node": "^0.45.1",
     "@opentelemetry/semantic-conventions": "^1.19.0",
