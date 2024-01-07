@@ -44,7 +44,7 @@ export class AssessmentController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['school', 'security', 'education'])
+  @Role(['admin', 'education'])
   @Get('/list', { summary: '用户-查询考核类型列表' })
   @ApiQuery({})
   async getAssessmentList(@Query() query: GetAssessmentListDTO) {
@@ -71,7 +71,7 @@ export class AssessmentController extends BaseUserController {
     };
   }
 
-  @Role(['admin', 'school', 'security', 'education'])
+  @Role(['admin', 'education'])
   @Get('/tree', { summary: '用户-查询考核树形列表' })
   @ApiQuery({})
   async getAssessmentTreeList(@Query() query: GetAssessmentListDTO) {
@@ -85,11 +85,11 @@ export class AssessmentController extends BaseUserController {
   @Post('/create', { summary: '用户-新建考核类型' })
   @ApiBody({ description: '考核类型信息' })
   async createAssessment(@Body() dto: CreateAssessmentDTO) {
-    if (await this.assessmentService.checkTitleExisted(dto.title)) {
-      throw new CommonError('title.exist.message', {
-        group: 'assessment',
-      });
-    }
+    // if (await this.assessmentService.checkTitleExisted(dto.title)) {
+    //   throw new CommonError('title.exist.message', {
+    //     group: 'assessment',
+    //   });
+    // }
     const assessment = <AssessmentEntity>dto;
     assessment.enabled = true;
     if (dto.parentId) {
@@ -129,11 +129,11 @@ export class AssessmentController extends BaseUserController {
     if (!mdl) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    if (await this.assessmentService.checkTitleExisted(dto.title, id)) {
-      throw new CommonError('title.exist.message', {
-        group: 'assessment',
-      });
-    }
+    // if (await this.assessmentService.checkTitleExisted(dto.title, id)) {
+    //   throw new CommonError('title.exist.message', {
+    //     group: 'assessment',
+    //   });
+    // }
     if (dto.parentId) {
       const parentAssessment = await this.assessmentService.getOneObject({
         where: {
