@@ -171,6 +171,17 @@ export class ModuleDTO {
   )
   enabled: boolean;
 
+  @ApiProperty({ example: {}, description: '模块路由元信息' })
+  @Rule(
+    RuleType.object().error(
+      handleParameterError({
+        message: 'meta.base.message',
+        options: { group: 'module' },
+      })
+    )
+  )
+  meta: object;
+
   @ApiProperty({ example: {}, description: '模块扩展配置信息' })
   @Rule(
     RuleType.object().error(

@@ -52,6 +52,9 @@ export class ModuleEntity {
   @Column({ default: true, comment: '模块是否可用' })
   enabled: boolean;
 
+  @Column({ type: 'json', nullable: true, comment: '模块路由元信息' })
+  meta: object;
+
   @Column({ type: 'json', nullable: true, comment: '扩展配置信息' })
   options: object;
 
