@@ -96,9 +96,9 @@ export class ModuleController extends BaseAdminController {
   @Post('/create', { summary: '管理员-新建模块' })
   @ApiBody({ description: '模块信息' })
   async createModule(@Body() dto: CreateModuleDTO) {
-    if (await this.moduleService.checkNameExisted(dto.name)) {
-      throw new CommonError('name.exist.message', { group: 'module' });
-    }
+    // if (await this.moduleService.checkNameExisted(dto.name)) {
+    //   throw new CommonError('name.exist.message', { group: 'module' });
+    // }
     const module = <ModuleEntity>dto;
     module.level = 1;
     if (!isEmpty(dto.parentId)) {
@@ -126,9 +126,9 @@ export class ModuleController extends BaseAdminController {
     if (!currentEntity) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    if (await this.moduleService.checkNameExisted(dto.name, id)) {
-      throw new CommonError('name.exist.message', { group: 'module' });
-    }
+    // if (await this.moduleService.checkNameExisted(dto.name, id)) {
+    //   throw new CommonError('name.exist.message', { group: 'module' });
+    // }
     if (!isEmpty(dto.parentId)) {
       const parentEntity = await this.moduleService.getOneObject({
         where: {
