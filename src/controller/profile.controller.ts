@@ -63,7 +63,7 @@ export class ProfileController extends BaseController {
         icon: module.icon,
       },
       ...(module?.children?.length > 0 && {
-        redirect: module.children[0].url,
+        redirect: `${module.url}/${module.children[0].url}`,
       }),
       operations: module.operations.map(operation => ({
         id: operation.id,
