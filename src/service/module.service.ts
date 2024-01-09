@@ -3,7 +3,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { ModuleEntity } from '../entity/module.entity';
 import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
-import { isEmpty, isNil, minBy, intersectionWith } from 'lodash';
+import { isEmpty, isNil, minBy, intersectionWith, orderBy } from 'lodash';
 import { ModuleRoleMappingService } from './module_role_mapping.service';
 import { ModuleRoleMappingEntity } from '../entity/module_role_mapping.entity';
 
@@ -73,6 +73,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
           );
         }
       }
+      module.operations = orderBy(module.operations, ['createdDate'], ['asc']);
       return (
         hasPermission &&
         (isEmpty(keyword) ? true : module.name.includes(keyword))

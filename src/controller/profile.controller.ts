@@ -61,15 +61,16 @@ export class ProfileController extends BaseController {
           zh_CN: module.name,
         },
         icon: module.icon,
+        operations: module.operations.map(operation => ({
+          id: operation.id,
+          code: operation.code,
+          name: operation.name,
+        })),
+        ...module.meta,
       },
       ...(module?.children?.length > 0 && {
         redirect: `${module.url}/${module.children[0].url}`,
       }),
-      operations: module.operations.map(operation => ({
-        id: operation.id,
-        code: operation.code,
-        name: operation.name,
-      })),
     }));
   }
 

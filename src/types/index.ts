@@ -6,7 +6,7 @@ export interface PermissionType {
 export interface WorkOrderContentType {
   type: number;
   employee?: {
-    id: string;
+    id?: string;
     details: {
       path: string;
       originalValue: any;
