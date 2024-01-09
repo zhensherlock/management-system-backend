@@ -39,6 +39,33 @@ export class AssessmentTaskEntity {
   @Column({ type: 'json', nullable: true, comment: '考核项目' })
   content: object;
 
+  @Column({
+    name: 'start_date',
+    type: 'timestamp',
+    comment: '开始时间',
+    transformer: createDateTransformer,
+  })
+  startDate: Date;
+
+  @Column({
+    name: 'end_date',
+    type: 'timestamp',
+    comment: '结束时间',
+    transformer: createDateTransformer,
+  })
+  endDate: Date;
+
+  @Column({ name: 'basic_score', comment: '考核基础分' })
+  basicScore: number;
+
+  @Column({
+    name: 'grade_setting',
+    type: 'json',
+    nullable: true,
+    comment: '分数等级配置',
+  })
+  gradeSetting: object;
+
   @Column({ length: 191, nullable: true, comment: '考核任务简介' })
   description: string;
 

@@ -71,6 +71,9 @@ export class AssessmentTaskDetailEntity {
   @Column({ type: 'json', nullable: true, comment: '评分内容' })
   score_content: object;
 
+  @Column({ name: 'score', comment: '总评分' })
+  score: number;
+
   @CreateDateColumn({
     name: 'created_date',
     type: 'timestamp',
