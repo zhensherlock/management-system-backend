@@ -49,7 +49,7 @@ export class WorkOrderController extends BaseUserController {
   @Inject()
   i18nService: MidwayI18nService;
 
-  @Role(['security', 'education'])
+  @Role(['admin', 'security', 'education'])
   @Get('/list', { summary: '用户-查询工单列表' })
   @ApiQuery({})
   async getWorkOrderList(@Query() query: GetWorkOrderListDTO) {
