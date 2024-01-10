@@ -36,6 +36,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
         enabled: true,
       },
       order: {
+        level: 'ASC',
         sequence: 'ASC',
       },
       relations: ['operations'],
