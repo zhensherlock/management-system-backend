@@ -1,7 +1,7 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { OrganizationEntity } from '../entity/organization.entity';
-import { In, IsNull, Not, Repository } from 'typeorm';
+import { In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isArray, isEmpty, isNumber, minBy } from 'lodash';
 import ExcelJS from 'exceljs';
@@ -43,11 +43,11 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       .getMany();
   }
 
-  async getTreeList(type = null, keyword: string) {
+  async getTreeList(type = null, keyword: string, minLevel?: number) {
     const where = {
       ...(isArray(type) && { type: In(type) }),
       ...(isNumber(type) && { type }),
-      // ...(isEmpty(keyword) ? {} : { name: Like(`%${keyword}%`) }),
+      ...(isNumber(minLevel) && { level: MoreThanOrEqual(minLevel) }),
     };
     const allOrganizations = await this.getList({
       where,
