@@ -8,6 +8,7 @@ import { UserService } from '../service/user.service';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { RoleService } from '../service/role.service';
 import { OrganizationService } from '../service/organization.service';
+import { OrganizationType } from '../constant';
 
 @Middleware()
 export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
@@ -66,6 +67,13 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
               tel: admin.tel || '',
               realName: admin.realName,
             };
+            ctx.currentRoles = [
+              {
+                id: 'admin',
+                code: 'admin',
+                name: 'admin',
+              },
+            ];
           }
         } else {
           const user = await userService.getFullObjectById(userId);
@@ -73,6 +81,7 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
           const organizations =
             await organizationService.getOrganizationListByUserId(userId);
           if (user) {
+            // 当前用户
             ctx.currentUser = {
               id: user.id,
               salt: user.salt,
@@ -88,6 +97,17 @@ export class SecurityMiddleware implements IMiddleware<Context, NextFunction> {
               roles,
               organizations,
             };
+            // 当前用户所有角色
+            ctx.currentRoles = roles;
+            // 当前用户所属组织
+            organizations.forEach(item => {
+              if (item.type === OrganizationType.School) {
+                ctx.schoolOrganization = item;
+              }
+              if (item.type === OrganizationType.Company) {
+                ctx.securityCompanyOrganization = item;
+              }
+            });
           }
         }
         return next();

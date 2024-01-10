@@ -47,10 +47,10 @@ export class ProfileController extends BaseController {
   @Role(['admin', 'school', 'security', 'education'])
   @Get('/getMenuList', { summary: '用户-获取基本信息' })
   async getEnabledModuleList() {
-    const currentUser = this.ctx.currentUser;
+    const { currentRoles } = this.ctx;
     const { list } = await this.moduleService.getModuleTreeList(
       null,
-      this.ctx.isAdmin ? null : currentUser.roles.map((role: any) => role.id)
+      this.ctx.isAdmin ? null : currentRoles.map((role: any) => role.id)
     );
     return recursiveMap(list, module => ({
       name: module.code,

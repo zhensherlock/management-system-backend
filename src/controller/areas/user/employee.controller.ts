@@ -34,6 +34,7 @@ import { CommonError } from '../../../error';
 import { Role } from '../../../decorator/role.decorator';
 import { CompanyService } from '../../../service/company.service';
 import { OrganizationType } from '../../../constant';
+import { hasRole } from '../../../util/permission';
 
 @ApiTags(['employee'])
 @Controller('/api/user/employee')
@@ -72,6 +73,7 @@ export class EmployeeController extends BaseUserController {
   @Get('/list', { summary: '用户-查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
+    const { securityCompanyOrganization, currentRoles } = this.ctx;
     const companyOrganizationWhere: any = {
       ...(isEmpty(query.keyword) ? {} : { name: Like(`%${query.keyword}%`) }),
     };
@@ -87,6 +89,10 @@ export class EmployeeController extends BaseUserController {
         query.organizationIds
       );
       schoolOrganizationWhere.schoolOrganizationId = In(query.organizationIds);
+    }
+    if (hasRole(currentRoles, 'security')) {
+      companyOrganizationWhere.companyOrganizationId =
+        securityCompanyOrganization.id;
     }
     const [list, count, currentPage, pageSize] =
       await this.employeeService.getPaginatedList(
