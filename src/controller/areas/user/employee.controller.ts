@@ -27,7 +27,7 @@ import {
   ApiTags,
   BodyContentType,
 } from '@midwayjs/swagger';
-import { isArray, isEmpty, isString, omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import { OrganizationService } from '../../../service/organization.service';
 import { BaseUserController } from './base/base.user.controller';
 import { CommonError } from '../../../error';
@@ -69,29 +69,41 @@ export class EmployeeController extends BaseUserController {
     return mdl;
   }
 
-  @Role(['admin', 'school', 'security', 'education'])
+  @Role(['admin', 'security', 'education'])
   @Get('/list', { summary: '用户-查询员工列表' })
   @ApiQuery({})
   async getEmployeeList(@Query() query: GetEmployeeListDTO) {
     const { securityCompanyOrganization, currentRoles } = this.ctx;
-    const companyOrganizationWhere: any = {
+    // 获取关联的机构编号
+    const ids = await this.organizationService.getAssociatedIdsByParentIds(
+      query.organizationIds
+    );
+    let companyOrganizationWhere: any = {
       ...(isEmpty(query.keyword) ? {} : { name: Like(`%${query.keyword}%`) }),
+      ...(ids.length > 0 && {
+        companyOrganizationId: In(ids),
+      }),
     };
     const schoolOrganizationWhere: any = {
       ...(isEmpty(query.keyword) ? {} : { name: Like(`%${query.keyword}%`) }),
+      ...(ids.length > 0 && {
+        schoolOrganizationId: In(ids),
+      }),
     };
-    if (isString(query.organizationIds)) {
-      companyOrganizationWhere.companyOrganizationId = query.organizationIds;
-      schoolOrganizationWhere.schoolOrganizationId = query.organizationIds;
-    }
-    if (isArray(query.organizationIds)) {
-      companyOrganizationWhere.companyOrganizationId = In(
-        query.organizationIds
-      );
-      schoolOrganizationWhere.schoolOrganizationId = In(query.organizationIds);
-    }
+    // if (isString(query.organizationIds)) {
+    //   companyOrganizationWhere.companyOrganizationId = query.organizationIds;
+    //   schoolOrganizationWhere.schoolOrganizationId = query.organizationIds;
+    // }
+    // if (isArray(query.organizationIds)) {
+    //   companyOrganizationWhere.companyOrganizationId = In(
+    //     query.organizationIds
+    //   );
+    //   schoolOrganizationWhere.schoolOrganizationId = In(query.organizationIds);
+    // }
+    // 保安公司只能看到自己公司的员工
     if (hasRole(currentRoles, 'security')) {
-      companyOrganizationWhere.companyOrganizationId =
+      companyOrganizationWhere = null;
+      schoolOrganizationWhere.companyOrganizationId =
         securityCompanyOrganization.id;
     }
     const [list, count, currentPage, pageSize] =

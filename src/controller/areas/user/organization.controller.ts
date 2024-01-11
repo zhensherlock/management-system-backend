@@ -25,7 +25,7 @@ export class OrganizationController extends BaseUserController {
   @ApiQuery({})
   async getOrganizationTreeList(@Query() query: GetOrganizationListDTO) {
     const { list, count } = await this.organizationService.getTreeList(
-      null,
+      query.type,
       query.keyword,
       query.minLevel
     );

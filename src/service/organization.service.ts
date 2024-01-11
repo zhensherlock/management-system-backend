@@ -222,4 +222,39 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     });
     return organizations;
   }
+
+  /**
+   * 根据父级ID获取所有子级ID，返回结果包含父级ID
+   * @param id
+   */
+  async getAssociatedIdsByParentIds(id: string[] | string) {
+    if (isEmpty(id)) {
+      return [];
+    }
+    const parentIds = isArray(id) ? [...id] : [id];
+    let result = [...parentIds];
+    for (const id of parentIds) {
+      result.push(id);
+      result = result.concat(await this.getSubIdsByParentId(id, result));
+    }
+    return result;
+  }
+
+  /**
+   * 根据父级ID获取所有子级ID
+   * @param parentId
+   * @param result
+   */
+  async getSubIdsByParentId(parentId: string, result: string[] = []) {
+    const subOrganizations = await this.getList({
+      where: {
+        parentId,
+      },
+    });
+    subOrganizations.forEach(item => {
+      result.push(item.id);
+      this.getSubIdsByParentId(item.id, result);
+    });
+    return result;
+  }
 }
