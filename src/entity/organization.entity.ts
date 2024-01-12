@@ -20,6 +20,7 @@ import { DeviceEntity } from './device.entity';
 import { OrganizationUserMappingEntity } from './organization_user_mapping.entity';
 import { EmployeeEntity } from './employee.entity';
 import { AssessmentTaskDetailEntity } from './assessment_task_detail.entity';
+import { WorkOrderEntity } from './work_order.entity';
 
 @Entity({
   name: 'organization',
@@ -144,6 +145,16 @@ export class OrganizationEntity {
     node => node.receiveSchoolOrganization
   )
   receiveAssessmentDetails: AssessmentTaskDetailEntity[];
+
+  @OneToMany(() => WorkOrderEntity, node => node.applyOrganization, {
+    cascade: true,
+  })
+  applyWorkOrders: WorkOrderEntity[];
+
+  @OneToMany(() => WorkOrderEntity, node => node.auditOrganization, {
+    cascade: true,
+  })
+  auditWorkOrders: WorkOrderEntity[];
 
   @BeforeInsert()
   generateId() {

@@ -1,9 +1,10 @@
 export enum WorkOrderType {
   ModifyEmployee = 1,
+  AddEmployee = 2,
 }
 
 export enum WorkOrderStatus {
   Pending = 'pending',
-  Completed = 'completed',
-  Rejected = 'rejected',
+  Completed = 'operated-completed',
+  Rejected = 'operated-rejected',
 }

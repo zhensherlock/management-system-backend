@@ -17,6 +17,7 @@ import {
 import { UserEntity } from './user.entity';
 import { EmployeeEntity } from './employee.entity';
 import { WorkOrderStatus } from '../constant/work_order.constant';
+import { OrganizationEntity } from './organization.entity';
 
 @Entity({
   name: 'work_order',
@@ -33,12 +34,27 @@ export class WorkOrderEntity {
   applyUserId: string;
 
   @Column({
+    name: 'apply_organization_id',
+    length: 36,
+    comment: '申请用户组织编号',
+  })
+  applyOrganizationId: string;
+
+  @Column({
     name: 'audit_user_id',
     length: 36,
     nullable: true,
     comment: '审核用户编号',
   })
   auditUserId: string;
+
+  @Column({
+    name: 'audit_organization_id',
+    length: 36,
+    nullable: true,
+    comment: '审核用户组织编号',
+  })
+  auditOrganizationId: string;
 
   @Column({
     name: 'employee_id',
@@ -95,11 +111,23 @@ export class WorkOrderEntity {
   @JoinColumn({ name: 'apply_user_id' })
   applyUser: UserEntity;
 
+  @ManyToOne(() => OrganizationEntity, node => node.applyWorkOrders, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'apply_organization_id' })
+  applyOrganization: OrganizationEntity;
+
   @ManyToOne(() => UserEntity, node => node.auditWorkOrders, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'audit_user_id' })
   auditUser: UserEntity;
+
+  @ManyToOne(() => OrganizationEntity, node => node.auditWorkOrders, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'audit_organization_id' })
+  auditOrganization: OrganizationEntity;
 
   @ManyToOne(() => EmployeeEntity, node => node.workOrders, {
     onDelete: 'CASCADE',

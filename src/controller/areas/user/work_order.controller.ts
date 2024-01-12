@@ -24,14 +24,19 @@ import {
   CreateWorkOrderDTO,
   GetWorkOrderListDTO,
 } from '../../../dto/areas/user/work_order.dto';
-import { omit } from 'lodash';
+import { isEmpty, omit } from 'lodash';
 import { CommonError } from '../../../error';
 import { WorkOrderEntity } from '../../../entity/work_order.entity';
-import { WorkOrderStatus } from '../../../constant/work_order.constant';
+import { WorkOrderStatus } from '../../../constant';
 import { EmployeeService } from '../../../service/employee.service';
 import { WorkOrderContentType } from '../../../types';
 import { hasRole } from '../../../util/permission';
-import type { FindOptionsWhere } from 'typeorm';
+import {
+  Between,
+  FindOptionsWhere,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+} from 'typeorm';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -53,10 +58,28 @@ export class WorkOrderController extends BaseUserController {
   @Get('/list', { summary: '用户-查询工单列表' })
   @ApiQuery({})
   async getWorkOrderList(@Query() query: GetWorkOrderListDTO) {
-    const user = this.ctx.currentUser;
+    const { currentUser, currentRoles } = this.ctx;
     const where: FindOptionsWhere<WorkOrderEntity> = {};
-    if (hasRole(user.roles, 'security')) {
-      where.applyUserId = user.id;
+    if (!isEmpty(query.status)) {
+      where.status = query.status;
+    }
+    if (
+      !isEmpty(query.searchApplyStartTime) &&
+      !isEmpty(query.searchApplyEndTime)
+    ) {
+      where.createdDate = Between(
+        query.searchApplyStartTime,
+        query.searchApplyEndTime
+      );
+    }
+    if (!isEmpty(query.searchApplyStartTime)) {
+      where.createdDate = MoreThanOrEqual(query.searchApplyStartTime);
+    }
+    if (!isEmpty(query.searchApplyEndTime)) {
+      where.createdDate = LessThanOrEqual(query.searchApplyEndTime);
+    }
+    if (hasRole(currentRoles, 'security')) {
+      where.applyUserId = currentUser.id;
     }
     const [list, count, currentPage, pageSize] =
       await this.workOrderService.getPaginatedList(
@@ -67,10 +90,29 @@ export class WorkOrderController extends BaseUserController {
           order: {
             updatedDate: 'DESC',
           },
+          relations: [
+            'applyUser',
+            'applyOrganization',
+            'auditOrganization',
+            'employee',
+          ],
         }
       );
     return {
-      list,
+      list: list.map(item => ({
+        ...omit(item, [
+          'updatedDate',
+          'applyUser',
+          'applyOrganization',
+          'auditOrganization',
+          'employee',
+        ]),
+        apply: {
+          name: item.applyUser.name,
+          realName: item.applyUser.realName,
+          organization: item.applyOrganization.name,
+        },
+      })),
       count,
       currentPage,
       pageSize,
@@ -84,6 +126,7 @@ export class WorkOrderController extends BaseUserController {
     const user = this.ctx.currentUser;
     const workOrder = <WorkOrderEntity>dto;
     workOrder.applyUserId = user.id;
+    workOrder.applyOrganizationId = user.organizations[0]?.id;
     workOrder.status = WorkOrderStatus.Pending;
     const mdl = await this.workOrderService.createObject(workOrder);
     return omit(mdl, ['deletedDate']);
@@ -112,12 +155,13 @@ export class WorkOrderController extends BaseUserController {
     }
 
     mdl.auditUserId = this.ctx.currentUser.id;
+    mdl.auditOrganizationId = this.ctx.currentUser.organizations[0]?.id;
 
     Object.assign(mdl, dto);
 
     if (dto.status === WorkOrderStatus.Completed) {
       await this.employeeService.updateEmployeeByWorkOrder(
-        dto.employeeId,
+        mdl.employeeId,
         <WorkOrderContentType>mdl.content
       );
     }
