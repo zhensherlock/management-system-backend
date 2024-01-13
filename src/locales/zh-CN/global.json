@@ -28,6 +28,7 @@
   "download-template": "下载模板",
   "upload.drag.tip": "将文件拖到此处，或点击上传！",
   "error.msg": "操作失败：{msg}！",
+  "success.msg": "操作成功！",
   "state.enable": "正常",
   "state.disable": "禁用",
   "export-list": "导出列表",

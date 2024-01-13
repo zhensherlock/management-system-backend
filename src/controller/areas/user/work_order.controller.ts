@@ -24,7 +24,7 @@ import {
   CreateWorkOrderDTO,
   GetWorkOrderListDTO,
 } from '../../../dto/areas/user/work_order.dto';
-import { isEmpty, omit } from 'lodash';
+import { isDate, isEmpty, omit } from 'lodash';
 import { CommonError } from '../../../error';
 import { WorkOrderEntity } from '../../../entity/work_order.entity';
 import { WorkOrderStatus } from '../../../constant';
@@ -35,8 +35,10 @@ import {
   Between,
   FindOptionsWhere,
   LessThanOrEqual,
+  Like,
   MoreThanOrEqual,
 } from 'typeorm';
+import { getEndOfTime, getStartOfTime } from '../../../util';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -61,22 +63,24 @@ export class WorkOrderController extends BaseUserController {
     const { currentUser, currentRoles } = this.ctx;
     const where: FindOptionsWhere<WorkOrderEntity> = {};
     if (!isEmpty(query.status)) {
-      where.status = query.status;
+      where.status = Like(`${query.status}%`);
     }
     if (
-      !isEmpty(query.searchApplyStartTime) &&
-      !isEmpty(query.searchApplyEndTime)
+      isDate(query.searchApplyStartTime) &&
+      isDate(query.searchApplyEndTime)
     ) {
       where.createdDate = Between(
-        query.searchApplyStartTime,
-        query.searchApplyEndTime
+        getStartOfTime(query.searchApplyStartTime),
+        getEndOfTime(query.searchApplyEndTime)
       );
-    }
-    if (!isEmpty(query.searchApplyStartTime)) {
-      where.createdDate = MoreThanOrEqual(query.searchApplyStartTime);
-    }
-    if (!isEmpty(query.searchApplyEndTime)) {
-      where.createdDate = LessThanOrEqual(query.searchApplyEndTime);
+    } else if (isDate(query.searchApplyStartTime)) {
+      where.createdDate = MoreThanOrEqual(
+        getStartOfTime(query.searchApplyStartTime)
+      );
+    } else if (isDate(query.searchApplyEndTime)) {
+      where.createdDate = LessThanOrEqual(
+        getEndOfTime(query.searchApplyEndTime)
+      );
     }
     if (hasRole(currentRoles, 'security')) {
       where.applyUserId = currentUser.id;
@@ -88,7 +92,7 @@ export class WorkOrderController extends BaseUserController {
         {
           where,
           order: {
-            updatedDate: 'DESC',
+            createdDate: 'DESC',
           },
           relations: [
             'applyUser',
@@ -166,33 +170,36 @@ export class WorkOrderController extends BaseUserController {
       );
     }
 
-    return omit(await this.workOrderService.updateObject(mdl), ['deletedDate']);
+    await this.workOrderService.updateObject(mdl);
+
+    return this.i18nService.translate('success.msg', { group: 'global' });
   }
 
   @Role(['security'])
-  @Post('/cancel/:id', { summary: '保安公司用户-取消工单' })
+  @Post('/cancel/:id', { summary: '保安公司用户-作废工单' })
   @ApiParam({ name: 'id', description: '编号' })
   async cancelWorkOrder(@Param('id') id: string) {
     const user = this.ctx.currentUser;
-    const workOrder = await this.workOrderService.getOneObject({
+    const mdl = await this.workOrderService.getOneObject({
       where: {
         id,
         applyUserId: user.id,
       },
     });
-    if (!workOrder) {
+    if (!mdl) {
       throw new CommonError('not.exist', { group: 'global' });
     }
 
-    if (workOrder.status !== WorkOrderStatus.Pending) {
+    if (mdl.status !== WorkOrderStatus.Pending) {
       throw new CommonError('cannot.be.cancelled', {
         group: 'work_order',
       });
     }
-    const result = await this.workOrderService.deleteObject(id);
-    if (!result.affected) {
-      throw new CommonError('delete.failure', { group: 'global' });
-    }
-    return this.i18nService.translate('delete.success', { group: 'global' });
+
+    mdl.status = WorkOrderStatus.Cancellation;
+
+    await this.workOrderService.updateObject(mdl);
+
+    return this.i18nService.translate('success.msg', { group: 'global' });
   }
 }

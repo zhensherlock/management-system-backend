@@ -1,5 +1,5 @@
 import ms from 'ms';
-import dayjs from 'dayjs';
+import dayjs, { OpUnitType } from 'dayjs';
 import { isNil, isDate } from 'lodash';
 
 export const formatToMS = value => {
@@ -34,4 +34,12 @@ export const updatedDateTransformer = {
   to: () => {
     return new Date();
   },
+};
+
+export const getEndOfTime = (date: Date, unit: OpUnitType = 'day') => {
+  return dayjs(date).endOf(unit).toDate();
+};
+
+export const getStartOfTime = (date: Date, unit: OpUnitType = 'day') => {
+  return dayjs(date).startOf(unit).toDate();
 };

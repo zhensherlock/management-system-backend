@@ -9,6 +9,7 @@ export interface WorkOrderContentType {
     id?: string;
     details: {
       path: string;
+      label: string;
       originalValue: any;
       newValue: any;
     }[];
