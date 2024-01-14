@@ -4,12 +4,12 @@ import { EmployeeEntity } from '../entity/employee.entity';
 import { Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import ExcelJS from 'exceljs';
-import { EmployeeSex, EmployeeStatus } from '../constant';
+import { EmployeeSex, EmployeeStatus, WorkOrderType } from '../constant';
 import { OrganizationService } from './organization.service';
 import dayjs from 'dayjs';
 import { WorkOrderContentType } from '../types';
-import { WorkOrderType } from '../constant/work_order.constant';
 import _ from 'lodash';
+import { WorkOrderEntity } from '../entity/work_order.entity';
 
 @Provide()
 export class EmployeeService extends BaseService<EmployeeEntity> {
@@ -107,13 +107,39 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
     }
   }
 
-  async updateEmployeeByWorkOrder(
-    id: string,
-    workOrderContent: WorkOrderContentType
-  ) {
-    if (workOrderContent.type !== WorkOrderType.ModifyEmployee) {
-      return false;
+  async addOrUpdateEmployeeByWorkOrder(workOrder: WorkOrderEntity) {
+    const workOrderContent = workOrder.content as WorkOrderContentType;
+    if (workOrderContent.type === WorkOrderType.AddEmployee) {
+      return await this.addEmployeeByWorkOrder(
+        workOrderContent,
+        workOrder.applyOrganizationId
+      );
     }
+    if (workOrderContent.type === WorkOrderType.ModifyEmployee) {
+      return await this.updateEmployeeByWorkOrder(
+        workOrderContent,
+        workOrder.id
+      );
+    }
+  }
+
+  async addEmployeeByWorkOrder(
+    workOrderContent: WorkOrderContentType,
+    applyOrganizationId: string
+  ) {
+    const employee = new EmployeeEntity();
+    employee.companyOrganizationId = applyOrganizationId;
+    workOrderContent.employee.details.forEach(item => {
+      _.set(employee, item.path, item.newValue);
+    });
+    await this.createObject(employee);
+    return true;
+  }
+
+  async updateEmployeeByWorkOrder(
+    workOrderContent: WorkOrderContentType,
+    id: string
+  ) {
     const employee = await this.getObjectById(id);
     if (!employee) {
       return false;

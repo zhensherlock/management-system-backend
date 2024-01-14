@@ -29,7 +29,6 @@ import { CommonError } from '../../../error';
 import { WorkOrderEntity } from '../../../entity/work_order.entity';
 import { WorkOrderStatus } from '../../../constant';
 import { EmployeeService } from '../../../service/employee.service';
-import { WorkOrderContentType } from '../../../types';
 import { hasRole } from '../../../util/permission';
 import {
   Between,
@@ -164,10 +163,7 @@ export class WorkOrderController extends BaseUserController {
     Object.assign(mdl, dto);
 
     if (dto.status === WorkOrderStatus.Completed) {
-      await this.employeeService.updateEmployeeByWorkOrder(
-        mdl.employeeId,
-        <WorkOrderContentType>mdl.content
-      );
+      await this.employeeService.addOrUpdateEmployeeByWorkOrder(mdl);
     }
 
     await this.workOrderService.updateObject(mdl);
