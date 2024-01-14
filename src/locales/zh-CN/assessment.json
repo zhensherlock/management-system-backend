@@ -1,5 +1,5 @@
 {
-  "assessment_category": "考核",
+  "assessment": "考核",
   "title.placeholder": "请输入考核标题",
   "title.search.placeholder": "请输入考核标题",
   "title.required.message": "请输入考核标题",

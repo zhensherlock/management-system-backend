@@ -14,7 +14,7 @@ export class AssessmentService extends BaseService<AssessmentEntity> {
     super();
   }
 
-  async getTreeList(keyword: string) {
+  async getTreeList(keyword = '') {
     const allAssessments = await this.getList({
       order: {
         sequence: 'ASC',

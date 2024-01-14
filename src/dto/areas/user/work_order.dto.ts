@@ -32,7 +32,7 @@ export class WorkOrderDTO {
   )
   type: number;
 
-  @ApiProperty({ example: '', description: '需要修改的内容' })
+  @ApiProperty({ example: {}, description: '需要修改的内容' })
   @Rule(
     RuleType.object().error(
       handleParameterError({

@@ -17,7 +17,7 @@ import {
 import { UserEntity } from './user.entity';
 import { AssessmentTaskEntity } from './assessment_task.entity';
 import { OrganizationEntity } from './organization.entity';
-import { AssessmentTaskDetailStatus } from '../constant/assessment_task';
+import { AssessmentTaskDetailStatus } from '../constant/assessment_task.constant';
 
 @Entity({
   name: 'assessment_task_detail',
@@ -61,17 +61,27 @@ export class AssessmentTaskDetailEntity {
     name: 'submit_user_id',
     length: 36,
     nullable: true,
-    comment: '发起用户编号',
+    comment: '提交用户编号',
   })
-  addUserId: string;
+  submitUserId: string;
 
-  @Column({ type: 'json', nullable: true, comment: '考核项目' })
-  assessment_content: object;
+  @Column({
+    name: 'assessment_content',
+    type: 'json',
+    nullable: true,
+    comment: '考核项目',
+  })
+  assessmentContent: object;
 
-  @Column({ type: 'json', nullable: true, comment: '评分内容' })
-  score_content: object;
+  @Column({
+    name: 'score_content',
+    type: 'json',
+    nullable: true,
+    comment: '评分内容',
+  })
+  scoreContent: object;
 
-  @Column({ name: 'score', comment: '总评分' })
+  @Column({ name: 'score', nullable: true, comment: '总评分' })
   score: number;
 
   @CreateDateColumn({

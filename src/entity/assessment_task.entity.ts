@@ -17,6 +17,7 @@ import {
 } from '../util';
 import { UserEntity } from './user.entity';
 import { AssessmentTaskDetailEntity } from './assessment_task_detail.entity';
+import { AssessmentTaskStatus } from '../constant';
 
 @Entity({
   name: 'assessment_task',
@@ -65,6 +66,13 @@ export class AssessmentTaskEntity {
     comment: '分数等级配置',
   })
   gradeSetting: object;
+
+  @Column({
+    default: AssessmentTaskStatus.Draft,
+    length: 40,
+    comment: '考核任务状态',
+  })
+  status: string;
 
   @Column({ length: 191, nullable: true, comment: '考核任务简介' })
   description: string;
