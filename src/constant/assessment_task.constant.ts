@@ -1,6 +1,7 @@
 export enum AssessmentTaskStatus {
   Draft = 'draft',
   Official = 'official',
+  Completed = 'completed',
   Cancellation = 'cancellation',
 }
 

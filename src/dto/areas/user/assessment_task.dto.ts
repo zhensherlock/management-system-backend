@@ -34,16 +34,16 @@ export class AssessmentTaskDTO {
   )
   title: string;
 
-  @ApiProperty({ example: {}, description: '考核项目' })
-  @Rule(
-    RuleType.object().error(
-      handleParameterError({
-        message: 'content.base.message',
-        options: { group: 'assessment_task' },
-      })
-    )
-  )
-  content: object;
+  // @ApiProperty({ example: {}, description: '考核项目' })
+  // @Rule(
+  //   RuleType.object().error(
+  //     handleParameterError({
+  //       message: 'content.base.message',
+  //       options: { group: 'assessment_task' },
+  //     })
+  //   )
+  // )
+  // content: object;
 
   @ApiProperty({ example: 100, description: '考核基础分' })
   @Rule(
@@ -60,7 +60,7 @@ export class AssessmentTaskDTO {
   @Rule(
     RuleType.string()
       .max(150)
-      .empty('')
+      .empty(null)
       .trim(true)
       .error(
         handleParameterErrors({
@@ -88,7 +88,7 @@ export class AssessmentTaskDTO {
   )
   gradeSetting: object;
 
-  @ApiProperty({ example: new Date(), description: '考核任务开始时间' })
+  @ApiProperty({ example: new Date(), description: '考核开始时间' })
   @Rule(
     RuleType.date().error(
       handleParameterError({
@@ -99,7 +99,7 @@ export class AssessmentTaskDTO {
   )
   startDate: Date;
 
-  @ApiProperty({ example: new Date(), description: '考核任务结束时间' })
+  @ApiProperty({ example: new Date(), description: '考核结束时间' })
   @Rule(
     RuleType.date().error(
       handleParameterError({
@@ -115,7 +115,6 @@ export class AssessmentTaskDTO {
     RuleType.string()
       .max(40)
       .valid(...Object.values(AssessmentTaskStatus))
-      .empty('')
       .trim(true)
       .error(
         handleParameterError({

@@ -203,6 +203,7 @@ export default {
         // default: require('../../locales/zh_CN'),
         admin: require('../locales/zh-CN/admin'),
         assessment: require('../locales/zh-CN/assessment'),
+        assessment_task: require('../locales/zh-CN/assessment_task'),
         device: require('../locales/zh-CN/device'),
         employee: require('../locales/zh-CN/employee'),
         global: require('../locales/zh-CN/global'),

@@ -15,3 +15,13 @@ export interface WorkOrderContentType {
     }[];
   };
 }
+
+// export interface AssessmentTaskContentType {}
+
+export interface AssessmentTaskGradeSetting {
+  list: {
+    id: string;
+    grade: string;
+    score: [number, number];
+  }[];
+}

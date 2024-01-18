@@ -88,9 +88,13 @@ export class AssessmentTaskController extends BaseUserController {
         group: 'assessment_task',
       });
     }
+    const { list } = await this.assessmentService.getTreeList();
     const { currentUser } = this.ctx;
     const entity = <AssessmentTaskEntity>dto;
     entity.creatorUserId = currentUser.id;
+    entity.content = {
+      list,
+    };
 
     const mdl = await this.assessmentTaskService.createObject(entity);
     if (mdl.status === AssessmentTaskStatus.Official) {
