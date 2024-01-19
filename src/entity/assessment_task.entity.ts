@@ -37,6 +37,9 @@ export class AssessmentTaskEntity {
   })
   creatorUserId: string;
 
+  @Column({ type: 'json', nullable: true, comment: '考核范围' })
+  scope: object;
+
   @Column({ type: 'json', nullable: true, comment: '考核项目' })
   content: object;
 

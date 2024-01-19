@@ -17,7 +17,7 @@ import {
 import { UserEntity } from './user.entity';
 import { AssessmentTaskEntity } from './assessment_task.entity';
 import { OrganizationEntity } from './organization.entity';
-import { AssessmentTaskDetailStatus } from '../constant/assessment_task.constant';
+import { AssessmentTaskDetailStatus } from '../constant';
 
 @Entity({
   name: 'assessment_task_detail',

@@ -24,17 +24,14 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
   }
 
   async publicTask(task: AssessmentTaskEntity) {
-    const schoolList = await this.organizationService.getList();
-    const assessmentTreeList = await this.assessmentService.getTreeList();
-    for (const schoolListKey in schoolList) {
+    const schoolList = await this.organizationService.getAllSchoolList();
+    for (const index in schoolList) {
       const detail = new AssessmentTaskDetailEntity();
       detail.assessmentTaskId = task.id;
       detail.creatorUserId = task.creatorUserId;
-      detail.receiveSchoolOrganizationId = schoolList[schoolListKey].id;
+      detail.receiveSchoolOrganizationId = schoolList[index].id;
       detail.status = AssessmentTaskDetailStatus.Pending;
-      detail.assessmentContent = {
-        tree: assessmentTreeList,
-      };
+      detail.assessmentContent = task.content;
       await this.entityModel.save(detail);
     }
   }

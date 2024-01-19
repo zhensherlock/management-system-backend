@@ -7,6 +7,7 @@ import {
   Body,
   Put,
   Param,
+  Del,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import {
@@ -142,5 +143,26 @@ export class AssessmentTaskController extends BaseUserController {
       'updatedDate',
       'creatorUserId',
     ]);
+  }
+
+  @Role(['education'])
+  @Del('/:id', { summary: '用户-删除考核任务' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async deleteAssessmentTask(@Param('id') id: string) {
+    if (
+      !(await this.assessmentTaskService.existObject({
+        where: {
+          id,
+          status: AssessmentTaskStatus.Draft,
+        },
+      }))
+    ) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    const result = await this.assessmentTaskService.deleteObject(id);
+    if (!result.affected) {
+      throw new CommonError('delete.failure', { group: 'global' });
+    }
+    return this.i18nService.translate('delete.success', { group: 'global' });
   }
 }

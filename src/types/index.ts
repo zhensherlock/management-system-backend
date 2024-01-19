@@ -16,7 +16,14 @@ export interface WorkOrderContentType {
   };
 }
 
-// export interface AssessmentTaskContentType {}
+export interface AssessmentTaskScopeType {
+  type: string;
+  list: string[];
+}
+
+export interface AssessmentTaskContentType {
+  list: any[];
+}
 
 export interface AssessmentTaskGradeSetting {
   list: {
