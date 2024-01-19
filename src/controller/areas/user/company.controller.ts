@@ -32,7 +32,7 @@ import { Like } from 'typeorm';
 import { CommonError } from '../../../error';
 import { OrganizationEntity } from '../../../entity/organization.entity';
 import { OrganizationService } from '../../../service/organization.service';
-import { OrganizationType } from '../../../constant';
+import { OrganizationCategory, OrganizationType } from '../../../constant';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -107,6 +107,7 @@ export class CompanyController extends BaseUserController {
     organization.enabled = true;
     organization.parentId = parentCompany.id;
     organization.level = parentCompany.level + 1;
+    organization.category = OrganizationCategory.SecurityCompany;
     const mdl = await this.organizationService.createObject(organization);
     return omit(mdl, ['deletedDate']);
   }
@@ -133,6 +134,7 @@ export class CompanyController extends BaseUserController {
     }
 
     Object.assign(mdl, dto);
+    mdl.category = OrganizationCategory.SecurityCompany;
 
     return omit(await this.organizationService.updateObject(mdl), [
       'deletedDate',

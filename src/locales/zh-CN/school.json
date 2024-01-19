@@ -23,6 +23,7 @@
   "options.base.message": "请输入正确的学校扩展配置信息",
   "sequence.base.message": "请输入正确的学校顺序",
   "parent_id.base.message": "请选择正确的父级机构",
+  "category.base.message": "请选择正确的学校类别",
   "delete.success": "学校删除成功！",
   "restore.success": "学校恢复成功！"
 }

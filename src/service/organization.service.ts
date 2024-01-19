@@ -5,7 +5,7 @@ import { In, IsNull, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import { isArray, isEmpty, isNumber, minBy } from 'lodash';
 import ExcelJS from 'exceljs';
-import { OrganizationType } from '../constant';
+import { OrganizationCategory, OrganizationType } from '../constant';
 import { OrganizationUserMappingService } from './organization_user_mapping.service';
 
 @Provide()
@@ -41,6 +41,18 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     return await query
       .leftJoinAndSelect('organization.children', 'child')
       .getMany();
+  }
+
+  async getAllSchoolList() {
+    return this.getList({
+      where: {
+        type: OrganizationType.School,
+        category: Not(OrganizationCategory.VirtualOrganization),
+      },
+      order: {
+        sequence: 'ASC',
+      },
+    });
   }
 
   async getTreeList(type = null, keyword: string, minLevel?: number) {
@@ -175,6 +187,7 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
           address: '',
           enabled: true,
           parentId: parentCompany.id,
+          category: OrganizationCategory.SecurityCompany,
         };
         row.eachCell((cell, cellNumber) => {
           switch (cellNumber) {

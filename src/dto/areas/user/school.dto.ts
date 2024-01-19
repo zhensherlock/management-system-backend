@@ -123,6 +123,17 @@ export class SchoolDTO {
     )
   )
   sequence: number;
+
+  @ApiProperty({ example: 0, description: '类型' })
+  @Rule(
+    RuleType.number().error(
+      handleParameterError({
+        message: 'category.base.message',
+        options: { group: 'school' },
+      })
+    )
+  )
+  category: number;
 }
 
 export class CreateSchoolDTO extends SchoolDTO {}
