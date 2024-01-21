@@ -93,9 +93,7 @@ export class AssessmentTaskController extends BaseUserController {
     const { currentUser } = this.ctx;
     const entity = <AssessmentTaskEntity>dto;
     entity.creatorUserId = currentUser.id;
-    entity.content = {
-      list,
-    };
+    entity.content = { list };
 
     const mdl = await this.assessmentTaskService.createObject(entity);
     if (mdl.status === AssessmentTaskStatus.Official) {
@@ -129,6 +127,8 @@ export class AssessmentTaskController extends BaseUserController {
       throw new CommonError('not.exist', { group: 'global' });
     }
     Object.assign(mdl, dto);
+    const { list } = await this.assessmentService.getTreeList();
+    mdl.content = { list };
 
     await this.assessmentTaskService.updateObject(mdl);
 
