@@ -14,20 +14,20 @@ export class AssessmentTaskDTO {
       .error(
         handleParameterErrors({
           'string.empty': {
-            message: 'title.required.message',
-            options: { group: 'assessment_task' },
+            message: 'task.title.required.message',
+            options: { group: 'assessment' },
           },
           'any.required': {
-            message: 'title.required.message',
-            options: { group: 'assessment_task' },
+            message: 'task.title.required.message',
+            options: { group: 'assessment' },
           },
           'string.max': {
-            message: 'title.length.message',
-            options: { group: 'assessment_task' },
+            message: 'task.title.length.message',
+            options: { group: 'assessment' },
           },
           '*': {
-            message: 'title.base.message',
-            options: { group: 'assessment_task' },
+            message: 'task.title.base.message',
+            options: { group: 'assessment' },
           },
         })
       )
@@ -38,8 +38,8 @@ export class AssessmentTaskDTO {
   // @Rule(
   //   RuleType.object().error(
   //     handleParameterError({
-  //       message: 'content.base.message',
-  //       options: { group: 'assessment_task' },
+  //       message: 'task.content.base.message',
+  //       options: { group: 'assessment' },
   //     })
   //   )
   // )
@@ -49,8 +49,8 @@ export class AssessmentTaskDTO {
   @Rule(
     RuleType.number().error(
       handleParameterError({
-        message: 'basic_score.base.message',
-        options: { group: 'assessment_task' },
+        message: 'task.basic_score.base.message',
+        options: { group: 'assessment' },
       })
     )
   )
@@ -65,12 +65,12 @@ export class AssessmentTaskDTO {
       .error(
         handleParameterErrors({
           'string.max': {
-            message: 'description.length.message',
-            options: { group: 'assessment_task' },
+            message: 'task.description.length.message',
+            options: { group: 'assessment' },
           },
           '*': {
-            message: 'description.base.message',
-            options: { group: 'assessment_task' },
+            message: 'task.description.base.message',
+            options: { group: 'assessment' },
           },
         })
       )
@@ -81,8 +81,8 @@ export class AssessmentTaskDTO {
   @Rule(
     RuleType.object().error(
       handleParameterError({
-        message: 'grade_setting.base.message',
-        options: { group: 'assessment_task' },
+        message: 'task.grade_setting.base.message',
+        options: { group: 'assessment' },
       })
     )
   )
@@ -92,8 +92,8 @@ export class AssessmentTaskDTO {
   @Rule(
     RuleType.date().error(
       handleParameterError({
-        message: 'start_date.base.message',
-        options: { group: 'assessment_task' },
+        message: 'task.start_date.base.message',
+        options: { group: 'assessment' },
       })
     )
   )
@@ -103,8 +103,8 @@ export class AssessmentTaskDTO {
   @Rule(
     RuleType.date().error(
       handleParameterError({
-        message: 'end_date.base.message',
-        options: { group: 'assessment_task' },
+        message: 'task.end_date.base.message',
+        options: { group: 'assessment' },
       })
     )
   )
@@ -118,8 +118,8 @@ export class AssessmentTaskDTO {
       .trim(true)
       .error(
         handleParameterError({
-          message: 'status.base.message',
-          options: { group: 'assessment_task' },
+          message: 'task.status.base.message',
+          options: { group: 'assessment' },
         })
       )
   )

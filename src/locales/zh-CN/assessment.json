@@ -15,5 +15,20 @@
   "enabled.base.message": "请输入正确的考核状态",
   "options.base.message": "请输入正确的考核扩展配置信息",
   "delete.success": "考核删除成功！",
-  "restore.success": "考核恢复成功！"
+  "restore.success": "考核恢复成功！",
+  "task.title.placeholder": "请输入考核任务标题",
+  "task.title.search.placeholder": "请输入考核任务标题",
+  "task.title.required.message": "请输入考核任务标题",
+  "task.title.exist.message": "考核任务标题已存在",
+  "task.title.length.message": "考核任务标题请控制在100字符以内",
+  "task.title.base.message": "请输入正确的考核任务标题",
+  "task.basic_score.base.message": "请选择正确的考核基础分",
+  "task.description.base.message": "请输入正确的考核任务简介",
+  "task.description.length.message": "考核任务简介长度在150个字符以内",
+  "task.grade_setting.base.message": "请输入正确的分数等级配置",
+  "task.start_date.base.message": "请输入正确的考核开始时间",
+  "task.end_date.base.message": "请输入正确的考核结束时间",
+  "task.status.base.message": "请输入正确的考核任务状态",
+  "task.delete.success": "考核任务删除成功！",
+  "task.restore.success": "考核任务恢复成功！"
 }
