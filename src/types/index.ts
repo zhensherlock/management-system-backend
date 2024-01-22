@@ -32,3 +32,12 @@ export interface AssessmentTaskGradeSetting {
     score: [number, number];
   }[];
 }
+
+export interface AssessmentTaskStatistic {
+  total: number;
+  submitted: number;
+  pending: number;
+  returned: number;
+  done: number;
+  donePercentage: number;
+}

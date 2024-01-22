@@ -85,8 +85,8 @@ export class AssessmentTaskController extends BaseUserController {
   @ApiBody({ description: '考核任务信息' })
   async createAssessmentTask(@Body() dto: CreateAssessmentTaskDTO) {
     if (await this.assessmentTaskService.checkTitleExisted(dto.title)) {
-      throw new CommonError('title.exist.message', {
-        group: 'assessment_task',
+      throw new CommonError('task.title.exist.message', {
+        group: 'assessment',
       });
     }
     const { list } = await this.assessmentService.getTreeList();
@@ -143,6 +143,63 @@ export class AssessmentTaskController extends BaseUserController {
       'updatedDate',
       'creatorUserId',
     ]);
+  }
+
+  @Role(['education'])
+  @Get('/statistic/:id', { summary: '用户-获取考核任务统计' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async getAssessmentTaskStatistic(@Param('id') id: string) {
+    if (
+      !(await this.assessmentTaskService.existObject({
+        where: {
+          id,
+        },
+      }))
+    ) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    return await this.assessmentTaskDetailService.getStatistic(id);
+  }
+
+  @Role(['education'])
+  @Get('/details/:id', { summary: '用户-获取考核任务明细' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async getAssessmentTaskDetailList(@Param('id') id: string) {
+    if (
+      !(await this.assessmentTaskService.existObject({
+        where: {
+          id,
+        },
+      }))
+    ) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    const list = await this.assessmentTaskDetailService.getList({
+      where: {
+        assessmentTaskId: id,
+      },
+      relations: ['receiveSchoolOrganization', 'submitUser'],
+    });
+    return {
+      list: list.map(item => ({
+        ...omit(item, [
+          'updatedDate',
+          'receiveSchoolOrganization',
+          'submitUser',
+        ]),
+        ...(item.receiveSchoolOrganization && {
+          receiveSchoolOrganization: {
+            name: item.receiveSchoolOrganization.name,
+          },
+        }),
+        ...(item.submitUser && {
+          submitUser: {
+            name: item.submitUser.name,
+          },
+        }),
+      })),
+      count: list.length,
+    };
   }
 
   @Role(['education'])

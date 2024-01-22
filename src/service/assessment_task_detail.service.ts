@@ -7,6 +7,8 @@ import { AssessmentTaskEntity } from '../entity/assessment_task.entity';
 import { OrganizationService } from './organization.service';
 import { AssessmentTaskDetailStatus } from '../constant';
 import { AssessmentService } from './assessment.service';
+import { AssessmentTaskStatistic } from '../types';
+import Big from 'big.js';
 
 @Provide()
 export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetailEntity> {
@@ -34,5 +36,42 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
       detail.assessmentContent = task.content;
       await this.entityModel.save(detail);
     }
+  }
+
+  async getStatistic(assessmentId: string) {
+    const list = await this.entityModel.find({
+      where: {
+        assessmentTaskId: assessmentId,
+      },
+    });
+    const result: AssessmentTaskStatistic = {
+      total: list.length,
+      submitted: 0,
+      pending: 0,
+      returned: 0,
+      done: 0,
+      donePercentage: 0,
+    };
+    list.forEach(item => {
+      switch (item.status) {
+        case AssessmentTaskDetailStatus.Submitted:
+          result.submitted++;
+          break;
+        case AssessmentTaskDetailStatus.Pending:
+          result.pending++;
+          break;
+        case AssessmentTaskDetailStatus.Done:
+          result.done++;
+          break;
+        case AssessmentTaskDetailStatus.Returned:
+          result.returned++;
+          break;
+      }
+    });
+    result.donePercentage = new Big(result.done)
+      .div(result.total)
+      .times(100)
+      .toNumber();
+    return result;
   }
 }

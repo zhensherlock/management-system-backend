@@ -66,6 +66,14 @@ export class AssessmentTaskDetailEntity {
   submitUserId: string;
 
   @Column({
+    name: 'submit_date',
+    type: 'timestamp',
+    nullable: true,
+    comment: '用户提交时间',
+  })
+  submitDate: Date;
+
+  @Column({
     name: 'assessment_content',
     type: 'json',
     nullable: true,
@@ -127,6 +135,12 @@ export class AssessmentTaskDetailEntity {
   })
   @JoinColumn({ name: 'receive_school_organization_id' })
   receiveSchoolOrganization: OrganizationEntity;
+
+  @ManyToOne(() => UserEntity, node => node.submittedAssessmentTaskDetails, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'submit_user_id' })
+  submitUser: UserEntity;
 
   @BeforeInsert()
   generateId() {

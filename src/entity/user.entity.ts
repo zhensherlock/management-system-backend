@@ -22,6 +22,7 @@ import { TenantEntity } from './tenant.entity';
 import { CompanyUserMappingEntity } from './company_user_mapping.entity';
 import { WorkOrderEntity } from './work_order.entity';
 import { AssessmentTaskEntity } from './assessment_task.entity';
+import { AssessmentTaskDetailEntity } from './assessment_task_detail.entity';
 
 @Entity({
   name: 'user',
@@ -140,6 +141,11 @@ export class UserEntity {
     cascade: true,
   })
   createAssessmentTasks: AssessmentTaskEntity[];
+
+  @OneToMany(() => AssessmentTaskDetailEntity, node => node.submitUser, {
+    cascade: true,
+  })
+  submittedAssessmentTaskDetails: AssessmentTaskDetailEntity[];
 
   @BeforeInsert()
   generateId() {
