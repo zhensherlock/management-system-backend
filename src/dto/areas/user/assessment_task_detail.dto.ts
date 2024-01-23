@@ -17,7 +17,18 @@ export class AssessmentTaskDetailDTO {
   scoreContent: object;
 }
 
-export class UpdateAssessmentTaskDetailScoreDTO extends AssessmentTaskDetailDTO {}
+export class EvaluationScoreDTO extends AssessmentTaskDetailDTO {
+  @ApiProperty({ example: true, description: '是否保存草稿' })
+  @Rule(
+    RuleType.boolean().error(
+      handleParameterError({
+        message: 'detail.is_draft.base.message',
+        options: { group: 'assessment' },
+      })
+    )
+  )
+  isDraft: boolean;
+}
 
 export class GetAssessmentTaskDetailListDTO extends GetListBaseDTO {
   @ApiProperty({ example: '', description: '任务状态' })

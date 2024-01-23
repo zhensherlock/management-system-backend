@@ -19,7 +19,7 @@ import { FindOptionsWhere, Like } from 'typeorm';
 import { AssessmentTaskDetailService } from '../../../service/assessment_task_detail.service';
 import {
   GetAssessmentTaskDetailListDTO,
-  UpdateAssessmentTaskDetailScoreDTO,
+  EvaluationScoreDTO,
 } from '../../../dto/areas/user/assessment_task_detail.dto';
 import { AssessmentTaskDetailEntity } from '../../../entity/assessment_task_detail.entity';
 import { CommonError } from '../../../error';
@@ -84,6 +84,7 @@ export class AssessmentTaskDetailController extends BaseUserController {
           'submit_user_id',
           'creator_user_id',
           'assessmentTask',
+          'assessmentContent',
         ]),
         assessmentTask: {
           title: item.assessmentTask.title,
@@ -91,6 +92,7 @@ export class AssessmentTaskDetailController extends BaseUserController {
           startDate: item.assessmentTask.startDate,
           endDate: item.assessmentTask.endDate,
           basicScore: item.assessmentTask.basicScore,
+          content: item.assessmentTask.content,
         },
       })),
       count,
@@ -100,12 +102,12 @@ export class AssessmentTaskDetailController extends BaseUserController {
   }
 
   @Role(['school'])
-  @Post('/:id', { summary: '学校用户-进行考核打分' })
+  @Post('/evaluation/:id', { summary: '学校用户-进行考核评分' })
   @ApiParam({ name: 'id', description: '编号' })
-  @ApiBody({ description: '考核打分信息' })
-  async UpdateAssessmentTaskDetailScore(
+  @ApiBody({ description: '考核评分信息' })
+  async EvaluationScore(
     @Param('id') id: string,
-    @Body() dto: UpdateAssessmentTaskDetailScoreDTO
+    @Body() dto: EvaluationScoreDTO
   ) {
     const mdl = await this.assessmentTaskDetailService.getObjectById(id, {
       relations: ['assessmentTask'],
@@ -124,11 +126,15 @@ export class AssessmentTaskDetailController extends BaseUserController {
         group: 'assessment',
       });
     }
-    this.assessmentTaskDetailService.evaluationScore(
-      mdl,
-      this.ctx.currentUser.id,
-      dto.scoreContent as AssessmentTaskDetailScoreContentType
-    );
+    if (dto.isDraft) {
+      mdl.scoreContent = dto.scoreContent;
+    } else {
+      this.assessmentTaskDetailService.evaluationScore(
+        mdl,
+        this.ctx.currentUser.id,
+        dto.scoreContent as AssessmentTaskDetailScoreContentType
+      );
+    }
     await this.assessmentTaskDetailService.updateObject(mdl);
     return this.i18nService.translate('success.msg', { group: 'global' });
   }
