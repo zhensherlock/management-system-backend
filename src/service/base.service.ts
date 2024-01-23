@@ -14,11 +14,12 @@ export class BaseService<T> {
     return await this.entityModel.findOne(options);
   }
 
-  async getObjectById(id: string): Promise<T> {
+  async getObjectById(id: string, options?: FindOneOptions<T>): Promise<T> {
     return await this.entityModel.findOne({
       where: {
         id,
       },
+      ...options,
     });
   }
 

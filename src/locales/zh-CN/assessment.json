@@ -30,5 +30,8 @@
   "task.end_date.base.message": "请输入正确的考核结束时间",
   "task.status.base.message": "请输入正确的考核任务状态",
   "task.delete.success": "考核任务删除成功！",
-  "task.restore.success": "考核任务恢复成功！"
+  "task.restore.success": "考核任务恢复成功！",
+  "detail.status.base.message": "请输入正确的考核任务状态",
+  "detail.score_content.base.message": "请输入正确的考核任务评分内容",
+  "detail.not.allowed.evaluate": "当前考核任务不允许评分"
 }

@@ -1,3 +1,5 @@
+import { AssessmentScoreType } from '../constant';
+
 export interface PermissionType {
   moduleId: string;
   operationOptions: object;
@@ -22,7 +24,10 @@ export interface AssessmentTaskScopeType {
 }
 
 export interface AssessmentTaskContentType {
-  list: any[];
+  list: {
+    maximumScore: number;
+    children: [];
+  }[];
 }
 
 export interface AssessmentTaskGradeSetting {
@@ -33,11 +38,23 @@ export interface AssessmentTaskGradeSetting {
   }[];
 }
 
-export interface AssessmentTaskStatistic {
+export interface AssessmentTaskStatisticType {
   total: number;
   submitted: number;
   pending: number;
   returned: number;
   done: number;
   donePercentage: number;
+}
+
+export interface AssessmentTaskDetailScoreContentType {
+  totalScore?: number;
+  grade?: string;
+  list: {
+    id: string;
+    scoreType: AssessmentScoreType;
+    score: number;
+    message: string;
+    files: string[];
+  }[];
 }

@@ -8,6 +8,6 @@ export enum AssessmentTaskStatus {
 export enum AssessmentTaskDetailStatus {
   Pending = 'pending',
   Submitted = 'submitted',
-  Returned = 'returned',
+  Returned = 'pending-returned',
   Done = 'done',
 }

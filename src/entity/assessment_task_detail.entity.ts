@@ -89,8 +89,11 @@ export class AssessmentTaskDetailEntity {
   })
   scoreContent: object;
 
-  @Column({ name: 'score', nullable: true, comment: '总评分' })
-  score: number;
+  @Column({ name: 'total_score', nullable: true, comment: '总评分' })
+  totalScore: number;
+
+  @Column({ length: 40, nullable: true, comment: '评分等级' })
+  grade: string;
 
   @CreateDateColumn({
     name: 'created_date',

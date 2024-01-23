@@ -187,11 +187,9 @@ export class AssessmentTaskController extends BaseUserController {
           'receiveSchoolOrganization',
           'submitUser',
         ]),
-        ...(item.receiveSchoolOrganization && {
-          receiveSchoolOrganization: {
-            name: item.receiveSchoolOrganization.name,
-          },
-        }),
+        receiveSchoolOrganization: {
+          name: item.receiveSchoolOrganization.name,
+        },
         ...(item.submitUser && {
           submitUser: {
             name: item.submitUser.name,
