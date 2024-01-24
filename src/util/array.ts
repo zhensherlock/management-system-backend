@@ -20,3 +20,17 @@ export const recursiveMap = <T, U>(
     }
   });
 };
+
+export const recursiveFlat = <T>(
+  list: T[],
+  childrenKey = 'children',
+  result: T[] = []
+) => {
+  list.forEach(item => {
+    result.push(item);
+    if (_.isArray(item[childrenKey])) {
+      recursiveFlat(item[childrenKey], childrenKey, result);
+    }
+  });
+  return result;
+};

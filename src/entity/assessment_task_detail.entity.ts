@@ -92,6 +92,12 @@ export class AssessmentTaskDetailEntity {
   @Column({ name: 'total_score', nullable: true, comment: '总评分' })
   totalScore: number;
 
+  @Column({ name: 'total_add_score', nullable: true, comment: '总加分' })
+  totalAddScore: number;
+
+  @Column({ name: 'total_subtract_score', nullable: true, comment: '总扣分' })
+  totalSubtractScore: number;
+
   @Column({ length: 40, nullable: true, comment: '评分等级' })
   grade: string;
 

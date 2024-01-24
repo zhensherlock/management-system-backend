@@ -1,7 +1,7 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
-import { find, flatMapDeep } from 'lodash';
+import { find } from 'lodash';
 import Big from 'big.js';
 import { BaseService } from './base.service';
 import { AssessmentTaskDetailEntity } from '../entity/assessment_task_detail.entity';
@@ -15,6 +15,7 @@ import {
   AssessmentTaskGradeSetting,
   AssessmentTaskStatisticType,
 } from '../types';
+import { recursiveFlat } from '../util/array';
 
 @Provide()
 export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetailEntity> {
@@ -33,13 +34,34 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
 
   async publicTask(task: AssessmentTaskEntity) {
     const schoolList = await this.organizationService.getAllSchoolList();
+    const assessmentContent = task.content as AssessmentTaskContentType;
+    const flatContentList = recursiveFlat(assessmentContent.list);
+    const scoreContent = {
+      totalScore: task.basicScore,
+      totalAddScore: 0,
+      totalSubtractScore: 0,
+      grade: '',
+      detail: {},
+    } as AssessmentTaskDetailScoreContentType;
+    flatContentList.forEach(item => {
+      if (!item.children) {
+        scoreContent.detail[item.id] = {
+          id: item.id,
+          score: 0,
+          message: '',
+          scoreType: item.scoreType,
+          files: [],
+        };
+      }
+    });
     for (const index in schoolList) {
       const detail = new AssessmentTaskDetailEntity();
       detail.assessmentTaskId = task.id;
       detail.creatorUserId = task.creatorUserId;
       detail.receiveSchoolOrganizationId = schoolList[index].id;
       detail.status = AssessmentTaskDetailStatus.Pending;
-      detail.assessmentContent = task.content;
+      detail.assessmentContent = assessmentContent;
+      detail.scoreContent = scoreContent;
       await this.entityModel.save(detail);
     }
   }
@@ -91,23 +113,29 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
     mdl.submitDate = new Date();
     const assessmentTaskContent = mdl.assessmentTask
       .content as AssessmentTaskContentType;
-    const flatContents = flatMapDeep(
-      assessmentTaskContent.list,
-      item => item.children || []
-    );
+    const flatContentList = recursiveFlat(assessmentTaskContent.list);
     let totalScore = mdl.assessmentTask.basicScore;
-    scoreContent.list.forEach(item => {
-      const rule = find(flatContents, content => content.id === item.id);
+    let totalAddScore = 0;
+    let totalSubtractScore = 0;
+    Object.keys(scoreContent.detail).forEach(key => {
+      const item = scoreContent.detail[key];
+      const rule = find(flatContentList, content => content.id === item.id);
       const score =
         rule && item.score > rule.maximumScore ? rule.maximumScore : item.score;
-      if (item.scoreType === AssessmentScoreType.Add) {
+      if (rule.scoreType === AssessmentScoreType.Add) {
         totalScore += score;
+        totalAddScore += score;
       } else {
         totalScore -= score;
+        totalSubtractScore += score;
       }
     });
     scoreContent.totalScore = totalScore;
+    scoreContent.totalAddScore = totalAddScore;
+    scoreContent.totalSubtractScore = totalSubtractScore;
     mdl.totalScore = totalScore;
+    mdl.totalAddScore = totalAddScore;
+    mdl.totalSubtractScore = totalSubtractScore;
     const gradeSetting = mdl.assessmentTask
       .gradeSetting as AssessmentTaskGradeSetting;
     const grade = this.getGrade(gradeSetting, totalScore);

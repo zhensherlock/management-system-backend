@@ -25,7 +25,10 @@ export interface AssessmentTaskScopeType {
 
 export interface AssessmentTaskContentType {
   list: {
+    id: string;
     maximumScore: number;
+    level: number;
+    scoreType: AssessmentScoreType;
     children: [];
   }[];
 }
@@ -48,13 +51,18 @@ export interface AssessmentTaskStatisticType {
 }
 
 export interface AssessmentTaskDetailScoreContentType {
-  totalScore?: number;
-  grade?: string;
-  list: {
-    id: string;
-    scoreType: AssessmentScoreType;
-    score: number;
-    message: string;
-    files: string[];
-  }[];
+  totalScore: number;
+  totalAddScore: number;
+  totalSubtractScore: number;
+  grade: string;
+  detail: Record<
+    string,
+    {
+      scoreType: AssessmentScoreType;
+      id: string;
+      score: number;
+      message: string;
+      files: string[];
+    }
+  >;
 }
