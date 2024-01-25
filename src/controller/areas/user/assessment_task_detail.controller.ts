@@ -28,6 +28,7 @@ import {
   AssessmentTaskStatus,
 } from '../../../constant';
 import { AssessmentTaskDetailScoreContentType } from '../../../types';
+import dayjs from 'dayjs';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -72,7 +73,7 @@ export class AssessmentTaskDetailController extends BaseUserController {
           order: {
             createdDate: 'DESC',
           },
-          relations: ['assessmentTask'],
+          relations: ['assessmentTask', 'submitUser'],
         }
       );
     return {
@@ -85,7 +86,11 @@ export class AssessmentTaskDetailController extends BaseUserController {
           'creator_user_id',
           'assessmentTask',
           'assessmentContent',
+          'submitUser',
         ]),
+        submitDate: item.submitDate
+          ? dayjs(item.submitDate).format('YYYY-MM-DD HH:mm:ss')
+          : null,
         assessmentTask: {
           title: item.assessmentTask.title,
           description: item.assessmentTask.description,
@@ -94,6 +99,12 @@ export class AssessmentTaskDetailController extends BaseUserController {
           basicScore: item.assessmentTask.basicScore,
           content: item.assessmentTask.content,
         },
+        ...(item.submitUser && {
+          submitUser: {
+            name: item.submitUser.name,
+            realName: item.submitUser.realName,
+          },
+        }),
       })),
       count,
       currentPage,

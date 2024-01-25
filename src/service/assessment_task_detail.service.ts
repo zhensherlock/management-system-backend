@@ -97,6 +97,7 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
       }
     });
     result.donePercentage = new Big(result.done)
+      .plus(result.submitted)
       .div(result.total)
       .times(100)
       .toNumber();

@@ -33,6 +33,7 @@ import { Like } from 'typeorm';
 import { AssessmentTaskStatus } from '../../../constant';
 import { AssessmentTaskDetailService } from '../../../service/assessment_task_detail.service';
 import { CommonError } from '../../../error';
+import dayjs from 'dayjs';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -187,12 +188,16 @@ export class AssessmentTaskController extends BaseUserController {
           'receiveSchoolOrganization',
           'submitUser',
         ]),
+        submitDate: item.submitDate
+          ? dayjs(item.submitDate).format('YYYY-MM-DD HH:mm:ss')
+          : null,
         receiveSchoolOrganization: {
           name: item.receiveSchoolOrganization.name,
         },
         ...(item.submitUser && {
           submitUser: {
             name: item.submitUser.name,
+            realName: item.submitUser.realName,
           },
         }),
       })),
