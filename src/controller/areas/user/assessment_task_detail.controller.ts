@@ -92,6 +92,7 @@ export class AssessmentTaskDetailController extends BaseUserController {
           ? dayjs(item.submitDate).format('YYYY-MM-DD HH:mm:ss')
           : null,
         assessmentTask: {
+          status: item.assessmentTask.status,
           title: item.assessmentTask.title,
           description: item.assessmentTask.description,
           startDate: item.assessmentTask.startDate,

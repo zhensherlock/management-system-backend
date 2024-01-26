@@ -179,7 +179,7 @@ export class AssessmentTaskController extends BaseUserController {
       where: {
         assessmentTaskId: id,
       },
-      relations: ['receiveSchoolOrganization', 'submitUser'],
+      relations: ['receiveSchoolOrganization', 'submitUser', 'assessmentTask'],
     });
     return {
       list: list.map(item => ({
@@ -191,6 +191,15 @@ export class AssessmentTaskController extends BaseUserController {
         submitDate: item.submitDate
           ? dayjs(item.submitDate).format('YYYY-MM-DD HH:mm:ss')
           : null,
+        assessmentTask: {
+          status: item.assessmentTask.status,
+          title: item.assessmentTask.title,
+          description: item.assessmentTask.description,
+          startDate: item.assessmentTask.startDate,
+          endDate: item.assessmentTask.endDate,
+          basicScore: item.assessmentTask.basicScore,
+          content: item.assessmentTask.content,
+        },
         receiveSchoolOrganization: {
           name: item.receiveSchoolOrganization.name,
         },
