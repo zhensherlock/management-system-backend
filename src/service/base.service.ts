@@ -1,9 +1,14 @@
-import { DeleteResult, UpdateResult, Repository, Not } from 'typeorm';
-import { FindManyOptions } from 'typeorm/find-options/FindManyOptions';
+import {
+  DeleteResult,
+  UpdateResult,
+  Repository,
+  Not,
+  FindOneOptions,
+  FindManyOptions,
+  FindOptionsWhere,
+} from 'typeorm';
 import { PickKeysByType } from 'typeorm/common/PickKeysByType';
-import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { isEmpty } from 'lodash';
-import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
 export class BaseService<T> {
   entityModel: Repository<T | any>;
@@ -118,11 +123,11 @@ export class BaseService<T> {
   }
 
   async existObject(options?: FindManyOptions<T>): Promise<boolean> {
-    return await this.entityModel.exist(options);
+    return await this.entityModel.exists(options);
   }
 
   async existObjectById(id: string): Promise<boolean> {
-    return await this.entityModel.exist({
+    return await this.entityModel.exists({
       where: {
         id,
       },

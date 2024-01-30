@@ -1,6 +1,6 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { find } from 'lodash';
 import Big from 'big.js';
 import { BaseService } from './base.service';
@@ -66,39 +66,38 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
     }
   }
 
-  async getStatistic(assessmentId: string) {
-    const list = await this.entityModel.find({
-      where: {
-        assessmentTaskId: assessmentId,
-      },
-    });
+  async getStatistic(options: FindManyOptions<AssessmentTaskDetailEntity>) {
+    const list = await this.getList(options);
     const result: AssessmentTaskStatisticType = {
-      total: list.length,
-      submitted: 0,
-      pending: 0,
-      returned: 0,
-      done: 0,
-      donePercentage: 0,
+      list,
+      statistic: {
+        total: list.length,
+        submitted: 0,
+        pending: 0,
+        returned: 0,
+        done: 0,
+        donePercentage: 0,
+      },
     };
     list.forEach(item => {
       switch (item.status) {
         case AssessmentTaskDetailStatus.Submitted:
-          result.submitted++;
+          result.statistic.submitted++;
           break;
         case AssessmentTaskDetailStatus.Pending:
-          result.pending++;
+          result.statistic.pending++;
           break;
         case AssessmentTaskDetailStatus.Done:
-          result.done++;
+          result.statistic.done++;
           break;
         case AssessmentTaskDetailStatus.Returned:
-          result.returned++;
+          result.statistic.returned++;
           break;
       }
     });
-    result.donePercentage = new Big(result.done)
-      .plus(result.submitted)
-      .div(result.total)
+    result.statistic.donePercentage = new Big(result.statistic.done)
+      .plus(result.statistic.submitted)
+      .div(result.statistic.total)
       .times(100)
       .toNumber();
     return result;

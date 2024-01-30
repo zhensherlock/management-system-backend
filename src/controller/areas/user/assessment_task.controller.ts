@@ -150,16 +150,16 @@ export class AssessmentTaskController extends BaseUserController {
   @Get('/statistic/:id', { summary: '用户-获取考核任务统计' })
   @ApiParam({ name: 'id', description: '编号' })
   async getAssessmentTaskStatistic(@Param('id') id: string) {
-    if (
-      !(await this.assessmentTaskService.existObject({
-        where: {
-          id,
-        },
-      }))
-    ) {
+    if (!(await this.assessmentTaskService.existObjectById(id))) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    return await this.assessmentTaskDetailService.getStatistic(id);
+    const assessmentTaskStatistic =
+      await this.assessmentTaskDetailService.getStatistic({
+        where: {
+          assessmentTaskId: id,
+        },
+      });
+    return assessmentTaskStatistic.statistic;
   }
 
   @Role(['education'])

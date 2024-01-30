@@ -20,6 +20,15 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     super();
   }
 
+  async existSchoolById(id: string): Promise<boolean> {
+    return await this.entityModel.exists({
+      where: {
+        id,
+        type: OrganizationType.School,
+      },
+    });
+  }
+
   async checkNameExisted(name: string, id?: string) {
     return await this.entityModel.exist({
       where: {

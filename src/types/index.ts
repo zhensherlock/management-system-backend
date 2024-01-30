@@ -1,4 +1,5 @@
 import { AssessmentScoreType } from '../constant';
+import type { AssessmentTaskDetailEntity } from '../entity/assessment_task_detail.entity';
 
 export interface PermissionType {
   moduleId: string;
@@ -41,13 +42,24 @@ export interface AssessmentTaskGradeSetting {
   }[];
 }
 
-export interface AssessmentTaskStatisticType {
-  total: number;
-  submitted: number;
-  pending: number;
-  returned: number;
+export interface AssessmentTaskSummaryStatisticType {
+  published: number;
+  draft: number;
+  official: number;
   done: number;
   donePercentage: number;
+}
+
+export interface AssessmentTaskStatisticType {
+  list: AssessmentTaskDetailEntity[];
+  statistic: {
+    total: number;
+    submitted: number;
+    pending: number;
+    returned: number;
+    done: number;
+    donePercentage: number;
+  };
 }
 
 export interface AssessmentTaskDetailScoreContentType {
