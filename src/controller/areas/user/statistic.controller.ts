@@ -4,11 +4,14 @@ import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@midwayjs/swagger';
 import { MidwayI18nService } from '@midwayjs/i18n';
 import { BaseUserController } from './base/base.user.controller';
 import { Role } from '../../../decorator/role.decorator';
-import { GetAssessmentTaskStatisticDTO } from '../../../dto/areas/user/statistic.dto';
 import { AssessmentTaskService } from '../../../service/assessment_task.service';
 import { AssessmentTaskDetailService } from '../../../service/assessment_task_detail.service';
 import { CommonError } from '../../../error';
 import { OrganizationService } from '../../../service/organization.service';
+import { OrganizationType } from '../../../constant';
+import { GetStatisticBySchoolIdsDTO } from '../../../dto/areas/user/statistic.dto';
+import { In } from 'typeorm';
+import { isString } from 'lodash';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -62,10 +65,10 @@ export class StatisticController extends BaseUserController {
   }
 
   @Role(['admin', 'education'])
-  @Get('/assessment/school/:id', {
+  @Get('/school/:id', {
     summary: '获取某个学校考核统计数据',
   })
-  @ApiParam({ name: 'id', description: '考核任务编号' })
+  @ApiParam({ name: 'id', description: '学校编号' })
   async getStatisticBySchoolId(@Param('id') schoolId: string) {
     if (!(await this.organizationService.existSchoolById(schoolId))) {
       throw new CommonError('not.exist', { group: 'global' });
@@ -81,9 +84,31 @@ export class StatisticController extends BaseUserController {
   }
 
   @Role(['admin', 'education'])
-  @Get('/assessment', { summary: '统计' })
+  @Get('/schools', {
+    summary: '获取某些学校考核统计数据',
+  })
   @ApiQuery({})
-  async getOrganizationTreeList(@Query() query: GetAssessmentTaskStatisticDTO) {
-    return {};
+  async getStatisticBySchoolIds(@Query() query: GetStatisticBySchoolIdsDTO) {
+    return await this.assessmentTaskDetailService.getList({
+      where: {
+        receiveSchoolOrganizationId: isString(query.schoolIds)
+          ? query.schoolIds
+          : In(query.schoolIds),
+      },
+      order: {
+        submitDate: 'DESC',
+      },
+    });
+  }
+
+  @Role(['admin', 'education'])
+  @Get('/school/list', { summary: '获取学校列表' })
+  async getSchoolTreeList() {
+    const { list, count } = await this.organizationService.getTreeList(
+      OrganizationType.School,
+      '',
+      2
+    );
+    return { list, count };
   }
 }

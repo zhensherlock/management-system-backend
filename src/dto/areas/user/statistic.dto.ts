@@ -1,19 +1,24 @@
-import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
 import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError } from '../../../error';
 
-export class GetAssessmentTaskStatisticDTO extends GetListBaseDTO {
-  @ApiProperty({ example: '', description: '考核任务编号' })
+export class GetAssessmentTaskStatisticDTO {}
+
+export class GetStatisticBySchoolIdsDTO {
+  @ApiProperty({ example: null, description: '学校编号' })
   @Rule(
-    RuleType.string()
-      .uuid({ separator: false })
+    RuleType.alternatives()
+      .try(
+        RuleType.array().items(RuleType.string().uuid({ separator: false })),
+        RuleType.string().uuid()
+      )
+      .empty('')
       .error(
         handleParameterError({
-          message: 'assessmentTaskId.base.message',
-          options: { group: 'statistic' },
+          message: 'id.base.message',
+          options: { group: 'school' },
         })
       )
   )
-  assessmentTaskId: string;
+  schoolIds: string[] | string;
 }

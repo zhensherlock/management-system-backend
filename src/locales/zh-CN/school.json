@@ -1,5 +1,6 @@
 {
   "school": "学校",
+  "id.base.message": "请输入正确的学校编号",
   "name.placeholder": "请输入学校名称",
   "name.search.placeholder": "请输入学校名称",
   "name.required.message": "请输入学校名称",
