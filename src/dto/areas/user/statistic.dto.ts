@@ -1,10 +1,11 @@
 import { ApiProperty } from '@midwayjs/swagger';
 import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError } from '../../../error';
+import { BaseDTO } from '../../base.dto';
 
 export class GetAssessmentTaskStatisticDTO {}
 
-export class GetStatisticBySchoolIdsDTO {
+export class GetStatisticBySchoolIdsDTO extends BaseDTO {
   @ApiProperty({ example: null, description: '学校编号' })
   @Rule(
     RuleType.alternatives()
