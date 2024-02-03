@@ -45,7 +45,7 @@ export class ProfileController extends BaseController {
   }
 
   @Role(['admin', 'school', 'security', 'education'])
-  @Get('/getMenuList', { summary: '用户-获取基本信息' })
+  @Get('/getMenuList', { summary: '用户-获取菜单列表' })
   async getEnabledModuleList() {
     const { currentRoles } = this.ctx;
     const { list } = await this.moduleService.getModuleTreeList(

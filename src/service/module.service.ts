@@ -90,6 +90,7 @@ export class ModuleService extends BaseService<ModuleEntity> {
         this.addModuleParentsAndChildren(item, allModules, associatedModules);
       });
       list = Array.from(associatedModules);
+      list = orderBy(list, ['level', 'sequence'], ['asc', 'asc']);
     }
     const topLevel = minBy(list, 'level').level;
     const rootModules = list.filter(item => item.level === topLevel);
