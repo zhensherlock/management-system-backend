@@ -11,7 +11,7 @@ import { OrganizationService } from '../../../service/organization.service';
 import { OrganizationType } from '../../../constant';
 import { GetStatisticBySchoolIdsDTO } from '../../../dto/areas/user/statistic.dto';
 import { In } from 'typeorm';
-import { isString } from 'lodash';
+import { isString, omit } from 'lodash';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -89,16 +89,40 @@ export class StatisticController extends BaseUserController {
   })
   @ApiQuery({})
   async getStatisticBySchoolIds(@Query() query: GetStatisticBySchoolIdsDTO) {
-    return await this.assessmentTaskDetailService.getList({
+    const list = await this.assessmentTaskDetailService.getList({
       where: {
         receiveSchoolOrganizationId: isString(query.schoolIds)
           ? query.schoolIds
           : In(query.schoolIds),
+        assessmentTaskId: isString(query.assessmentTaskIds)
+          ? query.assessmentTaskIds
+          : In(query.assessmentTaskIds),
       },
       order: {
-        submitDate: 'DESC',
+        assessmentTask: {
+          endDate: 'DESC',
+          startDate: 'DESC',
+          updatedDate: 'DESC',
+        },
+        // submitDate: 'DESC',
       },
+      relations: ['assessmentTask', 'receiveSchoolOrganization'],
     });
+    return {
+      list: list.map(item => ({
+        ...omit(item, [
+          'createdDate',
+          'updatedDate',
+          'creatorUserId',
+          'assessmentTask',
+          'assessmentContent',
+          'receiveSchoolOrganization',
+          'scoreContent',
+        ]),
+        assessmentTaskTitle: item.assessmentTask.title,
+        schoolName: item.receiveSchoolOrganization.name,
+      })),
+    };
   }
 
   @Role(['admin', 'education'])

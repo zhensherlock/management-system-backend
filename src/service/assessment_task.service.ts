@@ -57,6 +57,8 @@ export class AssessmentTaskService extends BaseService<AssessmentTaskEntity> {
       },
       order: {
         endDate: 'DESC',
+        startDate: 'DESC',
+        updatedDate: 'DESC',
       },
     });
     const result: Record<string, AssessmentTaskEntity[]> = {
