@@ -2,7 +2,11 @@ import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError, handleParameterErrors } from '../../../error';
 import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
-import { EmployeeSex, EmployeeStatus } from '../../../constant';
+import {
+  EmployeeEducation,
+  EmployeeSex,
+  EmployeeStatus,
+} from '../../../constant';
 
 export class EmployeeDTO {
   @ApiProperty({ example: '101', description: '员工工号' })
@@ -227,6 +231,22 @@ export class EmployeeDTO {
       )
   )
   status: string;
+
+  @ApiProperty({ example: '1', description: '员工学历' })
+  @Rule(
+    RuleType.string()
+      .required()
+      .empty('')
+      .trim(true)
+      .valid(...Object.values(EmployeeEducation))
+      .error(
+        handleParameterError({
+          message: 'education.base.message',
+          options: { group: 'employee' },
+        })
+      )
+  )
+  education: string;
 
   @ApiProperty({ example: {}, description: '员工扩展配置信息' })
   @Rule(

@@ -57,6 +57,9 @@ export class EmployeeEntity {
   @Column({ length: 191, nullable: true, comment: '员工民族' })
   nation: string;
 
+  @Column({ length: 2, nullable: true, comment: '员工学历' })
+  education: string;
+
   @Column({ length: 191, nullable: true, comment: '员工籍贯' })
   nativePlace: string;
 

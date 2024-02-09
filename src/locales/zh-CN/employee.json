@@ -26,6 +26,7 @@
   "id_card.length.message": "员工代码长度在100个字符以内",
   "id_card.base.message": "请输入正确的员工代码",
   "status.base.message": "请输入正确的员工状态",
+  "education.base.message": "请输入正确的员工学历",
   "options.base.message": "请输入正确的员工扩展配置信息",
   "tenant_id.base.message": "请选择正确的租户",
   "company_organization_id.base.message": "请选择正确的保安公司",
