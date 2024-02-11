@@ -1,8 +1,8 @@
 import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError, handleParameterErrors } from '../../../error';
-import { GetListBaseDTO } from '../../base.dto';
+import { BaseDTO, GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
-import { AssessmentTaskStatus } from '../../../constant';
+import { AssessmentTaskDetailStatus, AssessmentTaskStatus } from '../../../constant';
 
 export class AssessmentTaskDTO {
   @ApiProperty({ example: '标题1', description: '考核任务标题' })
@@ -119,6 +119,23 @@ export class AssessmentTaskDTO {
       .error(
         handleParameterError({
           message: 'task.status.base.message',
+          options: { group: 'assessment' },
+        })
+      )
+  )
+  status: string;
+}
+
+export class GetAssessmentTaskDetailFilterDTO extends BaseDTO {
+  @ApiProperty({ example: '', description: '考核任务状态' })
+  @Rule(
+    RuleType.string()
+      .max(40)
+      .valid(...Object.values(AssessmentTaskDetailStatus))
+      .trim(true)
+      .error(
+        handleParameterError({
+          message: 'detail.status.base.message',
           options: { group: 'assessment' },
         })
       )

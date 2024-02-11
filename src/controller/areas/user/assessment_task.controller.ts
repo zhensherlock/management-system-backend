@@ -23,6 +23,7 @@ import { Role } from '../../../decorator/role.decorator';
 import { AssessmentService } from '../../../service/assessment.service';
 import {
   CreateAssessmentTaskDTO,
+  GetAssessmentTaskDetailFilterDTO,
   GetAssessmentTaskListDTO,
   UpdateAssessmentTaskDTO,
 } from '../../../dto/areas/user/assessment_task.dto';
@@ -165,7 +166,11 @@ export class AssessmentTaskController extends BaseUserController {
   @Role(['education'])
   @Get('/details/:id', { summary: '用户-获取考核任务明细' })
   @ApiParam({ name: 'id', description: '编号' })
-  async getAssessmentTaskDetailList(@Param('id') id: string) {
+  @ApiQuery({})
+  async getAssessmentTaskDetailList(
+    @Param('id') id: string,
+    @Query() query: GetAssessmentTaskDetailFilterDTO
+  ) {
     if (
       !(await this.assessmentTaskService.existObject({
         where: {
