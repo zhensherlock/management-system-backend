@@ -9,7 +9,7 @@ import {
 } from '../../../constant';
 
 export class EmployeeDTO {
-  @ApiProperty({ example: '101', description: '员工工号' })
+  @ApiProperty({ example: '101', description: '员工派遣单号' })
   @Rule(
     RuleType.string()
       .max(100)

@@ -29,7 +29,7 @@ export class EmployeeEntity {
     name: 'job_number',
     nullable: true,
     length: 191,
-    comment: '职工号',
+    comment: '员工派遣单号',
   })
   jobNumber: string;
 
