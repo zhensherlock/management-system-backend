@@ -11,9 +11,10 @@ import {
   OneToMany,
 } from 'typeorm';
 import {
-  createDateTransformer,
   generateUUID,
+  createDateTransformer,
   updatedDateTransformer,
+  DecimalTransformer,
 } from '../util';
 
 @Entity({
@@ -48,6 +49,16 @@ export class AssessmentEntity {
     comment: '考核分数类型',
   })
   scoreType: string;
+
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    name: 'score_step',
+    comment: '考核分数步数',
+    transformer: new DecimalTransformer(),
+  })
+  scoreStep: number;
 
   @Column({ name: 'maximum_score', comment: '考核分数上限' })
   maximumScore: number;

@@ -70,6 +70,17 @@ export class AssessmentDTO {
   )
   maximumScore: number;
 
+  @ApiProperty({ example: 1, description: '考核分数步数' })
+  @Rule(
+    RuleType.number().error(
+      handleParameterError({
+        message: 'score_step.base.message',
+        options: { group: 'assessment' },
+      })
+    )
+  )
+  scoreStep: number;
+
   @ApiProperty({ example: null, description: '父级考核编号' })
   @Rule(
     RuleType.string()
