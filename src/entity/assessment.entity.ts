@@ -60,7 +60,14 @@ export class AssessmentEntity {
   })
   scoreStep: number;
 
-  @Column({ name: 'maximum_score', comment: '考核分数上限' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    name: 'maximum_score',
+    comment: '考核分数上限',
+    transformer: new DecimalTransformer(),
+  })
   maximumScore: number;
 
   @Column({ length: 191, nullable: true, comment: '考核简介' })

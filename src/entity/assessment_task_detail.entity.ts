@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import {
   createDateTransformer,
+  DecimalTransformer,
   generateUUID,
   updatedDateTransformer,
 } from '../util';
@@ -89,13 +90,37 @@ export class AssessmentTaskDetailEntity {
   })
   scoreContent: object;
 
-  @Column({ name: 'total_score', nullable: true, comment: '总评分' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    name: 'total_score',
+    nullable: true,
+    comment: '总评分',
+    transformer: new DecimalTransformer(),
+  })
   totalScore: number;
 
-  @Column({ name: 'total_add_score', nullable: true, comment: '总加分' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    name: 'total_add_score',
+    nullable: true,
+    comment: '总加分',
+    transformer: new DecimalTransformer(),
+  })
   totalAddScore: number;
 
-  @Column({ name: 'total_subtract_score', nullable: true, comment: '总扣分' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    name: 'total_subtract_score',
+    nullable: true,
+    comment: '总扣分',
+    transformer: new DecimalTransformer(),
+  })
   totalSubtractScore: number;
 
   @Column({ length: 40, nullable: true, comment: '评分等级' })

@@ -12,6 +12,7 @@ import {
 } from 'typeorm';
 import {
   createDateTransformer,
+  DecimalTransformer,
   generateUUID,
   updatedDateTransformer,
 } from '../util';
@@ -59,7 +60,14 @@ export class AssessmentTaskEntity {
   })
   endDate: Date;
 
-  @Column({ name: 'basic_score', comment: '考核基础分' })
+  @Column({
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    name: 'basic_score',
+    comment: '考核基础分',
+    transformer: new DecimalTransformer(),
+  })
   basicScore: number;
 
   @Column({
