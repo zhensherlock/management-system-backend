@@ -93,7 +93,7 @@ export class SchoolController extends BaseUserController {
     contentType: BodyContentType.Multipart,
   })
   async importSchools(@File() file) {
-    // await this.organizationService.importList(file.data);
+    await this.organizationService.importSchoolList(file.data);
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 

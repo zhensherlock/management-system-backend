@@ -30,6 +30,8 @@ export enum OrganizationCategory {
   DeafSchool = 11,
   // 其他特殊教育学校
   SpecialEducationSchool = 12,
+  // 其他学校组织
+  OtherSchoolOrganization = 13,
   // 学校大类
   School = 100,
   // 保安公司

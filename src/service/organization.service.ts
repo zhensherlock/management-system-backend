@@ -20,6 +20,15 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     super();
   }
 
+  async getIdByName(name: string) {
+    return await this.entityModel.findOne({
+      where: {
+        name,
+      },
+      select: ['id', 'level'],
+    });
+  }
+
   async existSchoolById(id: string): Promise<boolean> {
     return await this.entityModel.exists({
       where: {
@@ -176,6 +185,71 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     });
   }
 
+  async importSchoolList(url: string) {
+    const parentSchool = await this.getOneObject({
+      where: {
+        type: OrganizationType.School,
+        parentId: IsNull(),
+      },
+    });
+    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
+    for await (const worksheetReader of workbookReader) {
+      for await (const row of worksheetReader) {
+        if (row.number < 4) {
+          continue;
+        }
+        const entity = {
+          name: '',
+          person: '',
+          contact: '',
+          address: '',
+          enabled: true,
+          parentId: parentSchool.id,
+          category: OrganizationCategory.School,
+          type: OrganizationType.School,
+          level: parentSchool.level + 1,
+          // assignedCompanyId: null,
+        };
+        let parentName = '';
+        row.eachCell((cell, cellNumber) => {
+          switch (cellNumber) {
+            case 1:
+              entity.name = cell.text.trim();
+              break;
+            case 2:
+              entity.category = this.getSchoolCategoryByName(cell.text);
+              break;
+            case 3:
+              parentName = cell.text.trim();
+              break;
+            case 4:
+              entity.person = cell.text.trim();
+              break;
+            case 5:
+              entity.contact = cell.text.trim();
+              break;
+            case 6:
+              entity.address = cell.text.trim();
+              break;
+            // case 6:
+            //   entity.assignedCompanyId = cell.text;
+            //   break;
+          }
+        });
+        if (await this.checkNameExisted(entity.name)) {
+          continue;
+        }
+        if (!isEmpty(parentName)) {
+          await this.getIdByName(parentName).then(school => {
+            entity.parentId = school.id;
+            entity.level = school.level + 1;
+          });
+        }
+        await this.createObject(<OrganizationEntity>entity);
+      }
+    }
+  }
+
   async importCompanyList(url: string) {
     const parentCompany = await this.getOneObject({
       where: {
@@ -278,5 +352,36 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
       this.getSubIdsByParentId(item.id, result);
     });
     return result;
+  }
+
+  getSchoolCategoryByName(name: string) {
+    switch (name) {
+      case '幼儿园':
+        return OrganizationCategory.Kindergarten;
+      case '小学':
+        return OrganizationCategory.PrimarySchool;
+      case '初级中学':
+        return OrganizationCategory.JuniorMiddleSchool;
+      case '九年一贯制学校':
+        return OrganizationCategory.NineYearCombinedSchool;
+      case '职业初中':
+        return OrganizationCategory.VocationalJuniorMiddleSchool;
+      case '完全中学':
+        return OrganizationCategory.FullMiddleSchool;
+      case '高级中学':
+        return OrganizationCategory.SeniorMiddleSchool;
+      case '十二年一贯制学校':
+        return OrganizationCategory.TwelveYearCombinedSchool;
+      case '职业高中学校':
+        return OrganizationCategory.VocationalHighSchool;
+      case '盲人学校':
+        return OrganizationCategory.BlindSchool;
+      case '聋人学校':
+        return OrganizationCategory.DeafSchool;
+      case '其他特殊教育学校':
+        return OrganizationCategory.SpecialEducationSchool;
+      default:
+        return OrganizationCategory.OtherSchoolOrganization;
+    }
   }
 }
