@@ -113,6 +113,20 @@ export class SchoolDTO {
   )
   parentId: string;
 
+  @ApiProperty({ example: null, description: '指定的保安公司编号' })
+  @Rule(
+    RuleType.string()
+      .uuid({ separator: false })
+      .empty(null)
+      .error(
+        handleParameterError({
+          message: 'assigned_company_id.base.message',
+          options: { group: 'school' },
+        })
+      )
+  )
+  assignedCompanyId: string;
+
   @ApiProperty({ example: 0, description: '学校顺序' })
   @Rule(
     RuleType.number().error(

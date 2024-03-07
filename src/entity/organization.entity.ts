@@ -56,6 +56,15 @@ export class OrganizationEntity {
 
   // stage:
 
+  @Column({
+    name: 'assigned_company_id',
+    length: 36,
+    type: 'uuid',
+    nullable: true,
+    comment: '指定的保安公司编号',
+  })
+  assignedCompanyId: string;
+
   @Column({ length: 191, nullable: true, comment: '组织代码' })
   code: string;
 
@@ -121,6 +130,13 @@ export class OrganizationEntity {
 
   @OneToMany(() => OrganizationEntity, node => node.parent)
   children: OrganizationEntity[];
+
+  @ManyToOne(() => OrganizationEntity, node => node.assignedSchools)
+  @JoinColumn({ name: 'assigned_company_id' })
+  assignedCompany: OrganizationEntity;
+
+  @OneToMany(() => OrganizationEntity, node => node.assignedCompany)
+  assignedSchools: OrganizationEntity[];
 
   @ManyToOne(() => TenantEntity, node => node.organizations)
   @JoinColumn({ name: 'tenant_id' })

@@ -19,7 +19,7 @@ export class GetListBaseDTO extends BaseDTO {
       .integer()
       .error(
         handleParameterError({
-          message: 'i18n:current_page.validate.base.message',
+          message: 'current_page.validate.base.message',
           options: { group: 'validation' },
         })
       )
@@ -32,12 +32,23 @@ export class GetListBaseDTO extends BaseDTO {
       .integer()
       .error(
         handleParameterError({
-          message: 'i18n:page_size.validate.base.message',
+          message: 'page_size.validate.base.message',
           options: { group: 'validation' },
         })
       )
   )
   pageSize: number;
+
+  @ApiProperty({ description: '排序', example: {} })
+  @Rule(
+    RuleType.object().error(
+      handleParameterError({
+        message: 'order.validate.base.message',
+        options: { group: 'validation' },
+      })
+    )
+  )
+  order: object;
 }
 
 export class ImportBaseDTO {

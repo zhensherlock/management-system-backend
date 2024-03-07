@@ -1,4 +1,5 @@
 {
   "current_page.validate.base.message": "请输入正确的当前页数",
-  "page_size.validate.base.message": "请输入正确的每页条数"
+  "page_size.validate.base.message": "请输入正确的每页条数",
+  "order.validate.base.message": "请输入正确的排序"
 }
