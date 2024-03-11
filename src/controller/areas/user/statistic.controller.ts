@@ -60,6 +60,7 @@ export class StatisticController extends BaseUserController {
         where: {
           assessmentTaskId: id,
         },
+        select: ['status'],
       });
     return assessmentTaskStatistic.statistic;
   }
@@ -77,6 +78,7 @@ export class StatisticController extends BaseUserController {
       where: {
         receiveSchoolOrganizationId: schoolId,
       },
+      select: ['status'],
       order: {
         submitDate: 'DESC',
       },

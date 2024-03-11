@@ -39,7 +39,12 @@ export class EmployeeEntity {
   @Column({ length: 1, default: '1', comment: '员工性别' })
   sex: string;
 
-  @Column({ name: 'certificate_number', length: 191, comment: '保安证编号' })
+  @Column({
+    name: 'certificate_number',
+    length: 191,
+    nullable: true,
+    comment: '保安证编号',
+  })
   certificateNumber: string;
 
   @Column({ length: 191, comment: '员工联系方式' })

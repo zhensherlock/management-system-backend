@@ -1,14 +1,14 @@
 import { Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { EmployeeEntity } from '../entity/employee.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { BaseService } from './base.service';
 import ExcelJS from 'exceljs';
 import { EmployeeSex, EmployeeStatus, WorkOrderType } from '../constant';
 import { OrganizationService } from './organization.service';
 import dayjs from 'dayjs';
 import { WorkOrderContentType } from '../types';
-import _ from 'lodash';
+import _, { isEmpty } from 'lodash';
 import { WorkOrderEntity } from '../entity/work_order.entity';
 
 @Provide()
@@ -21,6 +21,15 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
 
   constructor() {
     super();
+  }
+
+  async checkIdCardExisted(idCard: string, id?: string) {
+    return await this.entityModel.exists({
+      where: {
+        idCard,
+        ...(isEmpty(id) ? {} : { id: Not(id) }),
+      },
+    });
   }
 
   async importEmployeeList(url) {
@@ -44,6 +53,7 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
           status: EmployeeStatus.Normal,
           companyOrganizationId: null,
           schoolOrganizationId: null,
+          description: null,
         };
         let companyName: string;
         let schoolName: string;
@@ -88,6 +98,9 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
               break;
           }
         });
+        if (await this.checkIdCardExisted(entity.idCard)) {
+          continue;
+        }
         const company = await this.organizationService.getOneObject({
           where: {
             name: companyName,
@@ -100,7 +113,11 @@ export class EmployeeService extends BaseService<EmployeeEntity> {
               name: schoolName,
             },
           });
-          entity.schoolOrganizationId = organization.id;
+          if (organization) {
+            entity.schoolOrganizationId = organization.id;
+          } else {
+            entity.description = schoolName;
+          }
         }
         await this.createObject(entity as EmployeeEntity);
       }

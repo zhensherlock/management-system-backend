@@ -1,8 +1,11 @@
 import { Rule, RuleType } from '@midwayjs/validate';
 import { handleParameterError, handleParameterErrors } from '../../../error';
-import { BaseDTO, GetListBaseDTO } from '../../base.dto';
+import { GetListBaseDTO } from '../../base.dto';
 import { ApiProperty } from '@midwayjs/swagger';
-import { AssessmentTaskDetailStatus, AssessmentTaskStatus } from '../../../constant';
+import {
+  AssessmentTaskDetailStatus,
+  AssessmentTaskStatus,
+} from '../../../constant';
 
 export class AssessmentTaskDTO {
   @ApiProperty({ example: '标题1', description: '考核任务标题' })
@@ -60,7 +63,7 @@ export class AssessmentTaskDTO {
   @Rule(
     RuleType.string()
       .max(150)
-      .empty(null)
+      .empty('')
       .trim(true)
       .error(
         handleParameterErrors({
@@ -126,13 +129,12 @@ export class AssessmentTaskDTO {
   status: string;
 }
 
-export class GetAssessmentTaskDetailFilterDTO extends BaseDTO {
-  @ApiProperty({ example: '', description: '考核任务状态' })
+export class GetAssessmentTaskDetailFilterDTO extends GetListBaseDTO {
+  @ApiProperty({ example: [], description: '考核任务状态' })
   @Rule(
-    RuleType.string()
-      .max(40)
+    RuleType.array()
+      .items(RuleType.string())
       .valid(...Object.values(AssessmentTaskDetailStatus))
-      .trim(true)
       .error(
         handleParameterError({
           message: 'detail.status.base.message',
@@ -140,7 +142,23 @@ export class GetAssessmentTaskDetailFilterDTO extends BaseDTO {
         })
       )
   )
-  status: string;
+  status: string[];
+
+  @ApiProperty({
+    example: [new Date(), new Date()],
+    description: '考核任务提交时间',
+  })
+  @Rule(
+    RuleType.array()
+      .items(RuleType.date())
+      .error(
+        handleParameterError({
+          message: 'detail.submitDate.base.message',
+          options: { group: 'assessment' },
+        })
+      )
+  )
+  submitDate: Date[];
 }
 
 export class CreateAssessmentTaskDTO extends AssessmentTaskDTO {}

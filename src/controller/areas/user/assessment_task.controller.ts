@@ -30,11 +30,12 @@ import {
 import { isEmpty, omit } from 'lodash';
 import { AssessmentTaskService } from '../../../service/assessment_task.service';
 import { AssessmentTaskEntity } from '../../../entity/assessment_task.entity';
-import { Like } from 'typeorm';
+import { Between, In, Like } from 'typeorm';
 import { AssessmentTaskStatus } from '../../../constant';
 import { AssessmentTaskDetailService } from '../../../service/assessment_task_detail.service';
 import { CommonError } from '../../../error';
 import dayjs from 'dayjs';
+import { getEndOfTime, getStartOfTime } from '../../../util';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -159,6 +160,7 @@ export class AssessmentTaskController extends BaseUserController {
         where: {
           assessmentTaskId: id,
         },
+        select: ['status'],
       });
     return assessmentTaskStatistic.statistic;
   }
@@ -180,12 +182,30 @@ export class AssessmentTaskController extends BaseUserController {
     ) {
       throw new CommonError('not.exist', { group: 'global' });
     }
-    const list = await this.assessmentTaskDetailService.getList({
-      where: {
-        assessmentTaskId: id,
-      },
-      relations: ['receiveSchoolOrganization', 'submitUser', 'assessmentTask'],
-    });
+    const [list, count] =
+      await this.assessmentTaskDetailService.getPaginatedList(
+        query.currentPage,
+        query.pageSize,
+        {
+          where: {
+            assessmentTaskId: id,
+            ...(isEmpty(query.status) ? {} : { status: In(query.status) }),
+            ...(isEmpty(query.submitDate) || query.submitDate.length !== 2
+              ? {}
+              : {
+                  submitDate: Between(
+                    getStartOfTime(query.submitDate[0]),
+                    getEndOfTime(query.submitDate[1])
+                  ),
+                }),
+          },
+          relations: [
+            'receiveSchoolOrganization',
+            'submitUser',
+            'assessmentTask',
+          ],
+        }
+      );
     return {
       list: list.map(item => ({
         ...omit(item, [
@@ -215,7 +235,7 @@ export class AssessmentTaskController extends BaseUserController {
           },
         }),
       })),
-      count: list.length,
+      count,
     };
   }
 

@@ -39,7 +39,7 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
   }
 
   async checkNameExisted(name: string, id?: string) {
-    return await this.entityModel.exist({
+    return await this.entityModel.exists({
       where: {
         name,
         ...(isEmpty(id) ? {} : { id: Not(id) }),
@@ -183,6 +183,35 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
         ...(isEmpty(id) ? {} : { id: Not(id) }),
       },
     });
+  }
+
+  async importSchoolList1(url: string) {
+    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
+    for await (const worksheetReader of workbookReader) {
+      for await (const row of worksheetReader) {
+        let schoolName = '';
+        row.eachCell((cell, cellNumber) => {
+          switch (cellNumber) {
+            case 1:
+              schoolName = cell.text.trim();
+              break;
+          }
+        });
+        if (!(await this.checkNameExisted(schoolName))) {
+          console.log(schoolName + '\r');
+          continue;
+        }
+        const school = await this.getOneObject({
+          where: {
+            name: schoolName,
+            type: OrganizationType.School,
+          },
+        });
+        // school.assignedCompanyId = 'e18f57f4930a4e539278a251ec348421'; // 大德
+        // school.assignedCompanyId = '1f7f6ab1ce7f4337984b8f9c75122e48'; // 张家港
+        await this.updateObject(<OrganizationEntity>school);
+      }
+    }
   }
 
   async importSchoolList(url: string) {

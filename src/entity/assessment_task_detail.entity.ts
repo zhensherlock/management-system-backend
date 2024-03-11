@@ -8,6 +8,7 @@ import {
   BeforeInsert,
   ManyToOne,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import {
   createDateTransformer,
@@ -23,10 +24,12 @@ import { AssessmentTaskDetailStatus } from '../constant';
 @Entity({
   name: 'assessment_task_detail',
 })
+@Index(['assessmentTaskId'])
 export class AssessmentTaskDetailEntity {
   @PrimaryColumn({ length: 36, type: 'uuid', comment: '考核任务详情编号' })
   id: string;
 
+  @Index()
   @Column({
     name: 'assessment_task_id',
     length: 36,
