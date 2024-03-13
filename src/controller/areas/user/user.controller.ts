@@ -105,7 +105,7 @@ export class UserController extends BaseUserController {
     contentType: BodyContentType.Multipart,
   })
   async import(@File() file) {
-    // await this.userService.importList(file.data);
+    await this.userService.importList(file.data);
     return this.i18nService.translate('import.success', { group: 'global' });
   }
 
