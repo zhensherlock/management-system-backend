@@ -79,6 +79,9 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
         donePercentage: 0,
       },
     };
+    if (list.length === 0) {
+      return result;
+    }
     list.forEach(item => {
       switch (item.status) {
         case AssessmentTaskDetailStatus.Submitted:

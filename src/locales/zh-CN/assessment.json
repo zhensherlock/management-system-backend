@@ -37,5 +37,6 @@
   "detail.submitDate.base.message": "请输入正确的考核任务提交时间",
   "detail.score_content.base.message": "请输入正确的考核任务评分内容",
   "detail.is_draft.base.message": "请输入正确的参数",
-  "detail.not.allowed.evaluate": "当前考核任务不允许评分"
+  "detail.not.allowed.evaluate": "当前考核任务不允许评分",
+  "detail.not.allowed.fallback": "当前考核任务不允许回退"
 }

@@ -47,7 +47,7 @@ export class EmployeeEntity {
   })
   certificateNumber: string;
 
-  @Column({ length: 191, comment: '员工联系方式' })
+  @Column({ length: 191, nullable: true, comment: '员工联系方式' })
   contact: string;
 
   @Column({ length: 255, nullable: true, comment: '员工头像' })

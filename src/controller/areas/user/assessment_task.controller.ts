@@ -204,6 +204,9 @@ export class AssessmentTaskController extends BaseUserController {
             'submitUser',
             'assessmentTask',
           ],
+          order: {
+            submitDate: 'DESC',
+          },
         }
       );
     return {

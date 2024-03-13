@@ -99,6 +99,7 @@ export class UserService extends BaseService<UserEntity> {
         group: 'passport',
       });
     }
+    this.clearPasswordErrorNumber();
     return mdl;
   }
 
@@ -282,6 +283,10 @@ export class UserService extends BaseService<UserEntity> {
   addPasswordErrorNumber(count = 1) {
     const passwordErrorNumber = this.ctx.session.passwordErrorNumber || 0;
     this.ctx.session.passwordErrorNumber = passwordErrorNumber + count;
+  }
+
+  clearPasswordErrorNumber() {
+    this.ctx.session.passwordErrorNumber = 0;
   }
 
   checkPasswordErrorNumber() {

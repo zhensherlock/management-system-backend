@@ -117,7 +117,7 @@ export class AssessmentTaskDetailController extends BaseUserController {
   @Post('/evaluation/:id', { summary: '学校用户-进行考核评分' })
   @ApiParam({ name: 'id', description: '编号' })
   @ApiBody({ description: '考核评分信息' })
-  async EvaluationScore(
+  async evaluationScore(
     @Param('id') id: string,
     @Body() dto: EvaluationScoreDTO
   ) {
@@ -147,6 +147,31 @@ export class AssessmentTaskDetailController extends BaseUserController {
         dto.scoreContent as AssessmentTaskDetailScoreContentType
       );
     }
+    await this.assessmentTaskDetailService.updateObject(mdl);
+    return this.i18nService.translate('success.msg', { group: 'global' });
+  }
+
+  @Role(['education'])
+  @Post('/fallback/:id', { summary: '教育局用户-退回考评' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async fallback(@Param('id') id: string) {
+    const mdl = await this.assessmentTaskDetailService.getObjectById(id, {
+      relations: ['assessmentTask'],
+    });
+    if (!mdl) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    if (
+      mdl.assessmentTask.status !== AssessmentTaskStatus.Official ||
+      ![AssessmentTaskDetailStatus.Submitted].includes(
+        mdl.status as AssessmentTaskDetailStatus
+      )
+    ) {
+      throw new CommonError('detail.not.allowed.fallback', {
+        group: 'assessment',
+      });
+    }
+    mdl.status = AssessmentTaskDetailStatus.Returned;
     await this.assessmentTaskDetailService.updateObject(mdl);
     return this.i18nService.translate('success.msg', { group: 'global' });
   }
