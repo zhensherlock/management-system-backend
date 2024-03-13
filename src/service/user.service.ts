@@ -16,6 +16,8 @@ import { CommonError, CaptchaError } from '../error';
 import ExcelJS from 'exceljs';
 import { Context } from '@midwayjs/koa';
 import { CaptchaService } from '@midwayjs/captcha';
+import { OrganizationService } from './organization.service';
+import { RoleService } from './role.service';
 
 @Provide()
 export class UserService extends BaseService<UserEntity> {
@@ -27,6 +29,12 @@ export class UserService extends BaseService<UserEntity> {
 
   @Inject()
   captchaService: CaptchaService;
+
+  @Inject()
+  organizationService: OrganizationService;
+
+  @Inject()
+  roleService: RoleService;
 
   fullSelects = [
     'id',
@@ -156,6 +164,68 @@ export class UserService extends BaseService<UserEntity> {
       })
     );
     return await this.updateObject(user);
+  }
+
+  async importList(url) {
+    const workbookReader = new ExcelJS.stream.xlsx.WorkbookReader(url, {});
+    for await (const worksheetReader of workbookReader) {
+      for await (const row of worksheetReader) {
+        if (row.number < 4) {
+          continue;
+        }
+        const dto: CreateUserDTO = {
+          description: '',
+          email: '',
+          enabled: true,
+          name: '',
+          options: undefined,
+          organizationIds: [],
+          password: '',
+          realName: '',
+          roleIds: [],
+          tel: '',
+          tenantId: null,
+          type: '',
+        };
+        let organizationName = '';
+        let roleName = '';
+        row.eachCell((cell, cellNumber) => {
+          switch (cellNumber) {
+            case 1:
+              dto.name = cell.text;
+              break;
+            case 2:
+              dto.password = cell.text;
+              break;
+            case 3:
+              organizationName = cell.text;
+              break;
+            case 4:
+              roleName = cell.text;
+              break;
+            case 5:
+              dto.realName = cell.text;
+              break;
+          }
+        });
+        if (await this.checkNameExisted(dto.name)) {
+          continue;
+        }
+        const organization = await this.organizationService.getOneObject({
+          where: {
+            name: organizationName,
+          },
+        });
+        dto.organizationIds = [organization.id];
+        const role = await this.roleService.getOneObject({
+          where: {
+            name: roleName,
+          },
+        });
+        dto.roleIds = [role.id];
+        await this.createUser(dto);
+      }
+    }
   }
 
   async importUserList(url) {
