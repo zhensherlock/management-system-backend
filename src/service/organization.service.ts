@@ -81,6 +81,7 @@ export class OrganizationService extends BaseService<OrganizationEntity> {
     };
     const allOrganizations = await this.getList({
       where,
+      relations: ['assignedCompany'],
       order: {
         sequence: 'ASC',
       },
