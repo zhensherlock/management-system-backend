@@ -39,7 +39,7 @@ export default {
         password: process.env.MYSQL_PASSWORD,
         database: 'smart_security',
         charset: 'utf8mb4',
-        synchronize: true, // 如果第一次使用，不存在表，有同步的需求可以写 true，注意会丢数据
+        synchronize: false, // 如果第一次使用，不存在表，有同步的需求可以写 true，注意会丢数据
         logging: true,
         entities: ['**/entity/*.entity{.ts,.js}'],
       },
@@ -113,7 +113,7 @@ export default {
       expiresIn: '5d',
       rememberExpiresIn: '30d',
     },
-    expiresIn: '1h', // https://github.com/vercel/ms
+    expiresIn: '10d', // https://github.com/vercel/ms
     rememberExpiresIn: '30d',
     cacheKeyPrefix: `${redisGlobalConfigPrefix}:passport`,
   },
