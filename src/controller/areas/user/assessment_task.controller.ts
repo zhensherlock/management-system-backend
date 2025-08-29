@@ -30,12 +30,16 @@ import {
 import { isEmpty, omit } from 'lodash';
 import { AssessmentTaskService } from '../../../service/assessment_task.service';
 import { AssessmentTaskEntity } from '../../../entity/assessment_task.entity';
-import { Between, In, Like } from 'typeorm';
-import { AssessmentTaskStatus } from '../../../constant';
+import { Between, In, LessThan, Like } from 'typeorm';
+import {
+  AssessmentTaskDetailStatus,
+  AssessmentTaskStatus,
+} from '../../../constant';
 import { AssessmentTaskDetailService } from '../../../service/assessment_task_detail.service';
 import { CommonError } from '../../../error';
 import dayjs from 'dayjs';
 import { getEndOfTime, getStartOfTime } from '../../../util';
+import type { AssessmentTaskDetailScoreContentType } from '../../../types';
 
 @ApiBearerAuth()
 @ApiTags(['user'])
@@ -163,6 +167,38 @@ export class AssessmentTaskController extends BaseUserController {
         select: ['status'],
       });
     return assessmentTaskStatistic.statistic;
+  }
+
+  @Role(['education'])
+  @Put('/mark-unscored-full/:id', { summary: '用户-未评分学校设为满分' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async updateDefaultScore(@Param('id') id: string) {
+    const now = new Date();
+    const task = await this.assessmentTaskService.getOneObject({
+      where: {
+        id,
+        endDate: LessThan(now),
+      },
+    });
+    if (!task) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    const list = await this.assessmentTaskDetailService.getList({
+      where: {
+        assessmentTaskId: id,
+        status: AssessmentTaskDetailStatus.Pending,
+      },
+    });
+    for (const item of list) {
+      item.assessmentTask = task;
+      this.assessmentTaskDetailService.evaluationScore(
+        item,
+        this.ctx.currentUser.id,
+        item.scoreContent as AssessmentTaskDetailScoreContentType
+      );
+      await this.assessmentTaskDetailService.updateObject(item);
+    }
+    return this.i18nService.translate('success.msg', { group: 'global' });
   }
 
   @Role(['education'])
