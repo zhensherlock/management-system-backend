@@ -3,6 +3,7 @@ import { InjectEntityModel } from '@midwayjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { find } from 'lodash';
 import Big from 'big.js';
+import ExcelJS from 'exceljs';
 import { BaseService } from './base.service';
 import { AssessmentTaskDetailEntity } from '../entity/assessment_task_detail.entity';
 import { AssessmentTaskEntity } from '../entity/assessment_task.entity';
@@ -16,6 +17,57 @@ import {
   AssessmentTaskStatisticType,
 } from '../types';
 import { recursiveFlat } from '../util/array';
+import { generateAdvancedExcel } from '../util';
+
+const getExportOptions = (data: AssessmentTaskDetailEntity[]) => {
+  return {
+    sheetName: '考核记录',
+    columns: [
+      { key: 'name', header: '学校' },
+      { key: 'totalScore', header: '总分' },
+      { key: 'grade', header: '等级' },
+      { key: 'totalSubtractScore', header: '扣分' },
+      { key: 'subtractScore', header: '扣分原因', width: 40 },
+      { key: 'totalAddScore', header: '加分' },
+      { key: 'addScore', header: '加分原因', width: 40 },
+    ],
+    title: { text: '考核记录' },
+    source: data.map(item => {
+      const scoreContent =
+        item.scoreContent as AssessmentTaskDetailScoreContentType;
+      const subtractScoreList = [];
+      const addScoreList = [];
+      Object.values(scoreContent.detail).forEach(content => {
+        if (content.score === 0) {
+          return;
+        }
+        if (content.scoreType === AssessmentScoreType.Add) {
+          addScoreList.push(`加${content.score}分：${content.message}`);
+        } else {
+          subtractScoreList.push(`扣${content.score}分：${content.message} `);
+        }
+      });
+      return [
+        item.receiveSchoolOrganization.name,
+        item.totalScore,
+        item.grade,
+        item.totalSubtractScore,
+        subtractScoreList.join('\n'),
+        item.totalAddScore,
+        addScoreList.join('\n'),
+      ];
+    }),
+    options: {
+      setCellOptions: (cell: ExcelJS.Cell, colNumber: number) => {
+        if ([5, 7].includes(colNumber)) {
+          cell.alignment = {
+            wrapText: true,
+          };
+        }
+      },
+    },
+  };
+};
 
 @Provide()
 export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetailEntity> {
@@ -157,5 +209,18 @@ export class AssessmentTaskDetailService extends BaseService<AssessmentTaskDetai
       }
     }
     return null;
+  }
+
+  /**
+   * 导出考核列表
+   */
+  async exportList(id: string) {
+    const list = await this.getList({
+      where: {
+        assessmentTaskId: id,
+      },
+      relations: ['receiveSchoolOrganization'],
+    });
+    return generateAdvancedExcel([getExportOptions(list)]);
   }
 }

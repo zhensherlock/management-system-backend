@@ -38,7 +38,7 @@ import {
 import { AssessmentTaskDetailService } from '../../../service/assessment_task_detail.service';
 import { CommonError } from '../../../error';
 import dayjs from 'dayjs';
-import { getEndOfTime, getStartOfTime } from '../../../util';
+import { exportAsExcel, getEndOfTime, getStartOfTime } from '../../../util';
 import type { AssessmentTaskDetailScoreContentType } from '../../../types';
 
 @ApiBearerAuth()
@@ -297,5 +297,21 @@ export class AssessmentTaskController extends BaseUserController {
       throw new CommonError('delete.failure', { group: 'global' });
     }
     return this.i18nService.translate('delete.success', { group: 'global' });
+  }
+
+  @Role(['education'])
+  @Post('/export/:id', { summary: '导出考核详情' })
+  @ApiParam({ name: 'id', description: '编号' })
+  async exportAssessmentTaskDetail(@Param('id') id: string) {
+    const task = await this.assessmentTaskService.getOneObject({
+      where: {
+        id,
+      },
+    });
+    if (!task) {
+      throw new CommonError('not.exist', { group: 'global' });
+    }
+    const workbook = await this.assessmentTaskDetailService.exportList(id);
+    await exportAsExcel(this.ctx, `${task.title} - 考核详情`, workbook);
   }
 }
